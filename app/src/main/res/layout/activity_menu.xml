@@ -142,7 +142,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginRight="108dp"
                             android:text="@string/lbl_transferencias"
-                            android:textColor="@color/colorBackground"
+                            android:textColor="#53331C"
 
                             android:textSize="24dp">
 
