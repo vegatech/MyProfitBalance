@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.menuActivity"
+    android:background="@color/colorBackground"
+    >
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view_Saldos"
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    android:innerRadius="40dp"
+                    android:thicknessRatio="1.9"
+                    app:cardBackgroundColor="@color/colorWhite"
+                    app:cardCornerRadius="30dp">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="138dp"
+                        android:layout_height="106dp"
+                        android:id="@+id/img_ingresos"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/ingresos"></ImageView>
+
+                    <TextView
+                        android:id="@+id/txt_mnuingreso"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginRight="148dp"
+                        android:text="@string/lbl_ingresos"
+                        android:textColor="@color/colorBackground"
+
+                        android:textSize="24dp">
+
+                    </TextView>
+
+                </RelativeLayout>
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view_Ingresos"
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    app:cardBackgroundColor="@color/colorWhite"
+                    app:cardCornerRadius="30dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="138dp"
+                            android:layout_height="106dp"
+                            android:id="@+id/img_egresos"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/egresos"></ImageView>
+
+                        <TextView
+                            android:id="@+id/txt_mnuegreso"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginRight="148dp"
+                            android:text="@string/lbl_egresos"
+                            android:textColor="@color/colorBackground"
+
+                            android:textSize="24dp">
+
+                        </TextView>
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view_Egresos"
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    app:cardBackgroundColor="@color/colorWhite"
+                    app:cardCornerRadius="30dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="138dp"
+                            android:layout_height="106dp"
+                            android:id="@+id/img_transferencias"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/transacciones"></ImageView>
+
+                        <TextView
+                            android:id="@+id/txt_mnutransferencia"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginRight="108dp"
+                            android:text="@string/lbl_transferencias"
+                            android:textColor="@color/colorBackground"
+
+                            android:textSize="24dp">
+
+                        </TextView>
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <com.getbase.floatingactionbutton.FloatingActionsMenu
+                    android:id="@+id/grupofab"
+                    android:layout_width="232dp"
+                    android:layout_height="245dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    app:fab_addButtonColorNormal="@color/colorPrimary"
+                    app:fab_addButtonColorPressed="@color/colorPrimaryDark"
+                    app:fab_labelStyle="@style/etiqueta"
+                    app:srcCompat="@android:drawable/ic_menu_add">
+
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:fabSize="normal"
+                        app:fab_colorNormal="@color/colorPrimaryDark"
+                        app:fab_icon="@android:drawable/ic_menu_my_calendar"
+                        app:fab_title="Reportes"></com.getbase.floatingactionbutton.FloatingActionButton>
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:fabSize="normal"
+                        app:fab_colorNormal="@color/colorPrimaryDark"
+                        app:fab_icon="@android:drawable/ic_menu_manage"
+                        app:fab_title="Ajuste"></com.getbase.floatingactionbutton.FloatingActionButton>
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:fabSize="normal"
+                        app:fab_colorNormal="@color/colorPrimaryDark"
+                        app:fab_icon="@android:drawable/ic_dialog_info"
+                        app:fab_title="Ayuda"></com.getbase.floatingactionbutton.FloatingActionButton>
+
+
+                </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+            </LinearLayout>
+        </ScrollView>
+
+</RelativeLayout>

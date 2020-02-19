@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">My Profit Balance</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="imgvw1">Aqui imagen</string>
+    <string name="title_activity_lista_ingresos">lista_ingresos</string>
+    <string name="montolabel">Monto</string>
+    <string name="montovalue"></string>
+    <string name="categorias">Ingrese categorias</string>
+    <string name="labelCategorias">Categoria</string>
+    <string name="transactionbutton">Guardar</string>
+    <string name="Fecha">Fecha de Operacion</string>
+    <string name="Fechalabel">Fecha:</string>
+    <string name="labeltipoCuenta">Cuenta</string>
+
+    <string name="lbl_ingresos">Ingresos</string>
+    <string name="lbl_egresos">Egresos</string>
+    <string name="lbl_transferencias">Transferencias</string>
+    <string name="lbl_reportes">Reportes</string>
+</resources>
