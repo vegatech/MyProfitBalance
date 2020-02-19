@@ -47,10 +47,14 @@ public class MainActivity extends AppCompatActivity  {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
                 if (menuItem.getItemId()== R.id.menu_home){
-                    showSelectedFragment(new homeFragment());
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    //showSelectedFragment(new homeFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_Reportes){
-                    showSelectedFragment(new reportsFragment());
+                    Intent intent = new Intent(getApplicationContext(), listaIngresos.class);
+                    startActivity(intent);
+                    //showSelectedFragment(new reportsFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_ajustes){
                     showSelectedFragment(new settingsFragment());

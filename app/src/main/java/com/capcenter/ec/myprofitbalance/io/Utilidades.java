@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class Utilidades {
-    public static final String DATE_FORMAT_1 = "dd-MMM-yyyy";
+    public static final String DATE_FORMAT_1 = "dd/MM/yyyy";
 
     public static String getCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_1);

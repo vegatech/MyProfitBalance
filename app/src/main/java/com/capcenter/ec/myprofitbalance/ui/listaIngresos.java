@@ -39,8 +39,8 @@ public class listaIngresos extends AppCompatActivity {
       //conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
            lvingresos =(ListView) findViewById(R.id.lvingresos);
         Bundle bundle = getIntent().getExtras();
-        tipotran=bundle.getInt("tipoper");
-
+        //tipotran=bundle.getInt("tipoper");
+        tipotran=1;
         consultarListaIngresos();
 
         ArrayAdapter adaptador = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listainformacionIngreso);

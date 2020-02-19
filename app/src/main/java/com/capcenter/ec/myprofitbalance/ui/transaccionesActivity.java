@@ -1,6 +1,7 @@
 package com.capcenter.ec.myprofitbalance.ui;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -66,7 +67,7 @@ public class transaccionesActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (this,android.R.layout.simple_spinner_item,listaCat);
         spCategorias.setAdapter(adapador);
         //spCategorias.setSelection(posision);
-        spCategorias.setSelection(0);
+        spCategorias.setSelection(1);
 
         consultarCuentas();
         ArrayAdapter<CharSequence> adapador2=  new ArrayAdapter (this,android.R.layout.simple_spinner_item,listainfoCuentas);
@@ -79,16 +80,19 @@ public class transaccionesActivity extends AppCompatActivity {
             conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getWritableDatabase();
             ContentValues values= new ContentValues();
-            values.put(Utilidades.CAMPO_TIPO_OPER,SpinnerCuentas.getSelectedItem().toString());
+
+            values.put(Utilidades.CAMPO_TIPO_OPER,tipotran);//SpinnerCuentas.getSelectedItem().toString());
             values.put(Utilidades.CAMPO_FECHA,txtfecha.getText().toString());
-            values.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItem().toString());
-            values.put(Utilidades.CAMPO_ID_CTA,1);
+            values.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
+            values.put(Utilidades.CAMPO_ID_CTA,SpinnerCuentas.getSelectedItemPosition());
             values.put(Utilidades.CAMPO_MONTO,txtmonto.getText().toString());
             //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
             Long idResultante= db.insert(Utilidades.TABLA_OPERACIONES,Utilidades.CAMPO_ID,values);
 
             Toast.makeText(getApplicationContext(),"idResultante"+idResultante,Toast.LENGTH_LONG).show();
             db.close();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         }
         private void consultarTransaccionById(){
         try {
