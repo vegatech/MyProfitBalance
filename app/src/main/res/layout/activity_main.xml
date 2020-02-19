@@ -22,7 +22,7 @@
 </RelativeLayout>
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigationbar"
+        android:id="@+id/navigationbariew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

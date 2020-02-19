@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,8 +23,12 @@ import android.widget.Toast;
 import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
+import com.capcenter.ec.myprofitbalance.ui.fragments.homeFragment;
+import com.capcenter.ec.myprofitbalance.ui.fragments.reportsFragment;
+import com.capcenter.ec.myprofitbalance.ui.fragments.settingsFragment;
 
 public class MainActivity extends AppCompatActivity  {
+    BottomNavigationView mbotomnavigationview;
 
     ConexionSQLiteHelper conn =new ConexionSQLiteHelper(this, Utilidades.NOMBRE_BD,null, 1);
 
@@ -33,6 +41,23 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mbotomnavigationview =(BottomNavigationView) findViewById(R.id.navigationbariew);
+        mbotomnavigationview.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                if (menuItem.getItemId()== R.id.menu_home){
+                    showSelectedFragment(new homeFragment());
+                }
+                if (menuItem.getItemId()== R.id.menu_Reportes){
+                    showSelectedFragment(new reportsFragment());
+                }
+                if (menuItem.getItemId()== R.id.menu_ajustes){
+                    showSelectedFragment(new settingsFragment());
+                }
+                return true;
+            }
+        });
 
     lst= (ListView) findViewById(R.id.listview);
         VivzAdapter adapter1 = new VivzAdapter(this,opcionnombre, imgid);
@@ -51,6 +76,13 @@ public class MainActivity extends AppCompatActivity  {
 
             }
         });
+
+    }// on Create
+
+    private void showSelectedFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.contenedorFragments,fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
 
     }
 
