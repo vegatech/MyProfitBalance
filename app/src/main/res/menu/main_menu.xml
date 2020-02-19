@@ -3,15 +3,15 @@
 
     <item  android:id="@+id/menu_home"
         android:title="Home"
-        android:icon="@mipmap/ic_home_bar"
+        android:icon="@drawable/ic_home_bar_btn"
         />
     <item  android:id="@+id/menu_Reportes"
         android:title="Reportes"
-        android:icon="@mipmap/ic_reports_bar"
+        android:icon="@drawable/ic_reports_bar_btn"
         />
     <item  android:id="@+id/menu_ajustes"
         android:title="Ajustes"
-        android:icon="@mipmap/ic_settings_bar"
+        android:icon="@drawable/ic_settings_bar_btn"
         />
 
 </menu>
