@@ -11,7 +11,7 @@ public class Utilidades {
 
     public static String getCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_1);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC -5"));
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC-5"));
         Date today = Calendar.getInstance().getTime();
         return dateFormat.format(today);
     }

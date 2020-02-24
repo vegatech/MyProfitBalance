@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#008577</color>
+    <color name="colorTransaccion1">#6EC417</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorSplash">#000000</color>
@@ -15,9 +16,17 @@
     <color name="colorCardReport">#000000</color>
 
 
+
     <color name="colorWhite">#ffffff</color>
     <color name="colorBackground">#A59E99</color>
-
+    <color name="colorBackground2">#DFDCDC</color>
+    <color name="CardViewTransacciones0">#AED1FA</color>
+    <color name="CardViewTransacciones1">#9CF19C</color>
+    <color name="CardViewTransacciones2">#8484B9</color>
+    <color name="CardViewTransacciones3">#85B950</color>
+    <color name="CardViewTransacciones4">#5DA71B</color>
+    <color name="CardViewTransacciones5">#D1A836</color>
+    <color name="CardViewDate">#FF5722</color>
 
 
 

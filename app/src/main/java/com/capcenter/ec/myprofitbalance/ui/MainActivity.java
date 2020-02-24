@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity  {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
                 if (menuItem.getItemId()== R.id.menu_home){
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), menuActivity.class);
                     startActivity(intent);
                     //showSelectedFragment(new homeFragment());
                 }

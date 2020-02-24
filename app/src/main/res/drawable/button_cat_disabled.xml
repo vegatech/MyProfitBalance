@@ -5,6 +5,7 @@
         android:angle="90"
         android:startColor="#FFFFFF"
         android:centerColor="#FFFFFF"
+        android:endColor="#FFFFFF"
         ></gradient>
         <padding
             android:bottom="7dp"
@@ -14,7 +15,7 @@
 
         </padding>
     <stroke
-        android:color="#FFF"
+        android:color="#AAAAAA"
         android:width="2dp"
         ></stroke>
     <corners

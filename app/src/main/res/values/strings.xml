@@ -14,9 +14,9 @@
     <string name="Fechalabel">Fecha:</string>
     <string name="labeltipoCuenta">Cuenta</string>
 
-    <string name="lbl_ingresos">Ingresos</string>
-    <string name="lbl_egresos">Egresos</string>
+    <string name="lbl_ingresos">Nuevo Ingreso</string>
+    <string name="lbl_egresos">Nuevo Egreso</string>
     <string name="lbl_transferencias">Transferencias</string>
     <string name="lbl_reportes">Reportes</string>
-    <string name="TituloTransaccion">Ingresos</string>
+    <string name="TituloTransaccion">Nuevo Ingreso</string>
 </resources>

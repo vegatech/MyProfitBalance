@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".ui.menuActivity"
     android:background="@color/colorBackground"
     >
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
         <ScrollView
             android:layout_width="match_parent"
@@ -121,13 +125,13 @@
                         android:layout_height="wrap_content">
 
                         <ImageView
+                            android:id="@+id/img_transferencias"
                             android:layout_width="138dp"
                             android:layout_height="106dp"
-                            android:id="@+id/img_transferencias"
                             android:layout_alignParentLeft="true"
                             android:layout_centerInParent="true"
                             android:layout_marginStart="10dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="241dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginEnd="10dp"
                             android:layout_marginRight="10dp"
@@ -151,50 +155,54 @@
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
 
-                <com.getbase.floatingactionbutton.FloatingActionsMenu
-                    android:id="@+id/grupofab"
-                    android:layout_width="232dp"
-                    android:layout_height="245dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_marginTop="@dimen/fab_margin"
-                    app:fab_addButtonColorNormal="@color/colorPrimary"
-                    app:fab_addButtonColorPressed="@color/colorPrimaryDark"
-                    app:fab_labelStyle="@style/etiqueta"
-                    app:srcCompat="@android:drawable/ic_menu_add">
-
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fab1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:fabSize="normal"
-                        app:fab_colorNormal="@color/colorPrimaryDark"
-                        app:fab_icon="@android:drawable/ic_menu_my_calendar"
-                        app:fab_title="Reportes"></com.getbase.floatingactionbutton.FloatingActionButton>
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fab2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:fabSize="normal"
-                        app:fab_colorNormal="@color/colorPrimaryDark"
-                        app:fab_icon="@android:drawable/ic_menu_manage"
-                        app:fab_title="Ajuste"></com.getbase.floatingactionbutton.FloatingActionButton>
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fab3"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:fabSize="normal"
-                        app:fab_colorNormal="@color/colorPrimaryDark"
-                        app:fab_icon="@android:drawable/ic_dialog_info"
-                        app:fab_title="Ayuda"></com.getbase.floatingactionbutton.FloatingActionButton>
-
-
-                </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
 
             </LinearLayout>
         </ScrollView>
 
-</RelativeLayout>
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/grupofab"
+            android:layout_width="193dp"
+            android:layout_height="497dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|end"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_marginBottom="218dp"
+            app:fab_addButtonColorNormal="@color/colorPrimary"
+            app:fab_addButtonColorPressed="@color/colorPrimaryDark"
+            app:fab_labelStyle="@style/etiqueta"
+            app:srcCompat="@android:drawable/ic_menu_add">
+
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:fabSize="normal"
+                app:fab_colorNormal="@color/colorPrimaryDark"
+                app:fab_icon="@android:drawable/ic_menu_my_calendar"
+                app:fab_title="Reportes"></com.getbase.floatingactionbutton.FloatingActionButton>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:fabSize="normal"
+                app:fab_colorNormal="@color/colorPrimaryDark"
+                app:fab_icon="@android:drawable/ic_menu_manage"
+                app:fab_title="Ajuste"></com.getbase.floatingactionbutton.FloatingActionButton>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:fabSize="normal"
+                app:fab_colorNormal="@color/colorPrimaryDark"
+                app:fab_icon="@android:drawable/ic_dialog_info"
+                app:fab_title="Ayuda"></com.getbase.floatingactionbutton.FloatingActionButton>
+
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
