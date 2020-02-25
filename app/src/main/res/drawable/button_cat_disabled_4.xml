@@ -3,10 +3,9 @@
     android:shape="rectangle">
     <gradient
         android:angle="90"
-        android:startColor="@color/colorTransaccion1"
-
-        android:centerColor="@color/colorTransaccion1"
-        android:endColor="@color/colorTransaccion1"
+        android:startColor="#FFFFFF"
+        android:centerColor="#FFFFFF"
+        android:endColor="#FFFFFF"
         ></gradient>
         <padding
             android:bottom="7dp"
@@ -16,10 +15,9 @@
 
         </padding>
     <stroke
-        android:color="#ABABB3"
+        android:color="#65C1FF"
         android:width="2dp"
         ></stroke>
     <corners
-        android:radius="15dp"></corners>
-
+        android:radius="20dp"></corners>
 </shape>

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,13 +54,17 @@ public class transaccionesActivity extends AppCompatActivity {
     Integer numerotran;
     Integer posision;
     Integer posision2;
+    Integer categoriaSeleccionada;
     String[] catlistitems =new String[5] ;
     String[] mtolistitems =new String[5] ;//={"Administrar Ingresos","Administrar Egresos","Administrar Transacciones"};
     boolean basic = true;
     boolean[] chequedItems;
+    int [] imgid ={R.drawable.ingresos,R.drawable.egresos,R.drawable.transacciones};
     ArrayList<Integer> mCategoryItems= new ArrayList<>();
     ArrayList<Integer> mDiagMtoItems= new ArrayList<>();
     Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+    Map<Integer, String> mapDrawable = new HashMap<Integer, String>();
+
 
 
     @Override
@@ -67,6 +73,8 @@ public class transaccionesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_transacciones);
 
         btn_date_hoy =(Button) findViewById(R.id.btn_set_date_today);
+        btn_date_ayer=(Button) findViewById(R.id.btn_set_date_yesterday);
+        btn_date_otros=(Button) findViewById(R.id.btn_set_date_others);
         btn_date_hoy.setBackgroundResource(R.drawable.button_date_pressed);
         //btn_date_hoy.setBackgroundColor(Color.rgb(70, 80, 90));
         btnCategorias =(Button) findViewById(R.id.btnCategoria);
@@ -96,6 +104,34 @@ public class transaccionesActivity extends AppCompatActivity {
         //SpinnerCuentas.setSelection(posision2);
         SpinnerCuentas.setSelection(1);
         consultarMontoTransaccionByCat();
+        //set de botones de fecha
+        btn_date_hoy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_date_hoy.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_date_ayer.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_otros.setBackgroundResource(R.drawable.custom_date_button);
+
+                String fechaOper = Utilidades.getCurrentDate();
+                txtfecha.setText(fechaOper);
+            }
+        });
+        btn_date_ayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_date_hoy.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_ayer.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_date_otros.setBackgroundResource(R.drawable.custom_date_button);
+            }
+        });
+        btn_date_otros.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_date_hoy.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_ayer.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_otros.setBackgroundResource(R.drawable.button_date_pressed);
+            }
+        });
         //DialogoSeleccion de Monto consultado de la BD
         chequedItems = new boolean[mtolistitems.length];
         /*txtvmonto.setOnClickListener(new View.OnClickListener(){
@@ -161,6 +197,7 @@ public class transaccionesActivity extends AppCompatActivity {
             btnCategorias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 AlertDialog.Builder mBuilder =new AlertDialog.Builder(transaccionesActivity.this);
                 mBuilder.setTitle("Categorias disponibles");
                 //mBuilder.setMultiChoiceItems(catlistitems, chequedItems, new DialogInterface.OnMultiChoiceClickListener() {
@@ -168,13 +205,19 @@ public class transaccionesActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int Position) {
 
+                        ListView lw = ((AlertDialog)dialog).getListView();
+                        Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                        Integer selected = (Integer)lw.getTag();
 
                         for (int i = 0; i < chequedItems.length; i++) {
                             //chequedItems [i] = false;
                             mCategoryItems.clear();
                             btnCategorias.setText("");
+
+
                             mCategoryItems.add(Position);
                         }
+
                     }
 
                     });
@@ -183,13 +226,51 @@ public class transaccionesActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int wich) {
                         String item="";
+                        mapDrawable.put(1,"R.drawable.ic_cat_slueldo");
+                        mapDrawable.put(2,"R.drawable.ic_cat_regalos");
+                        mapDrawable.put(3,"R.drawable.ic_cat_premios");
+                        mapDrawable.put(4,"R.drawable.ic_cat_ventas");
+                        mapDrawable.put(5,"R.drawable.ic_cat_inversiones");
                         for(int i = 0 ;i < mCategoryItems.size();i++ ){
                             btnCategorias.setText(catlistitems[ mCategoryItems.get(i)]);
-                           /* item = item +catlistitems[mCategoryItems.get(i)];
-                            if(i !=  mCategoryItems.size()-1){
-                                item =item + ", ";
+                            if (mCategoryItems.get(i)==0){
+                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_sueldo);
+                                btnCategorias.setCompoundDrawables(img,null,null,null);
+                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
+                                btnCategorias.setBackgroundResource(R.drawable.custom_button_1);
+                                categoriaSeleccionada=mCategoryItems.get(i)+1;
+                            }
+                            if (mCategoryItems.get(i)==1){
+                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_regalos);
+                                btnCategorias.setCompoundDrawables(img,null,null,null);
+                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
+                                btnCategorias.setBackgroundResource(R.drawable.custom_button_2);
+                                categoriaSeleccionada=mCategoryItems.get(i)+1;
+                            }
+                            if (mCategoryItems.get(i)==2){
+                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_premios);
+                                btnCategorias.setCompoundDrawables(img,null,null,null);
+                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
+                                btnCategorias.setBackgroundResource(R.drawable.custom_button_3);
+                                categoriaSeleccionada=mCategoryItems.get(i)+1;
+                            }
+                            if (mCategoryItems.get(i)==3){
+                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_ventas);
+                                btnCategorias.setCompoundDrawables(img,null,null,null);
+                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
+                                btnCategorias.setBackgroundResource(R.drawable.custom_button);
+                                btnCategorias.setBackgroundResource(R.drawable.custom_button_4);
+                                categoriaSeleccionada=mCategoryItems.get(i)+1;
+                            }
+                            if (mCategoryItems.get(i)==4){
+                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_inversiones);
 
-                            }*/
+                                btnCategorias.setCompoundDrawables(img,null,null,null);
+                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
+                                btnCategorias.setBackgroundResource(R.drawable.custom_button_5);
+                                categoriaSeleccionada=mCategoryItems.get(i)+1;
+                            }
+                            
                         }
                     }
                 });
@@ -279,7 +360,7 @@ public class transaccionesActivity extends AppCompatActivity {
         try {
             conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
-            String SQL_QUERY = "SELECT DISTINCT "+ Utilidades.CAMPO_ID+", "+Utilidades.CAMPO_MONTO+" FROM  " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "=" + tipotran+ " AND "+Utilidades.CAMPO_TIPO_CAT+" = "+1 +" LIMIT 5";
+            String SQL_QUERY = "SELECT DISTINCT "+ Utilidades.CAMPO_ID+", "+Utilidades.CAMPO_MONTO+" FROM  " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "=" + tipotran+ " AND "+Utilidades.CAMPO_TIPO_CAT+" = "+categoriaSeleccionada +" LIMIT 3";
             Log.d("STATE",SQL_QUERY);
             Cursor cursor = db.rawQuery(SQL_QUERY, null);
 

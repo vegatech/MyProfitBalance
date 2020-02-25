@@ -7,25 +7,43 @@
     android:layout_height="match_parent"
     android:background="@color/colorTransaccion1"
     >
-
+<RelativeLayout
+    android:layout_width="390dp"
+    android:layout_height="150dp"
+    android:layout_marginBottom="40dp"
+    android:layout_marginTop="1dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="20dp"
+    >
+    <TextView
+        android:id="@+id/TextTituloTransaccion1"
+        android:layout_width="338dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center|center_horizontal"
+        android:text="@string/TituloTransaccion"
+        android:textSize="36sp"></TextView>
+</RelativeLayout>
     <ScrollView
         android:id="@+id/ScrollView01"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingTop="100dp"
         android:scrollbars="vertical" >
 
 
     <android.support.v7.widget.CardView
         android:id="@+id/CardViewTransacionesMaestro"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="100dp"
         android:innerRadius="10dp"
         android:thicknessRatio="1.9"
         app:cardBackgroundColor="@color/colorWhite"
-        app:cardElevation="12dp"
+        app:cardElevation="10dp"
         app:cardUseCompatPadding="true"
-        android:paddingBottom="20dp"
-        android:paddingLeft="20dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
 
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -95,7 +113,7 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/custom_date_button"
                 android:text="Hoy"
-
+                android:textColor="@drawable/button_text"
                 android:textAllCaps="false" />
 
             <Button
@@ -170,9 +188,10 @@
             <Spinner
                 android:id="@+id/SpinnerCategorias"
                 android:layout_width="80dp"
-                android:layout_marginLeft="10dp"
                 android:layout_height="40dp"
-                android:layout_marginBottom="10dp"></Spinner>
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="invisible"></Spinner>
         </LinearLayout>
             <View
                 android:id="@+id/Separador3"
@@ -221,24 +240,48 @@
                 android:background="@drawable/shape_separador"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
-
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginVertical="5dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_account_section" />
             <Spinner
                 android:id="@+id/SpinnerCuentas"
-                android:layout_width="fill_parent"
-
+                android:layout_width="250dp"
                 android:layout_height="40dp"
-                android:layout_marginBottom="40dp"></Spinner>
-
+                android:layout_marginLeft="10dp"
+                android:textSize="12pt"
+                android:layout_marginBottom="10dp"></Spinner>
+        </LinearLayout>
 
             <Button
                 android:id="@+id/ButtonSendTransaction"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
                 android:onClick="registrarUsuario"
+                android:layout_gravity="center"
                 android:text="@string/transactionbutton"></Button>
-
+            <View
+                android:id="@+id/Separador5"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:paddingVertical="10dp"
+                android:background="@drawable/shape_separador"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
 
         </LinearLayout>
+
     </android.support.v7.widget.CardView>
 </ScrollView>
 

@@ -19,7 +19,14 @@ public class Utilidades {
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     Date date = new Date();
     //System.out.println(formatter.format(date));
+    public Date sumarRestarDiasFecha(Date fecha, int dias){
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha); // Configuramos la fecha que se recibe
+        calendar.add(Calendar.DAY_OF_YEAR, dias);  // numero de días a añadir, o restar en caso de días<0
+        return calendar.getTime(); // Devuelve el objeto Date con los nuevos días añadidos
+
+    }
     public static final String NOMBRE_BD="myprofitbd.db";
     public static final int VERSION_DB=7;
 
