@@ -64,6 +64,9 @@ public class transaccionesActivity extends AppCompatActivity {
     ArrayList<Integer> mDiagMtoItems= new ArrayList<>();
     Map<Integer, Integer> map = new HashMap<Integer, Integer>();
     Map<Integer, String> mapDrawable = new HashMap<Integer, String>();
+    Button btn_billete1;
+    Button btn_billete2;
+    Button btn_billete3;
 
 
 
@@ -76,6 +79,13 @@ public class transaccionesActivity extends AppCompatActivity {
         btn_date_ayer=(Button) findViewById(R.id.btn_set_date_yesterday);
         btn_date_otros=(Button) findViewById(R.id.btn_set_date_others);
         btn_date_hoy.setBackgroundResource(R.drawable.button_date_pressed);
+        btn_billete1=(Button)  findViewById(R.id.btnBillete1);
+        btn_billete2=(Button)  findViewById(R.id.btnBillete2);
+        btn_billete3=(Button)  findViewById(R.id.btnBillete3);
+        btn_billete1.setVisibility(View.GONE);
+        btn_billete2.setVisibility(View.GONE);
+        btn_billete3.setVisibility(View.GONE);
+
         //btn_date_hoy.setBackgroundColor(Color.rgb(70, 80, 90));
         btnCategorias =(Button) findViewById(R.id.btnCategoria);
         spCategorias =(Spinner) findViewById(R.id.SpinnerCategorias);
@@ -89,7 +99,7 @@ public class transaccionesActivity extends AppCompatActivity {
         tipotran=bundle.getInt("tipoper");
         //numerotran=bundle.getInt("numoper");
 
-        Toast.makeText(getApplicationContext(), "Nro transacion:"+numerotran, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Nro transacion:"+numerotran, Toast.LENGTH_SHORT).show();
 
         //consultarTransaccionById();
         consultarCategorias();
@@ -134,63 +144,36 @@ public class transaccionesActivity extends AppCompatActivity {
         });
         //DialogoSeleccion de Monto consultado de la BD
         chequedItems = new boolean[mtolistitems.length];
-        /*txtvmonto.setOnClickListener(new View.OnClickListener(){
+
+        //Seleccion de Billetes
+        btn_billete1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder =new AlertDialog.Builder(transaccionesActivity.this);
-                mBuilder.setTitle("Ultimos montos   ");
-                mBuilder.setSingleChoiceItems(mtolistitems, -1 , new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int position) {
-                        for (int i = 0; i < chequedItems.length; i++) {
-                           // chequedItems [i] = false;
-                            mDiagMtoItems.clear();
-                            txtvmonto.setText("");
-                        }
-                       // if(isChecked){
-                            mDiagMtoItems.add(position);
-                        //}else{
-                         //   mDiagMtoItems.remove((Integer.valueOf(position)));
-                        //}
-                    }
-                });
-                mBuilder.setCancelable(false);
-                mBuilder.setPositiveButton("Seleccionar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int wich) {
-                        String item="";
-                        for(int i = 0 ;i < mDiagMtoItems.size();i++ ){
-                            txtvmonto.setText(mtolistitems[mDiagMtoItems.get(i)]);
-                            item = item +mtolistitems[mDiagMtoItems.get(i)];
-                            if(i !=  mDiagMtoItems.size()-1){
-                                item =item + ", ";
-
-                            }
-                        }
-                    }
-                });
-                mBuilder.setNegativeButton("Olvidar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                mBuilder.setNeutralButton("Anular", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        for (int i = 0; i < chequedItems.length; i++) {
-                            chequedItems [i] = false;
-                            mDiagMtoItems.clear();
-                            txtvmonto.setText("");
-                        }
-                    }
-                });
-                AlertDialog mDialog =mBuilder.create();
-                mDialog.show();
+                txtmonto.setText(btn_billete1.getText());
+                btn_billete1.setVisibility(View.GONE);
+                btn_billete2.setVisibility(View.GONE);
+                btn_billete3.setVisibility(View.GONE);
             }
-        });// Fin boton monto
-*/
+        });
+        btn_billete2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtmonto.setText(btn_billete2.getText());
+                btn_billete1.setVisibility(View.GONE);
+                btn_billete2.setVisibility(View.GONE);
+                btn_billete3.setVisibility(View.GONE);
+            }
+        });
+        btn_billete3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtmonto.setText(btn_billete3.getText());
+                btn_billete1.setVisibility(View.GONE);
+                btn_billete2.setVisibility(View.GONE);
+                btn_billete3.setVisibility(View.GONE);
+            }
+        });
+
 
         // Dialogo Seleccion de Categoria
         chequedItems = new boolean[catlistitems.length];
@@ -239,6 +222,10 @@ public class transaccionesActivity extends AppCompatActivity {
                                 btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
                                 btnCategorias.setBackgroundResource(R.drawable.custom_button_1);
                                 categoriaSeleccionada=mCategoryItems.get(i)+1;
+                                consultarMontoTransaccionByCat();
+                                btn_billete1.setVisibility(View.VISIBLE);
+                                btn_billete2.setVisibility(View.VISIBLE);
+                                btn_billete3.setVisibility(View.VISIBLE);
                             }
                             if (mCategoryItems.get(i)==1){
                                 Drawable img = getResources().getDrawable( R.drawable.ic_cat_regalos);
@@ -246,6 +233,10 @@ public class transaccionesActivity extends AppCompatActivity {
                                 btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
                                 btnCategorias.setBackgroundResource(R.drawable.custom_button_2);
                                 categoriaSeleccionada=mCategoryItems.get(i)+1;
+                                consultarMontoTransaccionByCat();
+                                btn_billete1.setVisibility(View.VISIBLE);
+                                btn_billete2.setVisibility(View.VISIBLE);
+                                btn_billete3.setVisibility(View.VISIBLE);
                             }
                             if (mCategoryItems.get(i)==2){
                                 Drawable img = getResources().getDrawable( R.drawable.ic_cat_premios);
@@ -253,6 +244,10 @@ public class transaccionesActivity extends AppCompatActivity {
                                 btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
                                 btnCategorias.setBackgroundResource(R.drawable.custom_button_3);
                                 categoriaSeleccionada=mCategoryItems.get(i)+1;
+                                consultarMontoTransaccionByCat();
+                                btn_billete1.setVisibility(View.VISIBLE);
+                                btn_billete2.setVisibility(View.VISIBLE);
+                                btn_billete3.setVisibility(View.VISIBLE);
                             }
                             if (mCategoryItems.get(i)==3){
                                 Drawable img = getResources().getDrawable( R.drawable.ic_cat_ventas);
@@ -261,6 +256,10 @@ public class transaccionesActivity extends AppCompatActivity {
                                 btnCategorias.setBackgroundResource(R.drawable.custom_button);
                                 btnCategorias.setBackgroundResource(R.drawable.custom_button_4);
                                 categoriaSeleccionada=mCategoryItems.get(i)+1;
+                                consultarMontoTransaccionByCat();
+                                btn_billete1.setVisibility(View.VISIBLE);
+                                btn_billete2.setVisibility(View.VISIBLE);
+                                btn_billete3.setVisibility(View.VISIBLE);
                             }
                             if (mCategoryItems.get(i)==4){
                                 Drawable img = getResources().getDrawable( R.drawable.ic_cat_inversiones);
@@ -269,8 +268,12 @@ public class transaccionesActivity extends AppCompatActivity {
                                 btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
                                 btnCategorias.setBackgroundResource(R.drawable.custom_button_5);
                                 categoriaSeleccionada=mCategoryItems.get(i)+1;
+                                consultarMontoTransaccionByCat();
+                                btn_billete1.setVisibility(View.VISIBLE);
+                                btn_billete2.setVisibility(View.VISIBLE);
+                                btn_billete3.setVisibility(View.VISIBLE);
                             }
-                            
+
                         }
                     }
                 });
@@ -391,6 +394,15 @@ public class transaccionesActivity extends AppCompatActivity {
 
         for (int i=0; i<listaTransacciones.size();i++){
             mtolistitems[i] =listaTransacciones.get(i).getMonto_operacion();
+            if (i==0){
+                btn_billete1.setText(listaTransacciones.get(i).getMonto_operacion());
+            }
+            if (i==1){
+                btn_billete2.setText(listaTransacciones.get(i).getMonto_operacion());
+            }
+            if (i==2){
+                btn_billete3.setText(listaTransacciones.get(i).getMonto_operacion());
+            }
             listaMtoCat.add(
                     listaTransacciones.get(i).getId()+" - "
                             +listaTransacciones.get(i).getMonto_operacion()

@@ -219,16 +219,15 @@
                 app:srcCompat="@drawable/ic_amount_section" />
 
 
-
             <EditText
                 android:id="@+id/EditTextMonto"
-                android:layout_width="40dp"
+                android:layout_width="260dp"
                 android:layout_height="40dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="220dp"
-                android:focusable="false"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="10dp"
+                android:focusable="true"
                 android:hint="@string/montovalue"
-                android:inputType="none"></EditText>
+                android:inputType="numberDecimal"></EditText>
         </LinearLayout>
             <View
                 android:id="@+id/Separador4"
@@ -261,14 +260,6 @@
                 android:textSize="12pt"
                 android:layout_marginBottom="10dp"></Spinner>
         </LinearLayout>
-
-            <Button
-                android:id="@+id/ButtonSendTransaction"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:onClick="registrarUsuario"
-                android:layout_gravity="center"
-                android:text="@string/transactionbutton"></Button>
             <View
                 android:id="@+id/Separador5"
                 android:layout_width="fill_parent"
@@ -280,8 +271,66 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginVertical="5dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnBillete1"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:background="@drawable/custom_money_button"
+                android:drawableRight="@drawable/ic_dollar_btn"
+                android:textAllCaps="false"
+                android:layout_marginLeft="60dp"
+                android:onClick="onClick"
+                android:text="100" />
+            <Button
+                android:id="@+id/btnBillete2"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:background="@drawable/custom_money_button"
+                android:drawableRight="@drawable/ic_dollar_btn"
+                android:textAllCaps="false"
+                android:layout_marginLeft="5dp"
+                android:onClick="onClick"
+                android:text="100" />
+            <Button
+                android:id="@+id/btnBillete3"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:background="@drawable/custom_money_button"
+                android:drawableRight="@drawable/ic_dollar_btn"
+                android:textAllCaps="false"
+                android:layout_marginLeft="5dp"
+                android:onClick="onClick"
+                android:text="100" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+
         </LinearLayout>
 
+
+            <Button
+                android:id="@+id/ButtonSendTransaction"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:onClick="registrarUsuario"
+                android:layout_gravity="center"
+                android:text="@string/transactionbutton"></Button>
+
+
+
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 </ScrollView>
 
