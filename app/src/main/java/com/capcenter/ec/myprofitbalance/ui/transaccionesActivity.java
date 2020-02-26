@@ -195,6 +195,7 @@ public class transaccionesActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         fecha= dayOfMonth+"/"+month  +"/"+year;
+
                         try {
                             txtfecha.setText(Utilidades.getCurrentDatePicker(fecha));
                         } catch (ParseException e) {
@@ -431,7 +432,7 @@ public class transaccionesActivity extends AppCompatActivity {
         try {
             conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
-            String SQL_QUERY = "SELECT DISTINCT "+ Utilidades.CAMPO_ID+", "+Utilidades.CAMPO_MONTO+" FROM  " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "=" + tipotran+ " AND "+Utilidades.CAMPO_TIPO_CAT+" = "+categoriaSeleccionada +" LIMIT 3";
+            String SQL_QUERY = "SELECT DISTINCT "+ Utilidades.CAMPO_ID+", "+Utilidades.CAMPO_MONTO+" FROM  " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "=" + tipotran+ " AND "+Utilidades.CAMPO_TIPO_CAT+" = "+categoriaSeleccionada  +" ORDER BY "+Utilidades.CAMPO_ID+ " DESC "+" LIMIT 3 ";
             Log.d("STATE",SQL_QUERY);
             Cursor cursor = db.rawQuery(SQL_QUERY, null);
 
