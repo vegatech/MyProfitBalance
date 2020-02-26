@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity  {
 
     ListView lst;
     String[] opcionnombre={"Ingresos","Egresos","Transferencias"};
-        String[] desc={"Administrar Ingresos","Administrar Egresos","Administrar Transacciones"};
+        String[] desc={"Administrar Ingresos","Administrar Egresos","Administrar Transferencias"};
         int [] imgid ={R.drawable.ingresos,R.drawable.egresos,R.drawable.transacciones};
 
     @Override

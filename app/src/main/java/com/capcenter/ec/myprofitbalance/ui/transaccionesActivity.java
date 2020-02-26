@@ -35,9 +35,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class transaccionesActivity extends AppCompatActivity {
+    private View vistaTransaccion;
     private Spinner spCategorias,SpinnerCuentas;
     private EditText txtmonto;
-    private TextView txtvmonto;
+    private TextView txtvmonto, txtvtituloTransaccion;
     private EditText txtfecha;
     private Button btn_date_hoy,btn_date_ayer, btn_date_otros;
     ArrayList<Ingreso> listaTransacciones;
@@ -55,10 +56,11 @@ public class transaccionesActivity extends AppCompatActivity {
     Integer posision;
     Integer posision2;
     Integer categoriaSeleccionada;
-    String[] catlistitems =new String[5] ;
+    //String[] catlistitems;//=new String[] ;
     String[] mtolistitems =new String[5] ;//={"Administrar Ingresos","Administrar Egresos","Administrar Transacciones"};
     boolean basic = true;
     boolean[] chequedItems;
+    Integer lencadena;
     int [] imgid ={R.drawable.ingresos,R.drawable.egresos,R.drawable.transacciones};
     ArrayList<Integer> mCategoryItems= new ArrayList<>();
     ArrayList<Integer> mDiagMtoItems= new ArrayList<>();
@@ -75,6 +77,8 @@ public class transaccionesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transacciones);
 
+        vistaTransaccion =(View) findViewById(R.id.vistaTransacciones);
+        txtvtituloTransaccion=(TextView) findViewById(R.id.TextTituloTransaccion1);
         btn_date_hoy =(Button) findViewById(R.id.btn_set_date_today);
         btn_date_ayer=(Button) findViewById(R.id.btn_set_date_yesterday);
         btn_date_otros=(Button) findViewById(R.id.btn_set_date_others);
@@ -92,11 +96,31 @@ public class transaccionesActivity extends AppCompatActivity {
         SpinnerCuentas=(Spinner) findViewById(R.id.SpinnerCuentas);
         txtmonto =(EditText) findViewById(R.id.EditTextMonto);
         txtfecha = (EditText) findViewById(R.id.EditTextFecha);
+
+        Bundle bundle = getIntent().getExtras();
+        tipotran=bundle.getInt("tipoper");
+        btn_date_hoy.setTextColor(getResources().getColor(android.R.color.white));
+        if (tipotran==1){
+            txtvtituloTransaccion.setText("Nuevo Ingreso...");
+            txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
+            vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        }
+        if (tipotran==2){
+            txtvtituloTransaccion.setText("Nuevo Egreso...");
+            txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
+            vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+        }
+        if (tipotran==3){
+            txtvtituloTransaccion.setText("Nueva Transferencia...");
+            txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
+            vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+        }
+
         String fechaOper = Utilidades.getCurrentDate();
         txtfecha.setText(fechaOper);
        // txtvmonto = (TextView) findViewById(R.id.TextViewMonto1);
-                Bundle bundle = getIntent().getExtras();
-        tipotran=bundle.getInt("tipoper");
+
+
         //numerotran=bundle.getInt("numoper");
 
         //Toast.makeText(getApplicationContext(), "Nro transacion:"+numerotran, Toast.LENGTH_SHORT).show();
@@ -119,8 +143,12 @@ public class transaccionesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 btn_date_hoy.setBackgroundResource(R.drawable.button_date_pressed);
+
                 btn_date_ayer.setBackgroundResource(R.drawable.custom_date_button);
                 btn_date_otros.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_hoy.setTextColor(getResources().getColor(android.R.color.white));
+                btn_date_ayer.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_otros.setTextColor(getResources().getColor(android.R.color.black));
 
                 String fechaOper = Utilidades.getCurrentDate();
                 txtfecha.setText(fechaOper);
@@ -131,6 +159,9 @@ public class transaccionesActivity extends AppCompatActivity {
             public void onClick(View v) {
                 btn_date_hoy.setBackgroundResource(R.drawable.custom_date_button);
                 btn_date_ayer.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_date_hoy.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_ayer.setTextColor(getResources().getColor(android.R.color.white));
+                btn_date_otros.setTextColor(getResources().getColor(android.R.color.black));
                 btn_date_otros.setBackgroundResource(R.drawable.custom_date_button);
             }
         });
@@ -140,6 +171,9 @@ public class transaccionesActivity extends AppCompatActivity {
                 btn_date_hoy.setBackgroundResource(R.drawable.custom_date_button);
                 btn_date_ayer.setBackgroundResource(R.drawable.custom_date_button);
                 btn_date_otros.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_date_hoy.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_ayer.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_otros.setTextColor(getResources().getColor(android.R.color.white));
             }
         });
         //DialogoSeleccion de Monto consultado de la BD
@@ -176,8 +210,12 @@ public class transaccionesActivity extends AppCompatActivity {
 
 
         // Dialogo Seleccion de Categoria
-        chequedItems = new boolean[catlistitems.length];
+        //chequedItems = new boolean[catlistitems.length];
+
             btnCategorias.setOnClickListener(new View.OnClickListener() {
+               // String[] catlistitems =new String[listaCategorias.size()] ;
+                String [] catlistitems = listaCat.toArray(new String[listaCat.size()]);
+
             @Override
             public void onClick(View v) {
 
@@ -192,7 +230,8 @@ public class transaccionesActivity extends AppCompatActivity {
                         Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
                         Integer selected = (Integer)lw.getTag();
 
-                        for (int i = 0; i < chequedItems.length; i++) {
+                       // for (int i = 0; i < chequedItems.length; i++) {
+                        for (int i = 0; i < lencadena;i++){
                             //chequedItems [i] = false;
                             mCategoryItems.clear();
                             btnCategorias.setText("");
@@ -440,16 +479,21 @@ public class transaccionesActivity extends AppCompatActivity {
 
         private void obtenerListaCat(){
         listaCat= new ArrayList<String>();
-        listaCat.add("Seleccione...");
+       // listaCat.add("Seleccione...");
+        //String[] catlistitems =new String[listaCategorias.size()] ;
 
+         lencadena=   listaCategorias.size();
         for (int i=0; i<listaCategorias.size();i++){
-            catlistitems[i] =listaCategorias.get(i).getDescripcat().toString();
+           //catlistitems[i] =listaCategorias.get(i).getDescripcat().toString();
             listaCat.add(
                     listaCategorias.get(i).getId()+" - "
                     +listaCategorias.get(i).getDescripcat()
                    // +listaCategorias.get(i).getTipoCat()
             );
         }
+           // String [] stringArray = listaCat.toArray(new String[listaCat.size()]);
+           // catlistitems =stringArray;
+            lencadena=  listaCategorias.size();
     }
 
     private void consultarCuentas(){
