@@ -96,6 +96,7 @@ public class transaccionesActivity extends AppCompatActivity {
         SpinnerCuentas=(Spinner) findViewById(R.id.SpinnerCuentas);
         txtmonto =(EditText) findViewById(R.id.EditTextMonto);
         txtfecha = (EditText) findViewById(R.id.EditTextFecha);
+        btnCategorias.requestFocus();
 
         Bundle bundle = getIntent().getExtras();
         tipotran=bundle.getInt("tipoper");
@@ -486,8 +487,8 @@ public class transaccionesActivity extends AppCompatActivity {
         for (int i=0; i<listaCategorias.size();i++){
            //catlistitems[i] =listaCategorias.get(i).getDescripcat().toString();
             listaCat.add(
-                    listaCategorias.get(i).getId()+" - "
-                    +listaCategorias.get(i).getDescripcat()
+                    //listaCategorias.get(i).getId()+" - "
+                    listaCategorias.get(i).getDescripcat()
                    // +listaCategorias.get(i).getTipoCat()
             );
         }
@@ -527,8 +528,8 @@ public class transaccionesActivity extends AppCompatActivity {
 
         for (int i=0; i<listaCuentas.size();i++){
             listainfoCuentas.add(
-                    listaCuentas.get(i).getId()+" - "
-                            +listaCuentas.get(i).getDESCRIPCION()
+                  //  listaCuentas.get(i).getId()+" - "
+                            listaCuentas.get(i).getDESCRIPCION()
                     // +listaCategorias.get(i).getTipoCat()
             );
         }
