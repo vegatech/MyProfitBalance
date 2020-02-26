@@ -1,5 +1,6 @@
 package com.capcenter.ec.myprofitbalance.ui;
 
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -31,6 +33,7 @@ import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,13 +72,15 @@ public class transaccionesActivity extends AppCompatActivity {
     Button btn_billete1;
     Button btn_billete2;
     Button btn_billete3;
-
-
+    int y,d,m;
+    String fecha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transacciones);
+
+        final String DBO;
 
         vistaTransaccion =(View) findViewById(R.id.vistaTransacciones);
         txtvtituloTransaccion=(TextView) findViewById(R.id.TextTituloTransaccion1);
@@ -96,7 +101,8 @@ public class transaccionesActivity extends AppCompatActivity {
         SpinnerCuentas=(Spinner) findViewById(R.id.SpinnerCuentas);
         txtmonto =(EditText) findViewById(R.id.EditTextMonto);
         txtfecha = (EditText) findViewById(R.id.EditTextFecha);
-        btnCategorias.requestFocus();
+
+
 
         Bundle bundle = getIntent().getExtras();
         tipotran=bundle.getInt("tipoper");
@@ -175,6 +181,21 @@ public class transaccionesActivity extends AppCompatActivity {
                 btn_date_hoy.setTextColor(getResources().getColor(android.R.color.black));
                 btn_date_ayer.setTextColor(getResources().getColor(android.R.color.black));
                 btn_date_otros.setTextColor(getResources().getColor(android.R.color.white));
+
+                final Calendar calendar = Calendar.getInstance();
+                y = calendar.get(Calendar.YEAR);
+                d = calendar.get(Calendar.DAY_OF_MONTH);
+                m = calendar.get(Calendar.MONTH);
+
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(transaccionesActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        fecha= dayOfMonth+"/"+month  +"/"+year;
+                        txtfecha.setText(fecha);
+                    }
+                },y,m,d);
+                    datePickerDialog.show();
             }
         });
         //DialogoSeleccion de Monto consultado de la BD

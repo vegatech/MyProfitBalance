@@ -16,7 +16,7 @@ public class Utilidades {
         return dateFormat.format(today);
     }
 
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     Date date = new Date();
     //System.out.println(formatter.format(date));
     public Date sumarRestarDiasFecha(Date fecha, int dias){
@@ -28,7 +28,7 @@ public class Utilidades {
 
     }
     public static final String NOMBRE_BD="myprofitbd.db";
-    public static final int VERSION_DB=8;
+    public static final int VERSION_DB=9;
 
     //tablas
     public static final String TABLA_OPERACIONES= "TRANSACCIONES";

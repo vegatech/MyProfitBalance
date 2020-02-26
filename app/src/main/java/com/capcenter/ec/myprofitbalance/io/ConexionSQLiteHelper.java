@@ -39,6 +39,8 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(Utilidades.INSERT_CAT14);
         db.execSQL(Utilidades.INSERT_CAT15);
         db.execSQL(Utilidades.INSERT_CAT16);
+        db.execSQL(Utilidades.INSERT_CAT20);
+        db.execSQL(Utilidades.INSERT_CAT21);
     }
 
     @Override
