@@ -32,6 +32,7 @@ import com.capcenter.ec.myprofitbalance.model.Ingreso;
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -170,6 +171,8 @@ public class transaccionesActivity extends AppCompatActivity {
                 btn_date_ayer.setTextColor(getResources().getColor(android.R.color.white));
                 btn_date_otros.setTextColor(getResources().getColor(android.R.color.black));
                 btn_date_otros.setBackgroundResource(R.drawable.custom_date_button);
+                String fechaOper =Utilidades.getYesterday().toString();
+                txtfecha.setText(fechaOper);
             }
         });
         btn_date_otros.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +195,11 @@ public class transaccionesActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         fecha= dayOfMonth+"/"+month  +"/"+year;
-                        txtfecha.setText(fecha);
+                        try {
+                            txtfecha.setText(Utilidades.getCurrentDatePicker(fecha));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },y,m,d);
                     datePickerDialog.show();

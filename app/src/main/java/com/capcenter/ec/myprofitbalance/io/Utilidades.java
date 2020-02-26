@@ -1,6 +1,7 @@
 package com.capcenter.ec.myprofitbalance.io;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,17 +16,25 @@ public class Utilidades {
         Date today = Calendar.getInstance().getTime();
         return dateFormat.format(today);
     }
+    public static String getCurrentDatePicker(String fecha) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_1);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC-5"));
+        Date today = new SimpleDateFormat("dd/MM/yyyy").parse(fecha);//Calendar.getInstance().getTime();
+        return dateFormat.format(today);
+    }
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     Date date = new Date();
     //System.out.println(formatter.format(date));
-    public Date sumarRestarDiasFecha(Date fecha, int dias){
-
+    public static String getYesterday(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_1);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC-5"));
+        Date today = Calendar.getInstance().getTime();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fecha); // Configuramos la fecha que se recibe
-        calendar.add(Calendar.DAY_OF_YEAR, dias);  // numero de días a añadir, o restar en caso de días<0
-        return calendar.getTime(); // Devuelve el objeto Date con los nuevos días añadidos
-
+        calendar.setTime(today); // Configuramos la fecha que se recibe
+        calendar.add(Calendar.DAY_OF_YEAR, -1);  // numero de días a añadir, o restar en caso de días<0
+        //return calendar.getTime(); // Devuelve el objeto Date con los nuevos días añadidos
+        return dateFormat.format(calendar.getTime());
     }
     public static final String NOMBRE_BD="myprofitbd.db";
     public static final int VERSION_DB=9;
