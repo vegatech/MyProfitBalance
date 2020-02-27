@@ -251,7 +251,6 @@ public class transaccionesActivity extends AppCompatActivity {
 
                 AlertDialog.Builder mBuilder =new AlertDialog.Builder(transaccionesActivity.this);
                 mBuilder.setTitle("Categorias disponibles");
-                //mBuilder.setMultiChoiceItems(catlistitems, chequedItems, new DialogInterface.OnMultiChoiceClickListener() {
                 mBuilder.setSingleChoiceItems(catlistitems, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int Position) {
@@ -319,8 +318,10 @@ public class transaccionesActivity extends AppCompatActivity {
                                 btn_billete3.setVisibility(View.VISIBLE);
                             }
                             if (mCategoryItems.get(i)==3){
-                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_ventas);
-                                btnCategorias.setCompoundDrawables(img,null,null,null);
+                                //Drawable img = getResources().getDrawable( R.drawable.ic_cat_ventas);
+                                int img2 =getResources().getIdentifier("ic_cat_ventas","Drawable",getPackageName());
+                                Drawable img = getResources().getDrawable( img2);
+                                        btnCategorias.setCompoundDrawables(img,null,null,null);
                                 btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
                                 btnCategorias.setBackgroundResource(R.drawable.custom_button);
                                 btnCategorias.setBackgroundResource(R.drawable.custom_button_4);
