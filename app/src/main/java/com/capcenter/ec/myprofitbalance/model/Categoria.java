@@ -5,6 +5,8 @@ public class Categoria {
     private int id;
     private String descripcat;
     private int tipoCat;
+    private String Drawable;
+    private String Color;
 
 
 
@@ -30,5 +32,21 @@ public class Categoria {
 
     public void setTipoCat(int tipoCat) {
         this.tipoCat = tipoCat;
+    }
+
+    public String getDrawable() {
+        return Drawable;
+    }
+
+    public void setDrawable(String drawable) {
+        Drawable = drawable;
+    }
+
+    public String getColor() {
+        return Color;
+    }
+
+    public void setColor(String color) {
+        Color = color;
     }
 }

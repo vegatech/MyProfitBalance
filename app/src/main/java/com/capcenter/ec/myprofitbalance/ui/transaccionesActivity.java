@@ -2,6 +2,7 @@ package com.capcenter.ec.myprofitbalance.ui;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,17 +10,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -49,6 +55,7 @@ public class transaccionesActivity extends AppCompatActivity {
     ArrayList<String> listainformacionTransacciones;
     ArrayList<Categoria> listaCategorias;
     ArrayList<String> listaCat;
+    ArrayList<String> listaCatDraw;
     ArrayList<String> listaMtoCat;
     ArrayList<String> lstInformacionCategoria;
     ArrayList<Cuenta> listaCuentas;
@@ -75,6 +82,10 @@ public class transaccionesActivity extends AppCompatActivity {
     Button btn_billete3;
     int y,d,m;
     String fecha;
+    ListView lstcategoriasTransacciones;
+    String[] opcionnombre={"Ingresos","Egresos","Transferencias"};
+    String[] desc={"Administrar Ingresos","Administrar Egresos","Administrar Transferencias"};
+    int [] imgid1 ={R.drawable.ingresos,R.drawable.egresos,R.drawable.transacciones,R.drawable.egresos,R.drawable.transacciones};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +137,7 @@ public class transaccionesActivity extends AppCompatActivity {
 
         String fechaOper = Utilidades.getCurrentDate();
         txtfecha.setText(fechaOper);
-       // txtvmonto = (TextView) findViewById(R.id.TextViewMonto1);
+        // txtvmonto = (TextView) findViewById(R.id.TextViewMonto1);
 
 
         //numerotran=bundle.getInt("numoper");
@@ -136,13 +147,19 @@ public class transaccionesActivity extends AppCompatActivity {
         //consultarTransaccionById();
         consultarCategorias();
         ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (this,android.R.layout.simple_spinner_item,listaCat);
-        spCategorias.setAdapter(adapador);
+//        spCategorias.setAdapter(adapador);
         //spCategorias.setSelection(posision);
         spCategorias.setSelection(1);
 
         consultarCuentas();
         ArrayAdapter<CharSequence> adapador2=  new ArrayAdapter (this,android.R.layout.simple_spinner_item,listainfoCuentas);
         SpinnerCuentas.setAdapter(adapador2);
+
+        lstcategoriasTransacciones= (ListView) findViewById(R.id.listview_category);
+
+
+
+
         //SpinnerCuentas.setSelection(posision2);
         SpinnerCuentas.setSelection(1);
         consultarMontoTransaccionByCat();
@@ -203,7 +220,7 @@ public class transaccionesActivity extends AppCompatActivity {
                         }
                     }
                 },y,m,d);
-                    datePickerDialog.show();
+                datePickerDialog.show();
             }
         });
         //DialogoSeleccion de Monto consultado de la BD
@@ -240,9 +257,57 @@ public class transaccionesActivity extends AppCompatActivity {
 
 
         // Dialogo Seleccion de Categoria
+        final String [] catlistitems = listaCat.toArray(new String[listaCat.size()]);
+        //int img2 =getResources().getIdentifier("ic_cat_ventas","Drawable",getPackageName());
+        //Drawable img = getResources().getDrawable( img2);
+
+        final int [] imgid2 = new int[listaCat.size()];
+        int img3;
+        Drawable imgDraw;
+        String imagen;
+        for (int i = 0; i < listaCatDraw.size();i++){
+            imagen ="com.capcenter.ec.myprofitbalance:drawable/"+listaCatDraw.get(i).toString();
+            Log.d("imagen: ",imagen);
+            img3 =getResources().getIdentifier(imagen,"Drawable",getPackageName());
+            //imgDraw = getResources().getDrawable( img3);
+            imgid2[i]=img3;
+        }
+        btnCategorias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder mBuilder= new AlertDialog.Builder(transaccionesActivity.this);
+                mBuilder.setIcon(R.drawable.ic_category_section);
+                mBuilder.setTitle("Selecciona una categoria");
+                final VivzAdapter1 adapter1 = new VivzAdapter1(transaccionesActivity.this,catlistitems, imgid2);
+                //lstcategoriasTransacciones.setAdapter(adapter1);
+                // View mView=  getLayoutInflater().inflate(R.layout.custom_category_dialog,null);
+                mBuilder.setAdapter(adapter1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String strName = adapter1.getItem(which);
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(transaccionesActivity.this);
+                        builderInner.setMessage(strName);
+                        builderInner.setTitle("Usted Selecciono");
+                        builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builderInner.show();
+                    }
+                });
+
+                // mBuilder.setView(mView);
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+            }
+        });
+
+        /*
         //chequedItems = new boolean[catlistitems.length];
 
-            btnCategorias.setOnClickListener(new View.OnClickListener() {
+          btnCategorias.setOnClickListener(new View.OnClickListener() {
                // String[] catlistitems =new String[listaCategorias.size()] ;
                 String [] catlistitems = listaCat.toArray(new String[listaCat.size()]);
 
@@ -350,45 +415,47 @@ public class transaccionesActivity extends AppCompatActivity {
                 AlertDialog mDialog =mBuilder.create();
                 mDialog.show();
             }
-        });
-    }
+        });*/
 
-        public void registrarUsuario(View view){
+
+    }// On Create
+
+    public void registrarUsuario(View view){
         String resultado=null;
-            if  (btnCategorias.getText() != null ){
-                resultado ="ok";
-            }else{
-                resultado =null;
-                Toast.makeText(getApplicationContext(),"El campo Categoria debe ser indicado",Toast.LENGTH_LONG).show();
-            }
-            if (TextUtils.isEmpty(txtmonto.getText().toString())){
-                resultado =null;
-                Toast.makeText(getApplicationContext(),"El campo Monto debe ser indicado",Toast.LENGTH_LONG).show();
-            }else{
-                resultado ="ok";
-            }
-            if (resultado =="ok") {
-                conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
-                SQLiteDatabase db = conn.getWritableDatabase();
-                ContentValues values = new ContentValues();
-
-                values.put(Utilidades.CAMPO_TIPO_OPER, tipotran);//SpinnerCuentas.getSelectedItem().toString());
-                values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
-                values.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
-                values.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentas.getSelectedItemPosition());
-                values.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
-                //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
-                Long idResultante = db.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values);
-
-                Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
-                db.close();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-
+        if  (btnCategorias.getText() != null ){
+            resultado ="ok";
+        }else{
+            resultado =null;
+            Toast.makeText(getApplicationContext(),"El campo Categoria debe ser indicado",Toast.LENGTH_LONG).show();
         }
-        // Trae los datos paralaedicion de un registro seleccionado en la lista detransacciones
-        private void consultarTransaccionById(){
+        if (TextUtils.isEmpty(txtmonto.getText().toString())){
+            resultado =null;
+            Toast.makeText(getApplicationContext(),"El campo Monto debe ser indicado",Toast.LENGTH_LONG).show();
+        }else{
+            resultado ="ok";
+        }
+        if (resultado =="ok") {
+            conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
+            SQLiteDatabase db = conn.getWritableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(Utilidades.CAMPO_TIPO_OPER, tipotran);//SpinnerCuentas.getSelectedItem().toString());
+            values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
+            values.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
+            values.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentas.getSelectedItemPosition());
+            values.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
+            //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
+            Long idResultante = db.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values);
+
+            Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
+            db.close();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
+
+    }
+    // Trae los datos paralaedicion de un registro seleccionado en la lista detransacciones
+    private void consultarTransaccionById(){
         try {
             conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
@@ -423,9 +490,9 @@ public class transaccionesActivity extends AppCompatActivity {
 
         for (int i=0; i<listaTransacciones.size();i++){
 
-           // txtmonto.setText( listaTransacciones.get(i).getMonto_operacion()) ;
-                         //   +listaCategorias.get(i).getDescripcat()
-                    // +listaCategorias.get(i).getTipoCat()
+            // txtmonto.setText( listaTransacciones.get(i).getMonto_operacion()) ;
+            //   +listaCategorias.get(i).getDescripcat()
+            // +listaCategorias.get(i).getTipoCat()
 
         }
     }
@@ -443,13 +510,13 @@ public class transaccionesActivity extends AppCompatActivity {
             while (cursor.moveToNext()) {
                 transaccion = new Ingreso();
                 transaccion.setId(cursor.getInt(0));
-               // transaccion.setFecha(cursor.getString(1));
+                // transaccion.setFecha(cursor.getString(1));
                 transaccion.setMonto_operacion(cursor.getString(1));
                 //txtfecha.setText(cursor.getString(1));
                 //txtmonto.setText(cursor.getString(1));
                 //map.put(cursor.getPosition(),cursor.getInt(0));
-               // posision=cursor.getInt(3);
-               // posision2=cursor.getInt(4);
+                // posision=cursor.getInt(3);
+                // posision2=cursor.getInt(4);
                 listaTransacciones.add(transaccion);
 
             }
@@ -494,8 +561,10 @@ public class transaccionesActivity extends AppCompatActivity {
             while (cursorc.moveToNext()) {
                 regCategoria = new Categoria();
                 regCategoria.setId(cursorc.getInt(0));
-               // transaccion.setFecha(cursor.getString(1));
                 regCategoria.setDescripcat(cursorc.getString(1));
+                //regCategoria.setTipoCat(cursorc.getShort(2));
+                regCategoria.setDrawable(cursorc.getString(3));
+                regCategoria.setColor(cursorc.getString(4));
                 listaCategorias.add(regCategoria);
 
 
@@ -508,23 +577,25 @@ public class transaccionesActivity extends AppCompatActivity {
     }
 
 
-        private void obtenerListaCat(){
+    private void obtenerListaCat(){
         listaCat= new ArrayList<String>();
-       // listaCat.add("Seleccione...");
+        listaCatDraw = new ArrayList<String>();
+        // listaCat.add("Seleccione...");
         //String[] catlistitems =new String[listaCategorias.size()] ;
 
-         lencadena=   listaCategorias.size();
+        lencadena=   listaCategorias.size();
         for (int i=0; i<listaCategorias.size();i++){
-           //catlistitems[i] =listaCategorias.get(i).getDescripcat().toString();
+            //catlistitems[i] =listaCategorias.get(i).getDescripcat().toString();
             listaCat.add(
-                    //listaCategorias.get(i).getId()+" - "
+
                     listaCategorias.get(i).getDescripcat()
-                   // +listaCategorias.get(i).getTipoCat()
+                    // +listaCategorias.get(i).getTipoCat()
             );
+            listaCatDraw.add(listaCategorias.get(i).getDrawable());
         }
-           // String [] stringArray = listaCat.toArray(new String[listaCat.size()]);
-           // catlistitems =stringArray;
-            lencadena=  listaCategorias.size();
+        // String [] stringArray = listaCat.toArray(new String[listaCat.size()]);
+        // catlistitems =stringArray;
+        lencadena=  listaCategorias.size();
     }
 
     private void consultarCuentas(){
@@ -558,11 +629,44 @@ public class transaccionesActivity extends AppCompatActivity {
 
         for (int i=0; i<listaCuentas.size();i++){
             listainfoCuentas.add(
-                  //  listaCuentas.get(i).getId()+" - "
-                            listaCuentas.get(i).getDESCRIPCION()
+                    //  listaCuentas.get(i).getId()+" - "
+                    listaCuentas.get(i).getDESCRIPCION()
                     // +listaCategorias.get(i).getTipoCat()
             );
         }
     }
 
+
+
+}// Fin clase transacciones
+
+
+class VivzAdapter1 extends ArrayAdapter<String> {
+    Context context;
+    int[] images;
+    String[] tituloArray;
+
+    VivzAdapter1(Context c, String[] titulos, int imagenes[]) {
+        super(c, R.layout.single_row1, titulos);
+        this.context = c;
+        this.images = imagenes;
+        this.tituloArray = titulos;
+    }
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View row = inflater.inflate(R.layout.single_row1, parent, false);
+        ImageView myImage = (ImageView) row.findViewById(R.id.imageView1);
+        TextView myTitle = (TextView) row.findViewById(R.id.textView1);
+
+        //myImage.setImageDrawable(images[position]);
+        myImage.setImageResource(images[position]);
+        myTitle.setText(tituloArray[position]);
+
+        //return super.getView(position, convertView, parent);
+        return row;
+    }
 }
+
