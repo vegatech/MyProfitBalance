@@ -92,7 +92,7 @@ public class listaIngresos extends AppCompatActivity {
                 ingreso = new Ingreso();
                 ingreso.setId(cursor.getInt(0));
                 ingreso.setFecha(cursor.getString(1));
-                ingreso.setMonto_operacion(cursor.getString(5));
+                ingreso.setMonto_operacion(cursor.getDouble(5));
                 listaingresos.add(ingreso);
                 mapLista.put(cursor.getPosition(),cursor.getInt(0));
 

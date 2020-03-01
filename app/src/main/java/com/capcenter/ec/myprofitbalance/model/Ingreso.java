@@ -6,7 +6,7 @@ public class Ingreso {
     private String fecha;
     private String tipo_operacion;
     private String tipo_cat;
-    private String monto_operacion;
+    private Double monto_operacion;
 
     public String getTipo_cat() {
         return tipo_cat;
@@ -42,11 +42,11 @@ public class Ingreso {
         this.tipo_operacion = tipo_operacion;
     }
 
-    public String getMonto_operacion() {
+    public Double getMonto_operacion() {
         return monto_operacion;
     }
 
-    public void setMonto_operacion(String monto_operacion) {
+    public void setMonto_operacion(Double monto_operacion) {
         this.monto_operacion = monto_operacion;
     }
 

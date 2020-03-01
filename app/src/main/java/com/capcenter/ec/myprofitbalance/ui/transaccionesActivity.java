@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -56,6 +57,7 @@ public class transaccionesActivity extends AppCompatActivity {
     ArrayList<Categoria> listaCategorias;
     ArrayList<String> listaCat;
     ArrayList<String> listaCatDraw;
+    ArrayList<String> listaCatColor;
     ArrayList<String> listaMtoCat;
     ArrayList<String> lstInformacionCategoria;
     ArrayList<Cuenta> listaCuentas;
@@ -285,7 +287,8 @@ public class transaccionesActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String strName = adapter1.getItem(which);
-                        AlertDialog.Builder builderInner = new AlertDialog.Builder(transaccionesActivity.this);
+
+                       /* AlertDialog.Builder builderInner = new AlertDialog.Builder(transaccionesActivity.this);
                         builderInner.setMessage(strName);
                         builderInner.setTitle("Usted Selecciono");
                         builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -294,128 +297,38 @@ public class transaccionesActivity extends AppCompatActivity {
                                 dialog.dismiss();
                             }
                         });
-                        builderInner.show();
+                        builderInner.show();*/
+                        //mCategoryItems.add(which);
+
+                        for (int i = 0; i < listaCatDraw.size();i++) {
+                            if (which == i) {
+                                btnCategorias.setText(strName);
+                                String imagenSel ="com.capcenter.ec.myprofitbalance:drawable/"+listaCatDraw.get(i).toString();
+                                int img3 =getResources().getIdentifier(imagenSel,"Drawable",getPackageName());
+                                Drawable img = getResources().getDrawable(img3);
+                                btnCategorias.setCompoundDrawables(img, null, null, null);
+                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+                                String colorSel ="com.capcenter.ec.myprofitbalance:drawable/"+listaCatColor.get(i);
+                                int imgColor =getResources().getIdentifier(colorSel,"Drawable",getPackageName());
+                                //Drawable drawColor = getResources().getDrawable(imgColor);
+                                btnCategorias.setBackgroundResource(imgColor);
+                                categoriaSeleccionada=which+1;
+                                consultarMontoTransaccionByCat();
+                                btn_billete1.setVisibility(View.VISIBLE);
+                                btn_billete2.setVisibility(View.VISIBLE);
+                                btn_billete3.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
                 });
 
-                // mBuilder.setView(mView);
                 AlertDialog dialog = mBuilder.create();
+                // dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
             }
         });
 
-        /*
-        //chequedItems = new boolean[catlistitems.length];
 
-          btnCategorias.setOnClickListener(new View.OnClickListener() {
-               // String[] catlistitems =new String[listaCategorias.size()] ;
-                String [] catlistitems = listaCat.toArray(new String[listaCat.size()]);
-
-            @Override
-            public void onClick(View v) {
-
-                AlertDialog.Builder mBuilder =new AlertDialog.Builder(transaccionesActivity.this);
-                mBuilder.setTitle("Categorias disponibles");
-                mBuilder.setSingleChoiceItems(catlistitems, -1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int Position) {
-
-                        ListView lw = ((AlertDialog)dialog).getListView();
-                        Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-                        Integer selected = (Integer)lw.getTag();
-
-                       // for (int i = 0; i < chequedItems.length; i++) {
-                        for (int i = 0; i < lencadena;i++){
-                            //chequedItems [i] = false;
-                            mCategoryItems.clear();
-                            btnCategorias.setText("");
-
-
-                            mCategoryItems.add(Position);
-                        }
-
-                    }
-
-                    });
-                mBuilder.setCancelable(false);
-                mBuilder.setPositiveButton("Seleccionar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int wich) {
-                        String item="";
-                        mapDrawable.put(1,"R.drawable.ic_cat_slueldo");
-                        mapDrawable.put(2,"R.drawable.ic_cat_regalos");
-                        mapDrawable.put(3,"R.drawable.ic_cat_premios");
-                        mapDrawable.put(4,"R.drawable.ic_cat_ventas");
-                        mapDrawable.put(5,"R.drawable.ic_cat_inversiones");
-                        for(int i = 0 ;i < mCategoryItems.size();i++ ){
-                            btnCategorias.setText(catlistitems[ mCategoryItems.get(i)]);
-                            if (mCategoryItems.get(i)==0){
-                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_sueldo);
-                                btnCategorias.setCompoundDrawables(img,null,null,null);
-                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
-                                btnCategorias.setBackgroundResource(R.drawable.custom_button_1);
-                                categoriaSeleccionada=mCategoryItems.get(i)+1;
-                                consultarMontoTransaccionByCat();
-                                btn_billete1.setVisibility(View.VISIBLE);
-                                btn_billete2.setVisibility(View.VISIBLE);
-                                btn_billete3.setVisibility(View.VISIBLE);
-                            }
-                            if (mCategoryItems.get(i)==1){
-                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_regalos);
-                                btnCategorias.setCompoundDrawables(img,null,null,null);
-                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
-                                btnCategorias.setBackgroundResource(R.drawable.custom_button_2);
-                                categoriaSeleccionada=mCategoryItems.get(i)+1;
-                                consultarMontoTransaccionByCat();
-                                btn_billete1.setVisibility(View.VISIBLE);
-                                btn_billete2.setVisibility(View.VISIBLE);
-                                btn_billete3.setVisibility(View.VISIBLE);
-                            }
-                            if (mCategoryItems.get(i)==2){
-                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_premios);
-                                btnCategorias.setCompoundDrawables(img,null,null,null);
-                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
-                                btnCategorias.setBackgroundResource(R.drawable.custom_button_3);
-                                categoriaSeleccionada=mCategoryItems.get(i)+1;
-                                consultarMontoTransaccionByCat();
-                                btn_billete1.setVisibility(View.VISIBLE);
-                                btn_billete2.setVisibility(View.VISIBLE);
-                                btn_billete3.setVisibility(View.VISIBLE);
-                            }
-                            if (mCategoryItems.get(i)==3){
-                                //Drawable img = getResources().getDrawable( R.drawable.ic_cat_ventas);
-                                int img2 =getResources().getIdentifier("ic_cat_ventas","Drawable",getPackageName());
-                                Drawable img = getResources().getDrawable( img2);
-                                        btnCategorias.setCompoundDrawables(img,null,null,null);
-                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
-                                btnCategorias.setBackgroundResource(R.drawable.custom_button);
-                                btnCategorias.setBackgroundResource(R.drawable.custom_button_4);
-                                categoriaSeleccionada=mCategoryItems.get(i)+1;
-                                consultarMontoTransaccionByCat();
-                                btn_billete1.setVisibility(View.VISIBLE);
-                                btn_billete2.setVisibility(View.VISIBLE);
-                                btn_billete3.setVisibility(View.VISIBLE);
-                            }
-                            if (mCategoryItems.get(i)==4){
-                                Drawable img = getResources().getDrawable( R.drawable.ic_cat_inversiones);
-
-                                btnCategorias.setCompoundDrawables(img,null,null,null);
-                                btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img,null,null,null);
-                                btnCategorias.setBackgroundResource(R.drawable.custom_button_5);
-                                categoriaSeleccionada=mCategoryItems.get(i)+1;
-                                consultarMontoTransaccionByCat();
-                                btn_billete1.setVisibility(View.VISIBLE);
-                                btn_billete2.setVisibility(View.VISIBLE);
-                                btn_billete3.setVisibility(View.VISIBLE);
-                            }
-
-                        }
-                    }
-                });
-                AlertDialog mDialog =mBuilder.create();
-                mDialog.show();
-            }
-        });*/
 
 
     }// On Create
@@ -470,7 +383,7 @@ public class transaccionesActivity extends AppCompatActivity {
                 transaccion = new Ingreso();
                 transaccion.setId(cursor.getInt(0));
                 transaccion.setFecha(cursor.getString(1));
-                transaccion.setMonto_operacion(cursor.getString(4));
+                transaccion.setMonto_operacion(cursor.getDouble(4));
                 txtfecha.setText(cursor.getString(1));
                 txtmonto.setText(cursor.getString(5));
                 map.put(cursor.getPosition(),cursor.getInt(0));
@@ -511,7 +424,7 @@ public class transaccionesActivity extends AppCompatActivity {
                 transaccion = new Ingreso();
                 transaccion.setId(cursor.getInt(0));
                 // transaccion.setFecha(cursor.getString(1));
-                transaccion.setMonto_operacion(cursor.getString(1));
+                transaccion.setMonto_operacion(cursor.getDouble(1));
                 //txtfecha.setText(cursor.getString(1));
                 //txtmonto.setText(cursor.getString(1));
                 //map.put(cursor.getPosition(),cursor.getInt(0));
@@ -530,15 +443,15 @@ public class transaccionesActivity extends AppCompatActivity {
         listaMtoCat= new ArrayList<String>();
 
         for (int i=0; i<listaTransacciones.size();i++){
-            mtolistitems[i] =listaTransacciones.get(i).getMonto_operacion();
+            mtolistitems[i] =listaTransacciones.get(i).getMonto_operacion().toString();
             if (i==0){
-                btn_billete1.setText(listaTransacciones.get(i).getMonto_operacion());
+                btn_billete1.setText(listaTransacciones.get(i).getMonto_operacion().toString());
             }
             if (i==1){
-                btn_billete2.setText(listaTransacciones.get(i).getMonto_operacion());
+                btn_billete2.setText(listaTransacciones.get(i).getMonto_operacion().toString());
             }
             if (i==2){
-                btn_billete3.setText(listaTransacciones.get(i).getMonto_operacion());
+                btn_billete3.setText(listaTransacciones.get(i).getMonto_operacion().toString());
             }
             listaMtoCat.add(
                     listaTransacciones.get(i).getId()+" - "
@@ -562,7 +475,7 @@ public class transaccionesActivity extends AppCompatActivity {
                 regCategoria = new Categoria();
                 regCategoria.setId(cursorc.getInt(0));
                 regCategoria.setDescripcat(cursorc.getString(1));
-                //regCategoria.setTipoCat(cursorc.getShort(2));
+               //regCategoria.setTipoCat(cursorc.getString(2));
                 regCategoria.setDrawable(cursorc.getString(3));
                 regCategoria.setColor(cursorc.getString(4));
                 listaCategorias.add(regCategoria);
@@ -580,6 +493,7 @@ public class transaccionesActivity extends AppCompatActivity {
     private void obtenerListaCat(){
         listaCat= new ArrayList<String>();
         listaCatDraw = new ArrayList<String>();
+        listaCatColor = new ArrayList<String>();
         // listaCat.add("Seleccione...");
         //String[] catlistitems =new String[listaCategorias.size()] ;
 
@@ -592,6 +506,7 @@ public class transaccionesActivity extends AppCompatActivity {
                     // +listaCategorias.get(i).getTipoCat()
             );
             listaCatDraw.add(listaCategorias.get(i).getDrawable());
+            listaCatColor.add(listaCategorias.get(i).getColor());
         }
         // String [] stringArray = listaCat.toArray(new String[listaCat.size()]);
         // catlistitems =stringArray;
