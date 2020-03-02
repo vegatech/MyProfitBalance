@@ -38,6 +38,7 @@ public class Utilidades {
     }
     public static final String NOMBRE_BD="myprofitbd.db";
     public static final int VERSION_DB=13;
+    public static final String RUTA_APP="com.capcenter.ec.myprofitbalance:drawable/";
 
     //tablas
     public static final String TABLA_OPERACIONES= "TRANSACCIONES";

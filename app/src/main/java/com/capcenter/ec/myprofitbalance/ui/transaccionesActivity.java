@@ -268,7 +268,7 @@ public class transaccionesActivity extends AppCompatActivity {
         Drawable imgDraw;
         String imagen;
         for (int i = 0; i < listaCatDraw.size();i++){
-            imagen ="com.capcenter.ec.myprofitbalance:drawable/"+listaCatDraw.get(i).toString();
+            imagen =Utilidades.RUTA_APP+listaCatDraw.get(i).toString();
             Log.d("imagen: ",imagen);
             img3 =getResources().getIdentifier(imagen,"Drawable",getPackageName());
             //imgDraw = getResources().getDrawable( img3);
@@ -303,12 +303,12 @@ public class transaccionesActivity extends AppCompatActivity {
                         for (int i = 0; i < listaCatDraw.size();i++) {
                             if (which == i) {
                                 btnCategorias.setText(strName);
-                                String imagenSel ="com.capcenter.ec.myprofitbalance:drawable/"+listaCatDraw.get(i).toString();
+                                String imagenSel =Utilidades.RUTA_APP+listaCatDraw.get(i).toString();
                                 int img3 =getResources().getIdentifier(imagenSel,"Drawable",getPackageName());
                                 Drawable img = getResources().getDrawable(img3);
                                 btnCategorias.setCompoundDrawables(img, null, null, null);
                                 btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
-                                String colorSel ="com.capcenter.ec.myprofitbalance:drawable/"+listaCatColor.get(i);
+                                String colorSel =Utilidades.RUTA_APP+listaCatColor.get(i);
                                 int imgColor =getResources().getIdentifier(colorSel,"Drawable",getPackageName());
                                 //Drawable drawColor = getResources().getDrawable(imgColor);
                                 btnCategorias.setBackgroundResource(imgColor);
