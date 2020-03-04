@@ -19,4 +19,5 @@
     <string name="lbl_transferencias">Transferencias</string>
     <string name="lbl_reportes">Reportes</string>
     <string name="TituloTransaccion">Nuevo Ingreso</string>
+    <string name="Descripcion">Descripción</string>
 </resources>

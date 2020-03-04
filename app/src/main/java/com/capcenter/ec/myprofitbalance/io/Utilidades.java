@@ -37,7 +37,7 @@ public class Utilidades {
         return dateFormat.format(calendar.getTime());
     }
     public static final String NOMBRE_BD="myprofitbd.db";
-    public static final int VERSION_DB=13;
+    public static final int VERSION_DB=14;
     public static final String RUTA_APP="com.capcenter.ec.myprofitbalance:drawable/";
 
     //tablas
@@ -48,8 +48,9 @@ public class Utilidades {
     public static final String CAMPO_TIPO_CAT="TIPO_CATEGORIA";
     public static final String CAMPO_ID_CTA="ID_CTA";
     public static final String CAMPO_MONTO="MONTO_OPERACION";
+    public static final String CAMPO_DESCRIPCION="DESCRIPCION";
 
-    public static final String CREAR_TABLA_OPERACIONES ="CREATE TABLE "+TABLA_OPERACIONES+"  ("+CAMPO_ID+" INTEGER PRIMARY KEY autoincrement, "+CAMPO_FECHA+" TEXT, "+CAMPO_TIPO_OPER+" INTEGER,"+CAMPO_TIPO_CAT+" INTEGER,"+CAMPO_ID_CTA+" INTEGER,"+CAMPO_MONTO+ " DECIMAL(10,5))";
+    public static final String CREAR_TABLA_OPERACIONES ="CREATE TABLE "+TABLA_OPERACIONES+"  ("+CAMPO_ID+" INTEGER PRIMARY KEY autoincrement, "+CAMPO_FECHA+" TEXT, "+CAMPO_TIPO_OPER+" INTEGER,"+CAMPO_TIPO_CAT+" INTEGER,"+CAMPO_ID_CTA+" INTEGER,"+CAMPO_MONTO+ " DECIMAL(10,5), "+CAMPO_DESCRIPCION +" TEXT"+")";
 
 
     public static final String TABLA_CATEGORIAS="CATEGORIAS";
@@ -76,17 +77,17 @@ public class Utilidades {
 
     // insert de la tabla de operaciones
     //Ingresos
-    public static final String INSERT_OPERACIONES0="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'01/01/2020',"+1+","+1+","+1+","+700+")";
-    public static final String INSERT_OPERACIONES1="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'02/01/2020',"+1+","+2+","+1+","+180+")";
-    public static final String INSERT_OPERACIONES2="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'03/01/2020',"+1+","+3+","+1+","+20+")";
-    public static final String INSERT_OPERACIONES3="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'06/01/2020',"+1+","+1+","+1+","+3+")";
-    public static final String INSERT_OPERACIONES4="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'08/01/2020',"+1+","+4+","+1+","+1600+")";
+    public static final String INSERT_OPERACIONES0="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'01/01/2020',"+1+","+1+","+1+","+700+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES1="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'02/01/2020',"+1+","+2+","+1+","+180+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES2="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'03/01/2020',"+1+","+3+","+1+","+20+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES3="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'06/01/2020',"+1+","+1+","+1+","+3+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES4="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'08/01/2020',"+1+","+4+","+1+","+600+","+"'Descripcion'"+")";
     //Egresos
-    public static final String INSERT_OPERACIONES10="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'01/01/2020',"+2+","+1+","+1+","+20+")";
-    public static final String INSERT_OPERACIONES11="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'02/01/2020',"+2+","+2+","+1+","+200+")";
-    public static final String INSERT_OPERACIONES12="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'03/01/2020',"+2+","+3+","+1+","+19+")";
-    public static final String INSERT_OPERACIONES13="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'07/01/2020',"+2+","+4+","+1+","+3+")";
-    public static final String INSERT_OPERACIONES14="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+")"+" VALUES("+"'08/01/2020',"+2+","+5+","+1+","+100+")";
+    public static final String INSERT_OPERACIONES10="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'01/01/2020',"+2+","+1+","+1+","+20+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES11="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'02/01/2020',"+2+","+2+","+1+","+200+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES12="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'03/01/2020',"+2+","+3+","+1+","+19+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES13="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'07/01/2020',"+2+","+4+","+1+","+3+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES14="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'08/01/2020',"+2+","+5+","+1+","+100+","+"'Descripcion'"+")";
     //Insert de Categorias
     public static final String INSERT_CAT0="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Sueldo',"+1+", 'ic_cat_sueldo', 'custom_button_1')";
     public static final String INSERT_CAT1="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Regalos',"+1+", 'ic_cat_regalos', 'custom_button_2')";

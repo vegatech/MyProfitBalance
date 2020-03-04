@@ -7,6 +7,15 @@ public class Ingreso {
     private String tipo_operacion;
     private String tipo_cat;
     private Double monto_operacion;
+    private String Descripcion;
+
+    public String getDescripcion() {
+        return Descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        Descripcion = descripcion;
+    }
 
     public String getTipo_cat() {
         return tipo_cat;

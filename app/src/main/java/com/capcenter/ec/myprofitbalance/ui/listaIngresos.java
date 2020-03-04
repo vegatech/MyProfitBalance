@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,10 +14,26 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
-import com.capcenter.ec.myprofitbalance.model.Ingreso;
 import com.capcenter.ec.myprofitbalance.R;
+import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
+import com.capcenter.ec.myprofitbalance.model.Ingreso;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,13 +48,116 @@ public class listaIngresos extends AppCompatActivity {
     Integer tipotran;
     Map<Integer, Integer> mapLista = new HashMap<Integer, Integer>();
     Integer posisionLista;
+    private PieChart piechart;
+    private BarChart barchart;
+    private String []months= new String[]{"Enero","Febrero","Marzo","Abril","Mayo"};
+    private int[]sale = new int[]{25,20,38,40,70};
+    private int[]colors = new int[]{Color.RED, Color.BLACK,Color.BLUE,Color.GREEN,Color.LTGRAY};
 
+    private Chart getSameChart(Chart chart,String descripcion,int textColor,int background,int AnimateY){
+        chart.getDescription().setText("Ventas");
+        chart.getDescription().setEnabled(false);
+        chart.getDescription().setTextSize(15);
+        chart.setBackgroundColor(background);
+        chart.animateY(AnimateY);
+        legend(chart);
+        return chart;
+    }
+    private void legend(Chart chart){
+        Legend legend = chart.getLegend();
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
+        ArrayList<LegendEntry> entries =new ArrayList<>();
+        for (int i=0; i < months.length;i++){
+            LegendEntry entry= new LegendEntry();
+            entry.formColor=colors[i];
+            entry.label=months[i];
+            entries.add(entry);
+        }
+        legend.setCustom(entries);
+    }
+    private ArrayList<BarEntry>getBarEntries(){
+        ArrayList<BarEntry> entries =new ArrayList<>();
+
+        for (int i=0; i < sale.length;i++) {
+            entries.add(new BarEntry(i,sale[i]));
+        }
+        return entries;
+    }
+    private ArrayList<PieEntry>getPieEntries(){
+        ArrayList<PieEntry> entries =new ArrayList<>();
+
+        for (int i=0; i < sale.length;i++) {
+            entries.add(new PieEntry( sale[i]));
+        }
+        return entries;
+    }
+    private void axisX(XAxis xaxis){
+        xaxis.setGranularityEnabled(true);
+        xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xaxis.setValueFormatter(new IndexAxisValueFormatter(months));
+
+    }
+    private void axisLeft(YAxis axis){
+        axis.setSpaceTop(30);
+        axis.setAxisMinimum(0);
+
+    }
+    private void axisRight(YAxis axis){
+        axis.setEnabled(false);
+
+    }
+    public void createCharts(){
+        barchart =(BarChart) getSameChart(barchart,"Series",Color.RED,Color.CYAN,3000);
+        barchart.setDrawGridBackground(true);
+        barchart.setDrawBarShadow(true);
+        barchart.setData(getBarData());
+        barchart.invalidate();
+        axisX(barchart.getXAxis());
+        axisLeft(barchart.getAxisLeft());
+        axisRight(barchart.getAxisRight());
+
+        piechart =(PieChart) getSameChart(piechart,"Ventas",Color.GRAY,Color.MAGENTA,3000);
+        piechart.setHoleRadius(10);
+        piechart.setTransparentCircleRadius(12);
+        piechart.setData(getPieData());
+        piechart.invalidate();
+    }
+    private DataSet getData(DataSet dataset){
+        dataset.setColors(colors);
+        dataset.setValueTextSize(Color.WHITE);
+        dataset.setValueTextSize(10);
+        return dataset;
+    }
+    private BarData getBarData(){
+        BarDataSet barDataSet=(BarDataSet) getData(new BarDataSet(getBarEntries(),""));
+
+        barDataSet.setBarShadowColor(Color.GRAY);
+        BarData barData = new BarData(barDataSet);
+        barData.setBarWidth(0.45f);
+        return barData;
+    }
+    private PieData getPieData(){
+        PieDataSet pieDataSet=(PieDataSet) getData(new PieDataSet(getPieEntries(),""));
+
+        pieDataSet.setSliceSpace(2);// getSliceSpace(2);
+        pieDataSet.setValueFormatter(new PercentFormatter());
+
+        return new PieData(pieDataSet);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_ingresos);
-      //conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
-           lvingresos =(ListView) findViewById(R.id.lvingresos);
+
+
+        barchart =(BarChart) findViewById(R.id.Barchart);
+        piechart =(PieChart) findViewById(R.id.Piechart);
+        createCharts();
+
+        //conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
+        lvingresos =(ListView) findViewById(R.id.lvreportes);
         Bundle bundle = getIntent().getExtras();
         //tipotran=bundle.getInt("tipoper");
         tipotran=1;
@@ -62,7 +182,7 @@ public class listaIngresos extends AppCompatActivity {
                 while(it.hasNext()){
                     Integer key = (Integer) it.next();
                     if (key ==i){
-                      numoper = mapLista.get(key);
+                        numoper = mapLista.get(key);
                     }
                     Log.d("valor del arreglo",key.toString());
                     // System.out.println("Clave: " + key + " -> Valor: " + mapL.get(key));
@@ -74,7 +194,7 @@ public class listaIngresos extends AppCompatActivity {
 
             }
         });
-       }
+    }
     private void consultarListaIngresos(){
         try {
             conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
@@ -98,20 +218,20 @@ public class listaIngresos extends AppCompatActivity {
 
             }
 
-        obtenerLista();
+            obtenerLista();
         }catch (SQLiteException | IllegalStateException | NullPointerException e) {
             e.printStackTrace();
         }
     }
-        private void obtenerLista(){
+    private void obtenerLista(){
 
-            listainformacionIngreso =new ArrayList<String>();
-            for (int i=0; i<listaingresos.size();i++){
-                listainformacionIngreso.add(listaingresos.get(i).getId()+" - "
-                        +listaingresos.get(i).getFecha()+"                                 "
-                        +listaingresos.get(i).getMonto_operacion()+"$"
-                );
-            }
+        listainformacionIngreso =new ArrayList<String>();
+        for (int i=0; i<listaingresos.size();i++){
+            listainformacionIngreso.add(listaingresos.get(i).getId()+" - "
+                    +listaingresos.get(i).getFecha()+"                                 "
+                    +listaingresos.get(i).getMonto_operacion()+"$"
+            );
         }
+    }
 
 }
