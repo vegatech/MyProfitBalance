@@ -321,7 +321,12 @@ public class transaccionesActivity extends AppCompatActivity {
                         }
                     }
                 });
+                mBuilder.setNeutralButton("Nueva Categoria", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                    }
+                });
                 AlertDialog dialog = mBuilder.create();
                 // dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
