@@ -16,6 +16,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,13 +34,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.capcenter.ec.myprofitbalance.io.AdaptadorAvatar;
 import com.capcenter.ec.myprofitbalance.model.Categoria;
 import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
 import com.capcenter.ec.myprofitbalance.model.Cuenta;
 import com.capcenter.ec.myprofitbalance.model.Ingreso;
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
-
+import com.capcenter.ec.myprofitbalance.io.AvatarVo;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,12 +85,20 @@ public class transaccionesActivity extends AppCompatActivity {
     Button btn_billete1;
     Button btn_billete2;
     Button btn_billete3;
+
     int y,d,m;
     String fecha;
     ListView lstcategoriasTransacciones;
     String[] opcionnombre={"Ingresos","Egresos","Transferencias"};
     String[] desc={"Administrar Ingresos","Administrar Egresos","Administrar Transferencias"};
     int [] imgid1 ={R.drawable.ingresos,R.drawable.egresos,R.drawable.transacciones,R.drawable.egresos,R.drawable.transacciones};
+    String[] detalleCategoriasNEw={"01","02","03","04","05","06","07"};
+    int [] imgCategoriasNew ={R.drawable.ic_cat_01,R.drawable.ic_cat_02,R.drawable.ic_cat_03,R.drawable.ic_cat_04,R.drawable.ic_cat_05,R.drawable.ic_cat_06,R.drawable.ic_cat_07};
+
+
+    View vista;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +106,7 @@ public class transaccionesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_transacciones);
 
         final String DBO;
+
 
         vistaTransaccion =(View) findViewById(R.id.vistaTransacciones);
         txtvtituloTransaccion=(TextView) findViewById(R.id.TextTituloTransaccion1);
@@ -115,8 +127,9 @@ public class transaccionesActivity extends AppCompatActivity {
         SpinnerCuentas=(Spinner) findViewById(R.id.SpinnerCuentas);
         txtmonto =(EditText) findViewById(R.id.EditTextMonto);
         txtfecha = (EditText) findViewById(R.id.EditTextFecha);
-
-
+        //final RecyclerView recyclerAvatars;
+        //recyclerAvatars = vistaTransaccion.findViewById(R.id.recyclerAvatarsId2);
+        //RelativeLayout item = (RelativeLayout)findViewById(R.id.item);
 
         Bundle bundle = getIntent().getExtras();
         tipotran=bundle.getInt("tipoper");
@@ -324,7 +337,26 @@ public class transaccionesActivity extends AppCompatActivity {
                 mBuilder.setNeutralButton("Nueva Categoria", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(transaccionesActivity.this);
+                        builderInner.setTitle(" Registro de Categoria...");
+                        builderInner.setIcon(R.drawable.ic_category_section);
 
+                        View view = LayoutInflater.from(transaccionesActivity.this).inflate(R.layout.manage_category_dialog, null);
+                        builderInner.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(transaccionesActivity.this,"Registro Guardado",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        final VivzAdapter1 adapter2 = new VivzAdapter1(transaccionesActivity.this,detalleCategoriasNEw, imgCategoriasNew);
+                        builderInner.setAdapter(adapter2, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        builderInner.setView(view);
+                        builderInner.show();
                     }
                 });
                 AlertDialog dialog = mBuilder.create();

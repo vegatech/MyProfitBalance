@@ -39,20 +39,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 public class listaIngresos extends AppCompatActivity {
     ConexionSQLiteHelper conn;
     ListView lvingresos;
     ArrayList<Ingreso> listaingresos;
     ArrayList<String> listainformacionIngreso;
+    ArrayList<Double> listaMontoTransaccionesGrafica;
+    ArrayList<String> listaRangoTransaccionesFechaGrafica;
+    ArrayList ListaColorGraficas;
     Integer tipotran;
     Map<Integer, Integer> mapLista = new HashMap<Integer, Integer>();
     Integer posisionLista;
     private PieChart piechart;
     private BarChart barchart;
-    private String []months= new String[]{"Enero","Febrero","Marzo","Abril","Mayo"};
-    private int[]sale = new int[]{25,20,38,40,70};
-    private int[]colors = new int[]{Color.RED, Color.BLACK,Color.BLUE,Color.GREEN,Color.LTGRAY};
+    //private String []months= new String[]{"Enero","Febrero","Marzo","Abril","Mayo"};
+   // private int[]sale = new int[]{25,20,38,40,70};
+    public String [] months;
+    public Double [] sale;
+    public int[] colors; // = new int[]{Color.RED, Color.BLACK,Color.BLUE,Color.GREEN,Color.LTGRAY,Color.YELLOW};
 
     private Chart getSameChart(Chart chart,String descripcion,int textColor,int background,int AnimateY){
         chart.getDescription().setText("Ventas");
@@ -81,7 +87,7 @@ public class listaIngresos extends AppCompatActivity {
         ArrayList<BarEntry> entries =new ArrayList<>();
 
         for (int i=0; i < sale.length;i++) {
-            entries.add(new BarEntry(i,sale[i]));
+            entries.add(new BarEntry(i,sale[i].intValue()));
         }
         return entries;
     }
@@ -89,7 +95,7 @@ public class listaIngresos extends AppCompatActivity {
         ArrayList<PieEntry> entries =new ArrayList<>();
 
         for (int i=0; i < sale.length;i++) {
-            entries.add(new PieEntry( sale[i]));
+            entries.add(new PieEntry( sale[i].intValue()));
         }
         return entries;
     }
@@ -118,8 +124,8 @@ public class listaIngresos extends AppCompatActivity {
         axisLeft(barchart.getAxisLeft());
         axisRight(barchart.getAxisRight());
 
-        piechart =(PieChart) getSameChart(piechart,"Ventas",Color.GRAY,Color.MAGENTA,3000);
-        piechart.setHoleRadius(10);
+        piechart =(PieChart) getSameChart(piechart,"Ventas",Color.GRAY,Color.WHITE,3000);
+        piechart.setHoleRadius(60);
         piechart.setTransparentCircleRadius(12);
         piechart.setData(getPieData());
         piechart.invalidate();
@@ -152,9 +158,7 @@ public class listaIngresos extends AppCompatActivity {
         setContentView(R.layout.activity_lista_ingresos);
 
 
-        barchart =(BarChart) findViewById(R.id.Barchart);
-        piechart =(PieChart) findViewById(R.id.Piechart);
-        createCharts();
+
 
         //conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
         lvingresos =(ListView) findViewById(R.id.lvreportes);
@@ -162,6 +166,22 @@ public class listaIngresos extends AppCompatActivity {
         //tipotran=bundle.getInt("tipoper");
         tipotran=1;
         consultarListaIngresos();
+        months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
+        sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
+        colors = new int[ListaColorGraficas.size()];
+
+         for (int i = 0;i < ListaColorGraficas.size(); i++) {
+             //Random rnd = new Random();
+             //int colori = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            colors[i] = Color.RED;
+
+         }
+
+
+        // Carga Graficas
+        barchart =(BarChart) findViewById(R.id.Barchart);
+        piechart =(PieChart) findViewById(R.id.Piechart);
+        createCharts();
 
         ArrayAdapter adaptador = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listainformacionIngreso);
         lvingresos.setAdapter(adaptador);
@@ -224,13 +244,21 @@ public class listaIngresos extends AppCompatActivity {
         }
     }
     private void obtenerLista(){
-
         listainformacionIngreso =new ArrayList<String>();
+        listaMontoTransaccionesGrafica =new ArrayList<Double>();
+        listaRangoTransaccionesFechaGrafica = new ArrayList<String>();
+        ListaColorGraficas = new ArrayList<Integer>();
         for (int i=0; i<listaingresos.size();i++){
             listainformacionIngreso.add(listaingresos.get(i).getId()+" - "
                     +listaingresos.get(i).getFecha()+"                                 "
                     +listaingresos.get(i).getMonto_operacion()+"$"
             );
+            listaRangoTransaccionesFechaGrafica.add(listaingresos.get(i).getFecha());
+            listaMontoTransaccionesGrafica.add(listaingresos.get(i).getMonto_operacion());
+            Random rnd = new Random();
+            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            ListaColorGraficas.add(color);
+
         }
     }
 

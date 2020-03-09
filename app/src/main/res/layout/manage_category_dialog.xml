@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" "
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5dp"/>
+
+        <EditText
+            android:id="@+id/campoDescripcionCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripcion de categoria"
+            android:layout_margin="10dp"
+            android:shadowColor="@color/CardViewTransacciones0"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo:"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5dp"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <RadioButton
+                android:id="@+id/radioI"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ingreso"
+                android:layout_weight="1"/>
+
+            <RadioButton
+                android:id="@+id/radioE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Egreso"
+                android:layout_weight="1"/>
+            <RadioButton
+                android:id="@+id/radioT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Transferencia"
+                android:layout_weight="1"/>
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleccione un icono"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerAvatarsId"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"/>
+
+    </LinearLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/idFabRegistro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="7dp"
+        android:src="@mipmap/ic_home_bar" />
+
+</RelativeLayout>

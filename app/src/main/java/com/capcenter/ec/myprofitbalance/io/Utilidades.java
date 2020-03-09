@@ -1,14 +1,23 @@
 package com.capcenter.ec.myprofitbalance.io;
 
 
+import com.capcenter.ec.myprofitbalance.R;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 public class Utilidades {
     public static final String DATE_FORMAT_1 = "dd/MM/yyyy";
+
+
+    public static AvatarVo avatarSeleccion=null;
+    public static int avatarIdSeleccion=0;
+
+    public static ArrayList<AvatarVo> listaAvatars=null;
 
     public static String getCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_1);
@@ -37,7 +46,7 @@ public class Utilidades {
         return dateFormat.format(calendar.getTime());
     }
     public static final String NOMBRE_BD="myprofitbd.db";
-    public static final int VERSION_DB=14;
+    public static final int VERSION_DB=15;
     public static final String RUTA_APP="com.capcenter.ec.myprofitbalance:drawable/";
 
     //tablas
@@ -103,8 +112,44 @@ public class Utilidades {
     //public static final String INSERT_CAT15="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +")"+" VALUES("+"'Ropa',"+2+" 'ic_cat_ropa', 'custom_button_6')";
    // public static final String INSERT_CAT16="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +")"+" VALUES("+"'Pagos',"+2+" 'ic_cat_pagos', 'custom_button_7')";
 
-    public static final String INSERT_CAT20="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Transferencia',"+3+", 'ic_cat_transferencia', 'custom_button_1')";
-    public static final String INSERT_CAT21="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Deposito',"+3+", 'ic_cat_deposito', 'custom_button_2')";
-    public static final String INSERT_CAT22="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Retiro',"+3+", 'ic_cat_retiro', 'custom_button_3')";
+    public static final String INSERT_CAT20="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Transferencia',"+3+", 'ic_transferencia_cat', 'custom_button_1')";
+    public static final String INSERT_CAT21="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Deposito',"+3+", 'ic_deposito_cat', 'custom_button_2')";
+    public static final String INSERT_CAT22="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Retiro',"+3+", 'ic_retiro_cat', 'custom_button_3')";
 
+
+
+    public static void obtenerListaAvatars() {
+
+        //se instancian los avatars y se llena la lista
+        listaAvatars=new ArrayList<AvatarVo>();
+
+        listaAvatars.add(new AvatarVo(1,R.drawable.avatar1,"Avatar1"));
+        listaAvatars.add(new AvatarVo(2, R.drawable.avatar2,"Avatar2"));
+        listaAvatars.add(new AvatarVo(3,R.drawable.avatar3,"Avatar3"));
+        listaAvatars.add(new AvatarVo(4,R.drawable.avatar4,"Avatar4"));
+        listaAvatars.add(new AvatarVo(5,R.drawable.avatar5,"Avatar5"));
+        listaAvatars.add(new AvatarVo(6,R.drawable.avatar6,"Avatar6"));
+        listaAvatars.add(new AvatarVo(7,R.drawable.avatar7,"Avatar7"));
+        listaAvatars.add(new AvatarVo(8,R.drawable.avatar8,"Avatar8"));
+        listaAvatars.add(new AvatarVo(9,R.drawable.avatar9,"Avatar9"));
+        listaAvatars.add(new AvatarVo(10,R.drawable.avatar10,"Avatar10"));
+        listaAvatars.add(new AvatarVo(11,R.drawable.avatar11,"Avatar11"));
+        listaAvatars.add(new AvatarVo(12,R.drawable.avatar12,"Avatar12"));
+        listaAvatars.add(new AvatarVo(13,R.drawable.avatar13,"Avatar13"));
+        listaAvatars.add(new AvatarVo(14,R.drawable.avatar14,"Avatar14"));
+        listaAvatars.add(new AvatarVo(15,R.drawable.avatar15,"Avatar15"));
+        listaAvatars.add(new AvatarVo(16,R.drawable.avatar16,"Avatar16"));
+        listaAvatars.add(new AvatarVo(17,R.drawable.avatar17,"Avatar17"));
+        listaAvatars.add(new AvatarVo(18,R.drawable.avatar18,"Avatar18"));
+        listaAvatars.add(new AvatarVo(19,R.drawable.avatar19,"Avatar19"));
+        listaAvatars.add(new AvatarVo(20,R.drawable.avatar20,"Avatar20"));
+        listaAvatars.add(new AvatarVo(21,R.drawable.avatar21,"Avatar21"));
+        listaAvatars.add(new AvatarVo(22,R.drawable.avatar22,"Avatar22"));
+        listaAvatars.add(new AvatarVo(23,R.drawable.avatar23,"Avatar23"));
+        listaAvatars.add(new AvatarVo(24,R.drawable.avatar24,"Avatar24"));
+        listaAvatars.add(new AvatarVo(25,R.drawable.avatar25,"Avatar25"));
+        listaAvatars.add(new AvatarVo(26,R.drawable.avatar26,"Avatar26"));
+        listaAvatars.add(new AvatarVo(27,R.drawable.avatar27,"Avatar27"));
+
+    }
 }
