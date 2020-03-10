@@ -30,6 +30,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +67,9 @@ public class transaccionesActivity extends AppCompatActivity {
     ArrayList<String> lstInformacionCategoria;
     ArrayList<Cuenta> listaCuentas;
     ArrayList<String> listainfoCuentas;
+   private  EditText DialogoTextCategoria;
+    RadioButton radioIng, radioEgr, radioTransf;
+    EditText iconoSeleccionarDialogo;
     Button btnCategorias ;
     ConexionSQLiteHelper conn;
     Integer tipotran;
@@ -121,15 +126,42 @@ public class transaccionesActivity extends AppCompatActivity {
         btn_billete2.setVisibility(View.GONE);
         btn_billete3.setVisibility(View.GONE);
 
+        radioIng =(RadioButton) findViewById(R.id.radioI);
+        radioEgr =(RadioButton) findViewById(R.id.radioE);
+        radioTransf =(RadioButton) findViewById(R.id.radioT);
+
         //btn_date_hoy.setBackgroundColor(Color.rgb(70, 80, 90));
         btnCategorias =(Button) findViewById(R.id.btnCategoria);
         spCategorias =(Spinner) findViewById(R.id.SpinnerCategorias);
         SpinnerCuentas=(Spinner) findViewById(R.id.SpinnerCuentas);
         txtmonto =(EditText) findViewById(R.id.EditTextMonto);
         txtfecha = (EditText) findViewById(R.id.EditTextFecha);
-        //final RecyclerView recyclerAvatars;
-        //recyclerAvatars = vistaTransaccion.findViewById(R.id.recyclerAvatarsId2);
+
+
+        final RecyclerView recyclerAvatars;
+        //recyclerAvatars =vista.findViewById(R.id.recyclerAvatarsId);
+        recyclerAvatars = vistaTransaccion.findViewById(R.id.recyclerAvatarsId);
         //RelativeLayout item = (RelativeLayout)findViewById(R.id.item);
+        recyclerAvatars.setLayoutManager(new GridLayoutManager(transaccionesActivity.this,3));
+        recyclerAvatars.setHasFixedSize(true);
+        ArrayList<AvatarVo> listaAvatars;
+        listaAvatars=new ArrayList<AvatarVo>();
+
+
+        listaAvatars.add(new AvatarVo(1,R.drawable.ic_cat_01,"Avatar1"));
+        listaAvatars.add(new AvatarVo(2,R.drawable.ic_cat_02,"Avatar2"));
+        listaAvatars.add(new AvatarVo(3,R.drawable.ic_cat_03,"Avatar3"));
+        listaAvatars.add(new AvatarVo(4,R.drawable.ic_cat_04,"Avatar4"));
+        listaAvatars.add(new AvatarVo(5,R.drawable.ic_cat_05,"Avatar5"));
+        listaAvatars.add(new AvatarVo(6,R.drawable.ic_cat_06,"Avatar6"));
+        listaAvatars.add(new AvatarVo(7,R.drawable.ic_cat_07,"Avatar7"));
+        listaAvatars.add(new AvatarVo(8,R.drawable.ic_cat_01,"Avatar8"));
+        listaAvatars.add(new AvatarVo(9,R.drawable.ic_cat_01,"Avatar9"));
+
+        final AdaptadorAvatar miAdaptador=new AdaptadorAvatar(listaAvatars);
+
+        recyclerAvatars.setAdapter(miAdaptador);
+
 
         Bundle bundle = getIntent().getExtras();
         tipotran=bundle.getInt("tipoper");
@@ -340,21 +372,53 @@ public class transaccionesActivity extends AppCompatActivity {
                         AlertDialog.Builder builderInner = new AlertDialog.Builder(transaccionesActivity.this);
                         builderInner.setTitle(" Registro de Categoria...");
                         builderInner.setIcon(R.drawable.ic_category_section);
-
                         View view = LayoutInflater.from(transaccionesActivity.this).inflate(R.layout.manage_category_dialog, null);
+                        DialogoTextCategoria =view.findViewById(R.id.campoDescripcionCategoria1);
+                        RecyclerView recyclerView =   view.findViewById(R.id.recyclerAvatarsId);
+                        recyclerView.setLayoutManager(new GridLayoutManager(transaccionesActivity.this,3));
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setAdapter(miAdaptador);
+
                         builderInner.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(transaccionesActivity.this,"Registro Guardado",Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        final VivzAdapter1 adapter2 = new VivzAdapter1(transaccionesActivity.this,detalleCategoriasNEw, imgCategoriasNew);
-                        builderInner.setAdapter(adapter2, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+
+                               Integer tipoTrans=0;
+
+                                if (radioIng.isChecked()==true){
+                                    tipoTrans=1;
+                                }else if(radioEgr.isChecked()==true){
+                                    tipoTrans=2;
+                                }else{
+                                    tipoTrans=3;
+                                }
+                            if (tipoTrans.intValue()!=0 && DialogoTextCategoria.getText().toString()!=null
+                                    //&& !campoNick.getText().toString().trim().equals("")
+                            ) {
+
+                                String RecursoDraww = getResources().getResourceName(imgCategoriasNew[Utilidades.avatarIdSeleccion-1]);
+                                String substr = RecursoDraww.substring(42);
+                                String NombreCAtegoria=DialogoTextCategoria.getText().toString();
+
+                                conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
+                                SQLiteDatabase db = conn.getWritableDatabase();
+                                ContentValues values = new ContentValues();
+                                values.put(Utilidades.CAT_CAMPO_DESCRIPCION,NombreCAtegoria);
+                                values.put(Utilidades.CAT_CAMPO_COLOR, "custom_button_3");
+                                values.put(Utilidades.CAT_CAMPO_TIPO,tipoTrans );
+                                values.put(Utilidades.CAT_CAMPO_DRAWABLE,substr);
+                                Long idResultante = db.insert(Utilidades.TABLA_CATEGORIAS, Utilidades.CAT_CAMPO_ID, values);
+                                //Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
+                                db.close();
+                                consultarCategorias();
+                                Toast.makeText(transaccionesActivity.this, "Registro Guardado", Toast.LENGTH_SHORT).show();
+                                }else {
+                                Toast.makeText(transaccionesActivity.this, "Debe indicar todos los campos para continuar", Toast.LENGTH_SHORT).show();
 
                             }
+                            }
                         });
+
                         builderInner.setView(view);
                         builderInner.show();
                     }
@@ -462,13 +526,7 @@ public class transaccionesActivity extends AppCompatActivity {
                 transaccion.setId(cursor.getInt(0));
                 // transaccion.setFecha(cursor.getString(1));
                 transaccion.setMonto_operacion(cursor.getDouble(1));
-                //txtfecha.setText(cursor.getString(1));
-                //txtmonto.setText(cursor.getString(1));
-                //map.put(cursor.getPosition(),cursor.getInt(0));
-                // posision=cursor.getInt(3);
-                // posision2=cursor.getInt(4);
                 listaTransacciones.add(transaccion);
-
             }
             obtenerListaMtoTransaccion();
 

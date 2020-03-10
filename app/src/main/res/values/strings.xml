@@ -6,7 +6,7 @@
     <string name="imgvw1">Aqui imagen</string>
     <string name="title_activity_lista_ingresos">lista_ingresos</string>
     <string name="montolabel">Monto</string>
-    <string name="montovalue"></string>
+    <string name="montovalue">Monto de la transacción</string>
     <string name="categorias">Ingrese categorias</string>
     <string name="labelCategorias">Categoria</string>
     <string name="transactionbutton">Guardar</string>

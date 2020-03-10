@@ -21,7 +21,7 @@
             android:layout_marginLeft="5dp"/>
 
         <EditText
-            android:id="@+id/campoDescripcionCategoria"
+            android:id="@+id/campoDescripcionCategoria1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Descripcion de categoria"
@@ -84,16 +84,5 @@
     </LinearLayout>
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/idFabRegistro"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginBottom="7dp"
-        android:src="@mipmap/ic_home_bar" />
 
 </RelativeLayout>

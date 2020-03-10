@@ -16,6 +16,7 @@ public class Utilidades {
 
     public static AvatarVo avatarSeleccion=null;
     public static int avatarIdSeleccion=0;
+    public static String avatarIdSeleccionDialogo="";
 
     public static ArrayList<AvatarVo> listaAvatars=null;
 
@@ -46,7 +47,7 @@ public class Utilidades {
         return dateFormat.format(calendar.getTime());
     }
     public static final String NOMBRE_BD="myprofitbd.db";
-    public static final int VERSION_DB=15;
+    public static final int VERSION_DB=16;
     public static final String RUTA_APP="com.capcenter.ec.myprofitbalance:drawable/";
 
     //tablas

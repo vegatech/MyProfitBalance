@@ -3,10 +3,10 @@
     android:shape="rectangle">
     <gradient
         android:angle="90"
-        android:startColor="@color/colorTransaccion1"
+        android:startColor="@color/colorBotonPresed"
 
-        android:centerColor="@color/colorTransaccion1"
-        android:endColor="@color/colorTransaccion1"
+        android:centerColor="@color/colorBotonPresed"
+        android:endColor="@color/colorBotonPresed"
         ></gradient>
         <padding
             android:bottom="7dp"
@@ -17,9 +17,9 @@
         </padding>
     <stroke
         android:color="#ABABB3"
-        android:width="1dp"
+        android:width="0dp"
         ></stroke>
     <corners
-        android:radius="30dp"></corners>
+        android:radius="5dp"></corners>
 
 </shape>

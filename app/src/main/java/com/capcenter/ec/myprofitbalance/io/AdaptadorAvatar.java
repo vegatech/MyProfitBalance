@@ -74,7 +74,7 @@ public class AdaptadorAvatar extends RecyclerView.Adapter<AdaptadorAvatar.ViewHo
 
     @Override
     public int getItemCount() {
-        return    6;// listaAvatars.size();
+        return    7;// listaAvatars.size();
     }
 
 
