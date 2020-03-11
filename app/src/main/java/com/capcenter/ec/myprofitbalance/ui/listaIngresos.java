@@ -47,6 +47,7 @@ import java.util.Random;
 public class listaIngresos extends AppCompatActivity {
     ConexionSQLiteHelper conn;
     private String FechaRep;
+    private String consultaSQL;
     ListView lvingresos;
     ArrayList<Ingreso> listaingresos;
     ArrayList<String> listainformacionIngreso;
@@ -185,6 +186,12 @@ public class listaIngresos extends AppCompatActivity {
         btn_date_hoy.setTextColor(getResources().getColor(android.R.color.white));
         btn_trn_todas.setBackgroundResource(R.drawable.button_date_pressed);
         btn_trn_todas.setTextColor(getResources().getColor(android.R.color.white));
+        consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS ;
+        consultarCategorias();
+        ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (this,android.R.layout.simple_spinner_item,listaCat);
+        spinner_categoria_rep.setAdapter(adapador);
+        spinner_categoria_rep.setSelection(1);
+
         //btn_ejecutar_qry
 
 
@@ -251,32 +258,50 @@ public class listaIngresos extends AppCompatActivity {
 
             }
         });
+
         btn_trn_todas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fechaOper = Utilidades.getCurrentDate();
-                FechaRep=fechaOper;
+                consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS ;
+                consultarCategorias();
+                ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (listaIngresos.this,android.R.layout.simple_spinner_item,listaCat);
+                spinner_categoria_rep.setAdapter(adapador);
+                spinner_categoria_rep.setSelection(1);
             }
         });
         btn_trn_ingreso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fechaOper = Utilidades.getCurrentDate();
-                FechaRep=fechaOper;
+
+                tipotran=1;
+                consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS + " WHERE "+Utilidades.CAT_CAMPO_TIPO+"="+tipotran;
+                consultarCategorias();
+                ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (listaIngresos.this,android.R.layout.simple_spinner_item,listaCat);
+                spinner_categoria_rep.setAdapter(adapador);
+                spinner_categoria_rep.setSelection(1);
             }
         });
         btn_trn_egreso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fechaOper = Utilidades.getCurrentDate();
-                FechaRep=fechaOper;
+
+                tipotran=2;
+                consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS + " WHERE "+Utilidades.CAT_CAMPO_TIPO+"="+tipotran;
+                consultarCategorias();
+                ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (listaIngresos.this,android.R.layout.simple_spinner_item,listaCat);
+                spinner_categoria_rep.setAdapter(adapador);
+                spinner_categoria_rep.setSelection(1);
             }
         });
-        btn_trn_todas.setOnClickListener(new View.OnClickListener() {
+        btn_trn_transfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fechaOper = Utilidades.getCurrentDate();
-                FechaRep=fechaOper;
+                tipotran=3;
+                consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS + " WHERE "+Utilidades.CAT_CAMPO_TIPO+"="+tipotran;
+                consultarCategorias();
+                ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (listaIngresos.this,android.R.layout.simple_spinner_item,listaCat);
+                spinner_categoria_rep.setAdapter(adapador);
+                spinner_categoria_rep.setSelection(1);
             }
         });
         //conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
@@ -380,5 +405,42 @@ public class listaIngresos extends AppCompatActivity {
 
         }
     }
+
+    private void consultarCategorias(){
+        try {
+            conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
+            SQLiteDatabase db = conn.getReadableDatabase();
+            Cursor cursorc = db.rawQuery(consultaSQL, null);
+
+
+            Categoria regCategoria = null;
+            listaCategorias= new ArrayList<Categoria>();
+
+            while (cursorc.moveToNext()) {
+                regCategoria = new Categoria();
+                regCategoria.setId(cursorc.getInt(0));
+                regCategoria.setDescripcat(cursorc.getString(1));
+                //regCategoria.setTipoCat(cursorc.getString(2));
+                regCategoria.setDrawable(cursorc.getString(3));
+                regCategoria.setColor(cursorc.getString(4));
+                listaCategorias.add(regCategoria);
+
+
+            }
+            obtenerListaCat();
+
+        } catch (SQLiteException | IllegalStateException | NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+    private void obtenerListaCat(){
+        listaCat= new ArrayList<String>();
+        for (int i=0; i<listaCategorias.size();i++){
+            listaCat.add(
+                    listaCategorias.get(i).getDescripcat()
+            );
+        }
+    }
+
 
 }
