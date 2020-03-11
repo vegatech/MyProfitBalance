@@ -11,12 +11,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
+import com.capcenter.ec.myprofitbalance.model.Categoria;
 import com.capcenter.ec.myprofitbalance.model.Ingreso;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
@@ -43,12 +46,15 @@ import java.util.Random;
 
 public class listaIngresos extends AppCompatActivity {
     ConexionSQLiteHelper conn;
+    private String FechaRep;
     ListView lvingresos;
     ArrayList<Ingreso> listaingresos;
     ArrayList<String> listainformacionIngreso;
     ArrayList<Double> listaMontoTransaccionesGrafica;
     ArrayList<String> listaRangoTransaccionesFechaGrafica;
     ArrayList ListaColorGraficas;
+    ArrayList<Categoria> listaCategorias;
+    ArrayList<String> listaCat;
     Integer tipotran;
     Map<Integer, Integer> mapLista = new HashMap<Integer, Integer>();
     Integer posisionLista;
@@ -59,6 +65,10 @@ public class listaIngresos extends AppCompatActivity {
     public String [] months;
     public Double [] sale;
     public int[] colors; // = new int[]{Color.RED, Color.BLACK,Color.BLUE,Color.GREEN,Color.LTGRAY,Color.YELLOW};
+
+    private Button btn_date_hoy,btn_date_ayer, btn_date_mes, btn_date_otro, btn_ejecutar_qry;
+    private Spinner spinner_categoria_rep;
+    private Button btn_trn_todas, btn_trn_ingreso, btn_trn_egreso, btn_trn_transfer;
 
     private Chart getSameChart(Chart chart,String descripcion,int textColor,int background,int AnimateY){
         chart.getDescription().setText("Ventas");
@@ -158,8 +168,117 @@ public class listaIngresos extends AppCompatActivity {
         setContentView(R.layout.activity_lista_ingresos);
 
 
+        btn_date_hoy =(Button) findViewById(R.id.btn_set_date_today_rep);
+        btn_date_ayer =(Button) findViewById(R.id.btn_set_date_yesterday_rep);
+        btn_date_mes =(Button) findViewById(R.id.btn_set_date_this_month_rep);
+        btn_date_otro =(Button) findViewById(R.id.btn_set_date_others_rep);
+        btn_trn_todas =(Button) findViewById(R.id.btn_set_trn_todo_rep);
+        btn_trn_ingreso =(Button) findViewById(R.id.btn_set_trn_ingreso_rep);
+        btn_trn_egreso =(Button) findViewById(R.id.btn_set_trn_egreso_rep);
+        btn_trn_transfer =(Button) findViewById(R.id.btn_set_trn_transferencias_rep);
+        spinner_categoria_rep =(Spinner)findViewById(R.id.SpinnerCategoriasRep);
+
+        // Set Default botones
+        String fechaOper = Utilidades.getCurrentDate();
+        FechaRep=fechaOper;
+        btn_date_hoy.setBackgroundResource(R.drawable.button_date_pressed);
+        btn_date_hoy.setTextColor(getResources().getColor(android.R.color.white));
+        btn_trn_todas.setBackgroundResource(R.drawable.button_date_pressed);
+        btn_trn_todas.setTextColor(getResources().getColor(android.R.color.white));
+        //btn_ejecutar_qry
 
 
+
+        btn_date_hoy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fechaOper = Utilidades.getCurrentDate();
+                 FechaRep=fechaOper;
+                btn_date_hoy.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_date_hoy.setTextColor(getResources().getColor(android.R.color.white));
+                btn_date_ayer.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_mes.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_otro.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_ayer.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_mes.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_otro.setTextColor(getResources().getColor(android.R.color.black));
+            }
+        });
+        btn_date_ayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_date_ayer.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_date_ayer.setTextColor(getResources().getColor(android.R.color.white));
+                btn_date_hoy.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_mes.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_otro.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_hoy.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_mes.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_otro.setTextColor(getResources().getColor(android.R.color.black));
+                String fechaOper =Utilidades.getYesterday().toString();
+                FechaRep=fechaOper;
+            }
+        });
+        btn_date_mes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_date_mes.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_date_mes.setTextColor(getResources().getColor(android.R.color.white));
+                btn_date_hoy.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_ayer.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_otro.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_hoy.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_ayer.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_otro.setTextColor(getResources().getColor(android.R.color.black));
+                String fechaOper = Utilidades.getCurrentDate();
+                FechaRep=fechaOper;
+
+            }
+        });
+        btn_date_otro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_date_otro.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_date_otro.setTextColor(getResources().getColor(android.R.color.white));
+                btn_date_hoy.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_ayer.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_mes.setBackgroundResource(R.drawable.custom_date_button);
+                btn_date_hoy.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_ayer.setTextColor(getResources().getColor(android.R.color.black));
+                btn_date_mes.setTextColor(getResources().getColor(android.R.color.black));
+                String fechaOper = Utilidades.getCurrentDate();
+                FechaRep=fechaOper;
+
+            }
+        });
+        btn_trn_todas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fechaOper = Utilidades.getCurrentDate();
+                FechaRep=fechaOper;
+            }
+        });
+        btn_trn_ingreso.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fechaOper = Utilidades.getCurrentDate();
+                FechaRep=fechaOper;
+            }
+        });
+        btn_trn_egreso.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fechaOper = Utilidades.getCurrentDate();
+                FechaRep=fechaOper;
+            }
+        });
+        btn_trn_todas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fechaOper = Utilidades.getCurrentDate();
+                FechaRep=fechaOper;
+            }
+        });
         //conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
         lvingresos =(ListView) findViewById(R.id.lvreportes);
         Bundle bundle = getIntent().getExtras();
