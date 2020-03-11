@@ -47,7 +47,7 @@ public class Utilidades {
         return dateFormat.format(calendar.getTime());
     }
     public static final String NOMBRE_BD="myprofitbd.db";
-    public static final int VERSION_DB=16;
+    public static final int VERSION_DB=18;
     public static final String RUTA_APP="com.capcenter.ec.myprofitbalance:drawable/";
 
     //tablas
@@ -83,6 +83,7 @@ public class Utilidades {
 
     //Insert de la tablla Cuenta por defecto
     public static final String INSERT_CUENTA="INSERT INTO "+TABLA_CUENTAS+"("+CTA_CAMPO_DESCRIPCION+","+CTA_CAMPO_TIPO_CUENTA+","+CTA_CAMPO_NRO_CTA+","+CTA_CAMPO_SALDO+")"+" VALUES("+" 'EFECTIVO', "+" 'EFECTIVO',"+" 'EFECTIVO' ,"+0+")";
+    public static final String INSERT_CUENTA1="INSERT INTO "+TABLA_CUENTAS+"("+CTA_CAMPO_DESCRIPCION+","+CTA_CAMPO_TIPO_CUENTA+","+CTA_CAMPO_NRO_CTA+","+CTA_CAMPO_SALDO+")"+" VALUES("+" 'BANCO PICHINCHA', "+" 'CORRIENTE',"+" '01236547' ,"+0+")";
 
 
     // insert de la tabla de operaciones

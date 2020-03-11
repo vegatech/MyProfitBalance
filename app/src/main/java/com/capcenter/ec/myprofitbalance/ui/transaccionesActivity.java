@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -52,7 +53,7 @@ import java.util.Map;
 
 public class transaccionesActivity extends AppCompatActivity {
     private View vistaTransaccion;
-    private Spinner spCategorias,SpinnerCuentas;
+    private Spinner spCategorias,SpinnerCuentas,SpinnerCuentaDestino;
     private EditText txtmonto;
     private TextView txtvmonto, txtvtituloTransaccion;
     private EditText txtfecha;
@@ -90,6 +91,7 @@ public class transaccionesActivity extends AppCompatActivity {
     Button btn_billete1;
     Button btn_billete2;
     Button btn_billete3;
+    int  btn_billete_show=0;
 
     int y,d,m;
     String fecha;
@@ -98,7 +100,7 @@ public class transaccionesActivity extends AppCompatActivity {
     String[] desc={"Administrar Ingresos","Administrar Egresos","Administrar Transferencias"};
     int [] imgid1 ={R.drawable.ingresos,R.drawable.egresos,R.drawable.transacciones,R.drawable.egresos,R.drawable.transacciones};
     String[] detalleCategoriasNEw={"01","02","03","04","05","06","07"};
-    int [] imgCategoriasNew ={R.drawable.ic_cat_01,R.drawable.ic_cat_02,R.drawable.ic_cat_03,R.drawable.ic_cat_04,R.drawable.ic_cat_05,R.drawable.ic_cat_06,R.drawable.ic_cat_07};
+    int [] imgCategoriasNew ={R.drawable.ic_cat_01,R.drawable.ic_cat_02,R.drawable.ic_cat_03,R.drawable.ic_cat_04,R.drawable.ic_cat_05,R.drawable.ic_cat_06,R.drawable.ic_cat_07,R.drawable.ic_cat_generic};
 
 
     View vista;
@@ -134,6 +136,7 @@ public class transaccionesActivity extends AppCompatActivity {
         btnCategorias =(Button) findViewById(R.id.btnCategoria);
         spCategorias =(Spinner) findViewById(R.id.SpinnerCategorias);
         SpinnerCuentas=(Spinner) findViewById(R.id.SpinnerCuentas);
+        SpinnerCuentaDestino =(Spinner)findViewById(R.id.SpinnerCuentaDestino);
         txtmonto =(EditText) findViewById(R.id.EditTextMonto);
         txtfecha = (EditText) findViewById(R.id.EditTextFecha);
 
@@ -155,7 +158,7 @@ public class transaccionesActivity extends AppCompatActivity {
         listaAvatars.add(new AvatarVo(5,R.drawable.ic_cat_05,"Avatar5"));
         listaAvatars.add(new AvatarVo(6,R.drawable.ic_cat_06,"Avatar6"));
         listaAvatars.add(new AvatarVo(7,R.drawable.ic_cat_07,"Avatar7"));
-        listaAvatars.add(new AvatarVo(8,R.drawable.ic_cat_01,"Avatar8"));
+        listaAvatars.add(new AvatarVo(8,R.drawable.ic_cat_generic,"Avatar8"));
         listaAvatars.add(new AvatarVo(9,R.drawable.ic_cat_01,"Avatar9"));
 
         final AdaptadorAvatar miAdaptador=new AdaptadorAvatar(listaAvatars);
@@ -170,16 +173,19 @@ public class transaccionesActivity extends AppCompatActivity {
             txtvtituloTransaccion.setText("Nuevo Ingreso...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
             vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            SpinnerCuentaDestino.setVisibility(View.GONE);
         }
         if (tipotran==2){
             txtvtituloTransaccion.setText("Nuevo Egreso...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
             vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            SpinnerCuentaDestino.setVisibility(View.GONE);
         }
         if (tipotran==3){
             txtvtituloTransaccion.setText("Nueva Transferencia...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
             vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+
         }
 
         String fechaOper = Utilidades.getCurrentDate();
@@ -201,14 +207,40 @@ public class transaccionesActivity extends AppCompatActivity {
         consultarCuentas();
         ArrayAdapter<CharSequence> adapador2=  new ArrayAdapter (this,android.R.layout.simple_spinner_item,listainfoCuentas);
         SpinnerCuentas.setAdapter(adapador2);
+        SpinnerCuentaDestino.setAdapter(adapador2);
 
         lstcategoriasTransacciones= (ListView) findViewById(R.id.listview_category);
 
-
-
-
         //SpinnerCuentas.setSelection(posision2);
         SpinnerCuentas.setSelection(1);
+        SpinnerCuentaDestino.setSelection(2);
+        SpinnerCuentaDestino.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (SpinnerCuentas.getSelectedItem().toString().trim().equals(SpinnerCuentaDestino.getSelectedItem().toString().trim())) {
+                    Toast.makeText(transaccionesActivity.this, "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        SpinnerCuentas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (SpinnerCuentas.getSelectedItem().toString().trim().equals(SpinnerCuentaDestino.getSelectedItem().toString().trim())) {
+                    Toast.makeText(transaccionesActivity.this, "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         consultarMontoTransaccionByCat();
         //set de botones de fecha
         btn_date_hoy.setOnClickListener(new View.OnClickListener() {
@@ -270,6 +302,50 @@ public class transaccionesActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+        if(tipotran==1){
+            categoriaSeleccionada=1;
+            btnCategorias.setText("Sueldo");
+
+            String imagenSel =Utilidades.RUTA_APP+"ic_cat_sueldo".toString();
+            int img3 =getResources().getIdentifier(imagenSel,"Drawable",getPackageName());
+            Drawable img = getResources().getDrawable(img3);
+            btnCategorias.setCompoundDrawables(img, null, null, null);
+            btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+        }
+        if (tipotran==2){
+            categoriaSeleccionada=6;
+            btnCategorias.setText("Transporte");
+            String imagenSel =Utilidades.RUTA_APP+"ic_cat_transporte".toString();
+            int img3 =getResources().getIdentifier(imagenSel,"Drawable",getPackageName());
+            Drawable img = getResources().getDrawable(img3);
+            btnCategorias.setCompoundDrawables(img, null, null, null);
+            btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+        }
+        if (tipotran==3){
+            categoriaSeleccionada=11;
+            btnCategorias.setText("Transferencia");
+            String imagenSel =Utilidades.RUTA_APP+"ic_transferencia_cat".toString();
+            int img3 =getResources().getIdentifier(imagenSel,"Drawable",getPackageName());
+            Drawable img = getResources().getDrawable(img3);
+            btnCategorias.setCompoundDrawables(img, null, null, null);
+            btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+            if(categoriaSeleccionada==11){
+                SpinnerCuentaDestino.setVisibility(View.VISIBLE);
+                }else{
+                SpinnerCuentaDestino.setVisibility(View.GONE);
+            }
+        }
+        consultarMontoTransaccionByCat();
+        if ( btn_billete_show !=0 && btn_billete_show <=3){
+            btn_billete1.setVisibility(View.VISIBLE);
+        }
+        if ( btn_billete_show !=0 && btn_billete_show >=2 ){
+            btn_billete2.setVisibility(View.VISIBLE);
+        }
+        if ( btn_billete_show !=0 && btn_billete_show >=3){
+            btn_billete3.setVisibility(View.VISIBLE);
+        }
+
         //DialogoSeleccion de Monto consultado de la BD
         chequedItems = new boolean[mtolistitems.length];
 
@@ -281,6 +357,9 @@ public class transaccionesActivity extends AppCompatActivity {
                 btn_billete1.setVisibility(View.GONE);
                 btn_billete2.setVisibility(View.GONE);
                 btn_billete3.setVisibility(View.GONE);
+                btn_billete1.setText(null);
+                btn_billete2.setText(null);
+                btn_billete3.setText(null);
             }
         });
         btn_billete2.setOnClickListener(new View.OnClickListener() {
@@ -290,6 +369,9 @@ public class transaccionesActivity extends AppCompatActivity {
                 btn_billete1.setVisibility(View.GONE);
                 btn_billete2.setVisibility(View.GONE);
                 btn_billete3.setVisibility(View.GONE);
+                btn_billete1.setText(null);
+                btn_billete2.setText(null);
+                btn_billete3.setText(null);
             }
         });
         btn_billete3.setOnClickListener(new View.OnClickListener() {
@@ -299,6 +381,9 @@ public class transaccionesActivity extends AppCompatActivity {
                 btn_billete1.setVisibility(View.GONE);
                 btn_billete2.setVisibility(View.GONE);
                 btn_billete3.setVisibility(View.GONE);
+                btn_billete1.setText(null);
+                btn_billete2.setText(null);
+                btn_billete3.setText(null);
             }
         });
 
@@ -331,6 +416,9 @@ public class transaccionesActivity extends AppCompatActivity {
                 mBuilder.setAdapter(adapter1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        btn_billete1.setVisibility(View.GONE);
+                        btn_billete2.setVisibility(View.GONE);
+                        btn_billete3.setVisibility(View.GONE);
                         String strName = adapter1.getItem(which);
 
                        /* AlertDialog.Builder builderInner = new AlertDialog.Builder(transaccionesActivity.this);
@@ -359,9 +447,16 @@ public class transaccionesActivity extends AppCompatActivity {
                                 btnCategorias.setBackgroundResource(imgColor);
                                 categoriaSeleccionada=which+1;
                                 consultarMontoTransaccionByCat();
-                                btn_billete1.setVisibility(View.VISIBLE);
-                                btn_billete2.setVisibility(View.VISIBLE);
-                                btn_billete3.setVisibility(View.VISIBLE);
+                                if ( btn_billete_show !=0 && btn_billete_show <=3){
+                                    btn_billete1.setVisibility(View.VISIBLE);
+                                }
+                                if ( btn_billete_show !=0 && btn_billete_show >=2 ){
+                                    btn_billete2.setVisibility(View.VISIBLE);
+                                }
+                                if ( btn_billete_show !=0 && btn_billete_show >=3){
+                                    btn_billete3.setVisibility(View.VISIBLE);
+                                }
+
                             }
                         }
                     }
@@ -463,6 +558,22 @@ public class transaccionesActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
             db.close();
+
+            if(categoriaSeleccionada==11){
+                SQLiteDatabase db2 = conn.getWritableDatabase();
+                ContentValues values2 = new ContentValues();
+                values2.put(Utilidades.CAMPO_TIPO_OPER, tipotran);
+                values2.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
+                values2.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
+                values2.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentaDestino.getSelectedItemPosition());
+                values2.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
+                //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
+                Long idResultante2 = db2.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values2);
+
+                Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
+                db2.close();
+            }
+
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
@@ -541,12 +652,15 @@ public class transaccionesActivity extends AppCompatActivity {
             mtolistitems[i] =listaTransacciones.get(i).getMonto_operacion().toString();
             if (i==0){
                 btn_billete1.setText(listaTransacciones.get(i).getMonto_operacion().toString());
+                btn_billete_show=1;
             }
             if (i==1){
                 btn_billete2.setText(listaTransacciones.get(i).getMonto_operacion().toString());
+                btn_billete_show=2;
             }
             if (i==2){
                 btn_billete3.setText(listaTransacciones.get(i).getMonto_operacion().toString());
+                btn_billete_show=3;
             }
             listaMtoCat.add(
                     listaTransacciones.get(i).getId()+" - "

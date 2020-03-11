@@ -224,7 +224,7 @@ public class listaIngresos extends AppCompatActivity {
             listaingresos = new ArrayList<Ingreso>();
 
             //Cursor cursor = db.rawQuery("Select * from " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "='INGRESOS'", null);
-            Cursor cursor = db.rawQuery("Select * from " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "="+tipotran+" ", null);
+            Cursor cursor = db.rawQuery("Select * from " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "="+3+" ", null);
 
 
 

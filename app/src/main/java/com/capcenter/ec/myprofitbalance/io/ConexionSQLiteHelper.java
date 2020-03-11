@@ -17,6 +17,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(Utilidades.CREAR_TABLA_CATEGORIAS);
         db.execSQL(Utilidades.CREAR_TABLA_CUENTAS);
         db.execSQL(Utilidades.INSERT_CUENTA);
+        db.execSQL(Utilidades.INSERT_CUENTA1);
         db.execSQL(Utilidades.INSERT_OPERACIONES0);
         db.execSQL(Utilidades.INSERT_OPERACIONES1);
         db.execSQL(Utilidades.INSERT_OPERACIONES2);
