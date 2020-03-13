@@ -83,6 +83,8 @@ public class transaccionesActivity extends AppCompatActivity {
     Integer posision;
     Integer posision2;
     Integer categoriaSeleccionada;
+    String  sqlCuentas;
+
     //String[] catlistitems;//=new String[] ;
     String[] mtolistitems =new String[5] ;//={"Administrar Ingresos","Administrar Egresos","Administrar Transacciones"};
     boolean basic = true;
@@ -201,18 +203,21 @@ public class transaccionesActivity extends AppCompatActivity {
             txtvtituloTransaccion.setText("Nuevo Ingreso...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
             vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            sqlCuentas ="Select * from " + Utilidades.TABLA_CUENTAS;
             SpinnerCuentaDestino.setVisibility(View.GONE);
         }
         if (tipotran==2){
             txtvtituloTransaccion.setText("Nuevo Egreso...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
             vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            sqlCuentas ="Select * from " + Utilidades.TABLA_CUENTAS;
             SpinnerCuentaDestino.setVisibility(View.GONE);
         }
         if (tipotran==3){
             txtvtituloTransaccion.setText("Nueva Transferencia...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
             vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+            sqlCuentas ="Select * from " + Utilidades.TABLA_CUENTAS +" WHERE "+Utilidades.CTA_CAMPO_TIPO_CUENTA+ "<> 'EFECTIVO'";
             SpinnerCuentaDestino.setVisibility(View.VISIBLE);
         }
 
@@ -241,7 +246,7 @@ public class transaccionesActivity extends AppCompatActivity {
 
         //SpinnerCuentas.setSelection(posision2);
         SpinnerCuentas.setSelection(1);
-        SpinnerCuentaDestino.setSelection(2);
+        SpinnerCuentaDestino.setSelection(1);
         SpinnerCuentaDestino.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -488,7 +493,7 @@ public class transaccionesActivity extends AppCompatActivity {
                                 if ( btn_billete_show !=0 && btn_billete_show >=3){
                                     btn_billete3.setVisibility(View.VISIBLE);
                                 }
-                                if(categoriaSeleccionada==11){
+                                if(tipotran==3 && categoriaSeleccionada==1){
                                     SpinnerCuentaDestino.setVisibility(View.VISIBLE);
                                 }else{
                                     SpinnerCuentaDestino.setVisibility(View.GONE);
@@ -720,7 +725,7 @@ public class transaccionesActivity extends AppCompatActivity {
         try {
             conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
-            Cursor cursorc = db.rawQuery("Select * from " + Utilidades.TABLA_CUENTAS, null);
+            Cursor cursorc = db.rawQuery(sqlCuentas, null);
 
 
             Cuenta regCuenta= null;

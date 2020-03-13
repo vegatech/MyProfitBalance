@@ -14,15 +14,17 @@
         <activity android:name=".ui.transaccionesActivity"
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.SplashActivity">
+
+        </activity>
+        <activity android:name=".ui.listaIngresos" android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".ui.listaopciones" />
+        <activity android:name=".ui.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.listaIngresos" android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ui.listaopciones" />
-        <activity android:name=".ui.MainActivity" />
 
 
     </application>

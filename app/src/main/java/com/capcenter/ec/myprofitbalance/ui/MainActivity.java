@@ -49,15 +49,18 @@ public class MainActivity extends AppCompatActivity  {
                 if (menuItem.getItemId()== R.id.menu_home){
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                    startActivity(intent);
-                    showSelectedFragment(new homeFragment());
+                    //showSelectedFragment(new homeFragment());
+                    finish();
                 }
                 if (menuItem.getItemId()== R.id.menu_Reportes){
                     Intent intent = new Intent(getApplicationContext(), listaIngresos.class);
                     startActivity(intent);
+                    finish();
                     //showSelectedFragment(new reportsFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_ajustes){
                    // showSelectedFragment(new settingsFragment());
+                    finish();
                 }
                 return true;
             }
