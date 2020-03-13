@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorTransaccion1"
+    android:windowSoftInputMode="adjustPan"
     >
 
 
@@ -150,9 +151,10 @@
     <ScrollView
         android:id="@+id/ScrollView01"
         android:layout_width="wrap_content"
-        android:layout_height="500dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="215dp"
         android:paddingTop="1dp"
+        android:paddingBottom="5dp"
         android:scrollbars="vertical" >
         <!--Put form controls here-->
 
@@ -280,25 +282,50 @@
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="1dp"
-
+                android:imeOptions="actionDone"
+                android:singleLine="true"
                 android:hint="@string/Descripcion"
                 android:inputType="text"></EditText>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginVertical="5dp"
+            android:orientation="horizontal">
+           <Button
+               android:id="@+id/ButtonSendTransaction"
+               android:layout_width="150dp"
+               android:layout_height="40dp"
+               android:layout_gravity="center"
+               android:onClick="registrarTransaccionSalir"
+               android:text="@string/transactionbutton"></Button>
 
-            <Button
-                android:id="@+id/ButtonSendTransaction"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:onClick="registrarUsuario"
-                android:layout_gravity="center"
-                android:text="@string/transactionbutton"></Button>
-
-
-
+           <Button
+               android:id="@+id/ButtonSendTransactionNuevo"
+               android:layout_width="150dp"
+               android:layout_height="40dp"
+               android:layout_gravity="center"
+               android:onClick="registrarTransaccionyNuevo"
+               android:text="@string/transactionbutton2"></Button>
+        </LinearLayout>
         </LinearLayout>
 
 </ScrollView>
-    <include layout="@layout/manage_category_dialog"
+
+    <include
+        layout="@layout/manage_category_dialog"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginVertical="500dp"/>
+        android:layout_height="47dp"
+        android:layout_marginVertical="500dp" />
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigationbariewT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#242424"
+        app:itemBackground="@color/colorCardReport"
+        app:itemIconTint="@color/colorWhite"
+        app:itemTextColor="@color/colorWhite"
+        app:menu="@menu/main_menu"></android.support.design.widget.BottomNavigationView>
 </android.support.design.widget.CoordinatorLayout>

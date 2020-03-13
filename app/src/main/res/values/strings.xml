@@ -9,7 +9,8 @@
     <string name="montovalue">Monto de la transacción</string>
     <string name="categorias">Ingrese categorias</string>
     <string name="labelCategorias">Categoria</string>
-    <string name="transactionbutton">Guardar</string>
+    <string name="transactionbutton">Guardar y Salir</string>
+    <string name="transactionbutton2">Guardar Nuevo registro</string>
     <string name="Fecha">Fecha de Operacion</string>
     <string name="Fechalabel">Fecha:</string>
     <string name="labeltipoCuenta">Cuenta</string>

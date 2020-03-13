@@ -13,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -45,6 +47,9 @@ import com.capcenter.ec.myprofitbalance.model.Ingreso;
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
 import com.capcenter.ec.myprofitbalance.io.AvatarVo;
+import com.capcenter.ec.myprofitbalance.ui.fragments.homeFragment;
+import com.capcenter.ec.myprofitbalance.ui.fragments.settingsFragment;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,7 +59,7 @@ import java.util.Map;
 public class transaccionesActivity extends AppCompatActivity {
     private View vistaTransaccion;
     private Spinner spCategorias,SpinnerCuentas,SpinnerCuentaDestino;
-    private EditText txtmonto;
+    private EditText txtmonto, txtDescripcion;
     private TextView txtvmonto, txtvtituloTransaccion;
     private EditText txtfecha;
     private Button btn_date_hoy,btn_date_ayer, btn_date_otros;
@@ -102,7 +107,7 @@ public class transaccionesActivity extends AppCompatActivity {
     String[] detalleCategoriasNEw={"01","02","03","04","05","06","07"};
     int [] imgCategoriasNew ={R.drawable.ic_cat_01,R.drawable.ic_cat_02,R.drawable.ic_cat_03,R.drawable.ic_cat_04,R.drawable.ic_cat_05,R.drawable.ic_cat_06,R.drawable.ic_cat_07,R.drawable.ic_cat_generic};
 
-
+    BottomNavigationView mbotomnavigationview;
     View vista;
 
 
@@ -111,6 +116,28 @@ public class transaccionesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transacciones);
+
+        mbotomnavigationview =(BottomNavigationView) findViewById(R.id.navigationbariewT);
+        mbotomnavigationview.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                if (menuItem.getItemId()== R.id.menu_home){
+                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                     startActivity(intent);
+                    //showSelectedFragment(new homeFragment());
+                }
+                if (menuItem.getItemId()== R.id.menu_Reportes){
+                    Intent intent = new Intent(getApplicationContext(), listaIngresos.class);
+                    startActivity(intent);
+                    //showSelectedFragment(new reportsFragment());
+                }
+                if (menuItem.getItemId()== R.id.menu_ajustes){
+                    //showSelectedFragment(new settingsFragment());
+                }
+                return true;
+            }
+        });
 
         final String DBO;
 
@@ -139,6 +166,7 @@ public class transaccionesActivity extends AppCompatActivity {
         SpinnerCuentaDestino =(Spinner)findViewById(R.id.SpinnerCuentaDestino);
         txtmonto =(EditText) findViewById(R.id.EditTextMonto);
         txtfecha = (EditText) findViewById(R.id.EditTextFecha);
+        txtDescripcion =(EditText) findViewById(R.id.EditTextDescripcion);
 
 
         final RecyclerView recyclerAvatars;
@@ -185,7 +213,7 @@ public class transaccionesActivity extends AppCompatActivity {
             txtvtituloTransaccion.setText("Nueva Transferencia...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
             vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
-
+            SpinnerCuentaDestino.setVisibility(View.VISIBLE);
         }
 
         String fechaOper = Utilidades.getCurrentDate();
@@ -217,8 +245,10 @@ public class transaccionesActivity extends AppCompatActivity {
         SpinnerCuentaDestino.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (SpinnerCuentas.getSelectedItem().toString().trim().equals(SpinnerCuentaDestino.getSelectedItem().toString().trim())) {
-                    Toast.makeText(transaccionesActivity.this, "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
+                if(tipotran==3 && categoriaSeleccionada==11) {
+                    if (SpinnerCuentas.getSelectedItem().toString().trim().equals(SpinnerCuentaDestino.getSelectedItem().toString().trim())) {
+                        Toast.makeText(transaccionesActivity.this, "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -230,8 +260,10 @@ public class transaccionesActivity extends AppCompatActivity {
         SpinnerCuentas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (SpinnerCuentas.getSelectedItem().toString().trim().equals(SpinnerCuentaDestino.getSelectedItem().toString().trim())) {
-                    Toast.makeText(transaccionesActivity.this, "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
+                if(tipotran==3 && categoriaSeleccionada==11) {
+                    if (SpinnerCuentas.getSelectedItem().toString().trim().equals(SpinnerCuentaDestino.getSelectedItem().toString().trim())) {
+                        Toast.makeText(transaccionesActivity.this, "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -456,7 +488,11 @@ public class transaccionesActivity extends AppCompatActivity {
                                 if ( btn_billete_show !=0 && btn_billete_show >=3){
                                     btn_billete3.setVisibility(View.VISIBLE);
                                 }
-
+                                if(categoriaSeleccionada==11){
+                                    SpinnerCuentaDestino.setVisibility(View.VISIBLE);
+                                }else{
+                                    SpinnerCuentaDestino.setVisibility(View.GONE);
+                                }
                             }
                         }
                     }
@@ -529,55 +565,13 @@ public class transaccionesActivity extends AppCompatActivity {
 
     }// On Create
 
-    public void registrarUsuario(View view){
-        String resultado=null;
-        if  (btnCategorias.getText() != null ){
-            resultado ="ok";
-        }else{
-            resultado =null;
-            Toast.makeText(getApplicationContext(),"El campo Categoria debe ser indicado",Toast.LENGTH_LONG).show();
-        }
-        if (TextUtils.isEmpty(txtmonto.getText().toString())){
-            resultado =null;
-            Toast.makeText(getApplicationContext(),"El campo Monto debe ser indicado",Toast.LENGTH_LONG).show();
-        }else{
-            resultado ="ok";
-        }
-        if (resultado =="ok") {
-            conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
-            SQLiteDatabase db = conn.getWritableDatabase();
-            ContentValues values = new ContentValues();
-
-            values.put(Utilidades.CAMPO_TIPO_OPER, tipotran);//SpinnerCuentas.getSelectedItem().toString());
-            values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
-            values.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
-            values.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentas.getSelectedItemPosition());
-            values.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
-            //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
-            Long idResultante = db.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values);
-
-            Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
-            db.close();
-
-            if(categoriaSeleccionada==11){
-                SQLiteDatabase db2 = conn.getWritableDatabase();
-                ContentValues values2 = new ContentValues();
-                values2.put(Utilidades.CAMPO_TIPO_OPER, tipotran);
-                values2.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
-                values2.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
-                values2.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentaDestino.getSelectedItemPosition());
-                values2.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
-                //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
-                Long idResultante2 = db2.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values2);
-
-                Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
-                db2.close();
-            }
-
+    public void registrarTransaccionSalir(View view){
+            guardarnuevoRegistro();
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
-        }
-
+    }
+    public void registrarTransaccionyNuevo(View view){
+        guardarnuevoRegistro();
     }
     // Trae los datos paralaedicion de un registro seleccionado en la lista detransacciones
     private void consultarTransaccionById(){
@@ -761,7 +755,54 @@ public class transaccionesActivity extends AppCompatActivity {
     }
 
 
+public void guardarnuevoRegistro(){
+    String resultado=null;
+    if  (btnCategorias.getText() != null ){
+        resultado ="ok";
+    }else{
+        resultado =null;
+        Toast.makeText(getApplicationContext(),"El campo Categoria debe ser indicado",Toast.LENGTH_LONG).show();
+    }
+    if (TextUtils.isEmpty(txtmonto.getText().toString())){
+        resultado =null;
+        Toast.makeText(getApplicationContext(),"El campo Monto debe ser indicado",Toast.LENGTH_LONG).show();
+    }else{
+        resultado ="ok";
+    }
+    if (resultado =="ok") {
+        conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
+        values.put(Utilidades.CAMPO_TIPO_OPER, tipotran);//SpinnerCuentas.getSelectedItem().toString());
+        values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
+        values.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
+        values.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentas.getSelectedItemPosition());
+        values.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
+        //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
+        Long idResultante = db.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values);
+
+        Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
+        db.close();
+
+        if(categoriaSeleccionada==11){
+            SQLiteDatabase db2 = conn.getWritableDatabase();
+            ContentValues values2 = new ContentValues();
+            values2.put(Utilidades.CAMPO_TIPO_OPER, tipotran);
+            values2.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
+            values2.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
+            values2.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentaDestino.getSelectedItemPosition());
+            values2.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
+            //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
+            Long idResultante2 = db2.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values2);
+
+            Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
+            db2.close();
+        }
+        txtDescripcion.setText("");
+        txtmonto.setText("");
+    }
+}
 }// Fin clase transacciones
 
 

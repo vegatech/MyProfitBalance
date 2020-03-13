@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
@@ -151,13 +151,49 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/custom_date_button"
                 android:gravity="center|center_horizontal"
-                android:text="Transac."
+                android:text="Tranfer."
                 android:textAllCaps="false" />
 
 
         </LinearLayout>
         <View
             android:id="@+id/SeparadorRep03"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingVertical="10dp"
+            android:background="@drawable/shape_separador"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginVertical="5dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/imageView_rep2"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_category_section" />
+
+        <Spinner
+            android:id="@+id/SpinnerCategoriasRep"
+            android:layout_width="320dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
+            android:textSize="18pt"></Spinner>
+    </LinearLayout>
+        <View
+            android:id="@+id/SeparadorRep05"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:paddingTop="20dp"
@@ -174,26 +210,32 @@
             android:layout_marginVertical="5dp"
             android:orientation="horizontal">
             <ImageView
-                android:id="@+id/imageView_rep2"
+                android:id="@+id/imageView_rep3"
                 android:layout_width="30dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_category_section" />
 
-            <Spinner
-                android:id="@+id/SpinnerCategoriasRep"
-                android:layout_width="320dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginBottom="10dp"
-                android:paddingLeft="5dp"
+            <Button
+                android:id="@+id/btn_set_execute_rep"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+
+                android:layout_marginLeft="125dp"
+                android:layout_marginRight="155dp"
+                android:background="@drawable/custom_date_button"
+                android:gravity="center|center_horizontal"
+                android:paddingLeft="100dp"
                 android:paddingTop="5dp"
-                android:paddingRight="5dp"
+                android:paddingRight="10dp"
                 android:paddingBottom="5dp"
-                android:textSize="12pt"></Spinner>
+                android:text="Consultar"
+                android:textAllCaps="false"
+                android:textColor="@drawable/button_text" />
+
         </LinearLayout>
         <View
-            android:id="@+id/SeparadorRep05"
+            android:id="@+id/SeparadorRep06"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:paddingTop="20dp"
@@ -210,7 +252,7 @@
 
         android:layout_width="410dp"
         android:layout_height="200dp"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="225dp"
         android:paddingVertical="5dp" />
 
     <ScrollView
@@ -218,7 +260,7 @@
         android:layout_width="410dp"
         android:layout_height="400dp"
         android:layout_below="@+id/lvreportes"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="410dp"
         android:paddingTop="5dp"
         android:scrollbars="vertical">
 
@@ -245,4 +287,14 @@
                 android:paddingTop="20dp" />
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigationbariewR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#242424"
+        app:itemBackground="@color/colorCardReport"
+        app:itemIconTint="@color/colorWhite"
+        app:itemTextColor="@color/colorWhite"
+        app:menu="@menu/main_menu"></android.support.design.widget.BottomNavigationView>
+</android.support.design.widget.CoordinatorLayout>

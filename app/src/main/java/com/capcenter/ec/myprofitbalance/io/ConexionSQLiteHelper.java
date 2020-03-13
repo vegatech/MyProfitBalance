@@ -29,8 +29,8 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(Utilidades.INSERT_OPERACIONES13);
         db.execSQL(Utilidades.INSERT_OPERACIONES14);
         db.execSQL(Utilidades.INSERT_CAT0);
-        db.execSQL(Utilidades.INSERT_CAT1);
-        db.execSQL(Utilidades.INSERT_CAT2);
+        //db.execSQL(Utilidades.INSERT_CAT1);
+        //db.execSQL(Utilidades.INSERT_CAT2);
         db.execSQL(Utilidades.INSERT_CAT3);
         db.execSQL(Utilidades.INSERT_CAT4);
         db.execSQL(Utilidades.INSERT_CAT10);
@@ -38,8 +38,10 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(Utilidades.INSERT_CAT12);
         db.execSQL(Utilidades.INSERT_CAT13);
         db.execSQL(Utilidades.INSERT_CAT14);
-        //db.execSQL(Utilidades.INSERT_CAT15);
-        //db.execSQL(Utilidades.INSERT_CAT16);
+        db.execSQL(Utilidades.INSERT_CAT15);
+        db.execSQL(Utilidades.INSERT_CAT16);
+        db.execSQL(Utilidades.INSERT_CAT17);
+        db.execSQL(Utilidades.INSERT_CAT18);
         db.execSQL(Utilidades.INSERT_CAT20);
         db.execSQL(Utilidades.INSERT_CAT21);
         db.execSQL(Utilidades.INSERT_CAT22);

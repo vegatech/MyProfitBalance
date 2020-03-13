@@ -6,8 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,8 +49,9 @@ import java.util.Random;
 
 public class listaIngresos extends AppCompatActivity {
     ConexionSQLiteHelper conn;
-    private String FechaRep;
-    private String consultaSQL;
+    private String FechaRep, fechaDesde, fechaHasta;
+    private String consultaSQL, transaccioneSQL;
+    private int posicionSeleccionada;
     ListView lvingresos;
     ArrayList<Ingreso> listaingresos;
     ArrayList<String> listainformacionIngreso;
@@ -59,6 +63,7 @@ public class listaIngresos extends AppCompatActivity {
     Integer tipotran;
     Map<Integer, Integer> mapLista = new HashMap<Integer, Integer>();
     Integer posisionLista;
+    BottomNavigationView mbotomnavigationviewR;
     private PieChart piechart;
     private BarChart barchart;
     //private String []months= new String[]{"Enero","Febrero","Marzo","Abril","Mayo"};
@@ -168,6 +173,27 @@ public class listaIngresos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_ingresos);
 
+        mbotomnavigationviewR =(BottomNavigationView) findViewById(R.id.navigationbariewR);
+        mbotomnavigationviewR.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                if (menuItem.getItemId()== R.id.menu_home){
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    //showSelectedFragment(new homeFragment());
+                }
+                if (menuItem.getItemId()== R.id.menu_Reportes){
+                    Intent intent = new Intent(getApplicationContext(), listaIngresos.class);
+                    startActivity(intent);
+                    //showSelectedFragment(new reportsFragment());
+                }
+                if (menuItem.getItemId()== R.id.menu_ajustes){
+                    //showSelectedFragment(new settingsFragment());
+                }
+                return true;
+            }
+        });
 
         btn_date_hoy =(Button) findViewById(R.id.btn_set_date_today_rep);
         btn_date_ayer =(Button) findViewById(R.id.btn_set_date_yesterday_rep);
@@ -178,6 +204,7 @@ public class listaIngresos extends AppCompatActivity {
         btn_trn_egreso =(Button) findViewById(R.id.btn_set_trn_egreso_rep);
         btn_trn_transfer =(Button) findViewById(R.id.btn_set_trn_transferencias_rep);
         spinner_categoria_rep =(Spinner)findViewById(R.id.SpinnerCategoriasRep);
+        btn_ejecutar_qry =(Button) findViewById(R.id.btn_set_execute_rep);
 
         // Set Default botones
         String fechaOper = Utilidades.getCurrentDate();
@@ -186,13 +213,14 @@ public class listaIngresos extends AppCompatActivity {
         btn_date_hoy.setTextColor(getResources().getColor(android.R.color.white));
         btn_trn_todas.setBackgroundResource(R.drawable.button_date_pressed);
         btn_trn_todas.setTextColor(getResources().getColor(android.R.color.white));
+        btn_ejecutar_qry.setBackgroundResource(R.drawable.custom_date_button);
         consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS ;
         consultarCategorias();
         ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (this,android.R.layout.simple_spinner_item,listaCat);
         spinner_categoria_rep.setAdapter(adapador);
-        spinner_categoria_rep.setSelection(1);
+        spinner_categoria_rep.setSelection(0);
 
-        //btn_ejecutar_qry
+
 
 
 
@@ -262,46 +290,128 @@ public class listaIngresos extends AppCompatActivity {
         btn_trn_todas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_trn_todas.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_trn_todas.setTextColor(getResources().getColor(android.R.color.white));
+                btn_trn_ingreso.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_egreso.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_transfer.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_ingreso.setTextColor(getResources().getColor(android.R.color.black));
+                btn_trn_egreso.setTextColor(getResources().getColor(android.R.color.black));
+                btn_trn_transfer.setTextColor(getResources().getColor(android.R.color.black));
                 consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS ;
+
                 consultarCategorias();
                 ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (listaIngresos.this,android.R.layout.simple_spinner_item,listaCat);
                 spinner_categoria_rep.setAdapter(adapador);
-                spinner_categoria_rep.setSelection(1);
+                spinner_categoria_rep.setSelection(0);
             }
         });
         btn_trn_ingreso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                btn_trn_ingreso.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_trn_ingreso.setTextColor(getResources().getColor(android.R.color.white));
+                btn_trn_todas.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_egreso.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_transfer.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_todas.setTextColor(getResources().getColor(android.R.color.black));
+                btn_trn_egreso.setTextColor(getResources().getColor(android.R.color.black));
+                btn_trn_transfer.setTextColor(getResources().getColor(android.R.color.black));
                 tipotran=1;
                 consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS + " WHERE "+Utilidades.CAT_CAMPO_TIPO+"="+tipotran;
+                transaccioneSQL ="";
                 consultarCategorias();
                 ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (listaIngresos.this,android.R.layout.simple_spinner_item,listaCat);
                 spinner_categoria_rep.setAdapter(adapador);
-                spinner_categoria_rep.setSelection(1);
+                spinner_categoria_rep.setSelection(0);
             }
         });
         btn_trn_egreso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                btn_trn_egreso.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_trn_egreso.setTextColor(getResources().getColor(android.R.color.white));
+                btn_trn_ingreso.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_todas.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_transfer.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_ingreso.setTextColor(getResources().getColor(android.R.color.black));
+                btn_trn_todas.setTextColor(getResources().getColor(android.R.color.black));
+                btn_trn_transfer.setTextColor(getResources().getColor(android.R.color.black));
                 tipotran=2;
                 consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS + " WHERE "+Utilidades.CAT_CAMPO_TIPO+"="+tipotran;
                 consultarCategorias();
                 ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (listaIngresos.this,android.R.layout.simple_spinner_item,listaCat);
                 spinner_categoria_rep.setAdapter(adapador);
-                spinner_categoria_rep.setSelection(1);
+                spinner_categoria_rep.setSelection(0);
             }
         });
         btn_trn_transfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_trn_transfer.setBackgroundResource(R.drawable.button_date_pressed);
+                btn_trn_transfer.setTextColor(getResources().getColor(android.R.color.white));
+                btn_trn_ingreso.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_egreso.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_todas.setBackgroundResource(R.drawable.custom_date_button);
+                btn_trn_ingreso.setTextColor(getResources().getColor(android.R.color.black));
+                btn_trn_egreso.setTextColor(getResources().getColor(android.R.color.black));
+                btn_trn_todas.setTextColor(getResources().getColor(android.R.color.black));
                 tipotran=3;
                 consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS + " WHERE "+Utilidades.CAT_CAMPO_TIPO+"="+tipotran;
                 consultarCategorias();
                 ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (listaIngresos.this,android.R.layout.simple_spinner_item,listaCat);
                 spinner_categoria_rep.setAdapter(adapador);
-                spinner_categoria_rep.setSelection(1);
+                spinner_categoria_rep.setSelection(0);
+            }
+        });
+        spinner_categoria_rep.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                posicionSeleccionada = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        btn_ejecutar_qry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                transaccioneSQL="SELECT * FROM " + Utilidades.TABLA_OPERACIONES+" ";
+                if (tipotran!=0) {
+                    transaccioneSQL=transaccioneSQL+ " WHERE " + Utilidades.CAMPO_TIPO_OPER + "="+tipotran+" ";
+                }
+                if (posicionSeleccionada!=0){
+                    transaccioneSQL=transaccioneSQL+" AND "+Utilidades.CAMPO_TIPO_CAT+" = " +posicionSeleccionada+" ";
+                }
+                if (FechaRep.length()!=0){
+                   // transaccioneSQL=transaccioneSQL+"  AND DATE("+Utilidades.CAMPO_FECHA +") BETWEEN  DATE('11/03/2020') and Date('11/03/2020')";
+                //+FechaRep.trim().toString()+"' AND '"+FechaRep.trim().toString()+"'";
+                    Log.d("SQL",transaccioneSQL);
+                }
+
+                        //" AND "+ Utilidades.CAMPO_FECHA +" = "+FechaRep+" " ;
+                consultarListaIngresos();
+                ArrayAdapter adaptador = new ArrayAdapter(listaIngresos.this, android.R.layout.simple_list_item_1,listainformacionIngreso);
+                lvingresos.setAdapter(adaptador);
+                months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
+                sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
+                colors = new int[ListaColorGraficas.size()];
+
+                for (int i = 0;i < ListaColorGraficas.size(); i++) {
+                    //Random rnd = new Random();
+                    //int colori = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                    colors[i] = Color.RED;
+
+                }
+
+
+                // Carga Graficas
+                barchart =(BarChart) findViewById(R.id.Barchart);
+                piechart =(PieChart) findViewById(R.id.Piechart);
+                createCharts();
+
             }
         });
         //conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
@@ -309,6 +419,7 @@ public class listaIngresos extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         //tipotran=bundle.getInt("tipoper");
         tipotran=1;
+        transaccioneSQL="SELECT * FROM " + Utilidades.TABLA_OPERACIONES ;
         consultarListaIngresos();
         months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
         sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
@@ -368,7 +479,7 @@ public class listaIngresos extends AppCompatActivity {
             listaingresos = new ArrayList<Ingreso>();
 
             //Cursor cursor = db.rawQuery("Select * from " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "='INGRESOS'", null);
-            Cursor cursor = db.rawQuery("Select * from " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "="+3+" ", null);
+            Cursor cursor = db.rawQuery(transaccioneSQL, null);
 
 
 
@@ -392,16 +503,33 @@ public class listaIngresos extends AppCompatActivity {
         listaMontoTransaccionesGrafica =new ArrayList<Double>();
         listaRangoTransaccionesFechaGrafica = new ArrayList<String>();
         ListaColorGraficas = new ArrayList<Integer>();
-        for (int i=0; i<listaingresos.size();i++){
-            listainformacionIngreso.add(listaingresos.get(i).getId()+" - "
-                    +listaingresos.get(i).getFecha()+"                                 "
-                    +listaingresos.get(i).getMonto_operacion()+"$"
-            );
-            listaRangoTransaccionesFechaGrafica.add(listaingresos.get(i).getFecha());
-            listaMontoTransaccionesGrafica.add(listaingresos.get(i).getMonto_operacion());
-            Random rnd = new Random();
-            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-            ListaColorGraficas.add(color);
+
+        for (int i=0; i<listaingresos.size();i++) {
+            String fechaVal=listaingresos.get(i).getFecha().trim().toString();
+            if (FechaRep.length() != 0 && fechaVal == FechaRep.trim().toString()) {
+                listainformacionIngreso.add(
+                        listaingresos.get(i).getFecha() + "                                 "
+                                + listaingresos.get(i).getMonto_operacion() + "$"
+
+                        );
+                listaRangoTransaccionesFechaGrafica.add(listaingresos.get(i).getFecha());
+                listaMontoTransaccionesGrafica.add(listaingresos.get(i).getMonto_operacion());
+                Random rnd = new Random();
+                int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                ListaColorGraficas.add(color);
+
+            }else{
+                listainformacionIngreso.add(
+                        listaingresos.get(i).getFecha() + "                                 "
+                                + listaingresos.get(i).getMonto_operacion() + "$"
+                );
+                listaRangoTransaccionesFechaGrafica.add(listaingresos.get(i).getFecha());
+                listaMontoTransaccionesGrafica.add(listaingresos.get(i).getMonto_operacion());
+                Random rnd = new Random();
+                int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                ListaColorGraficas.add(color);
+            }
+
 
         }
     }
@@ -435,6 +563,7 @@ public class listaIngresos extends AppCompatActivity {
     }
     private void obtenerListaCat(){
         listaCat= new ArrayList<String>();
+        listaCat.add("Seleccione...");
         for (int i=0; i<listaCategorias.size();i++){
             listaCat.add(
                     listaCategorias.get(i).getDescripcat()

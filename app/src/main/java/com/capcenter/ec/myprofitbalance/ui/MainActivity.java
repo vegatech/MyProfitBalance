@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity  {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
                 if (menuItem.getItemId()== R.id.menu_home){
-                    Intent intent = new Intent(getApplicationContext(), menuActivity.class);
-                    startActivity(intent);
-                    //showSelectedFragment(new homeFragment());
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                   startActivity(intent);
+                    showSelectedFragment(new homeFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_Reportes){
                     Intent intent = new Intent(getApplicationContext(), listaIngresos.class);
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity  {
                     //showSelectedFragment(new reportsFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_ajustes){
-                    showSelectedFragment(new settingsFragment());
+                   // showSelectedFragment(new settingsFragment());
                 }
                 return true;
             }
