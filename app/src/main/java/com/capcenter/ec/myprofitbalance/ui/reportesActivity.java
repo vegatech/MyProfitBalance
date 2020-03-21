@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
+import com.capcenter.ec.myprofitbalance.io.Graficas;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
 import com.capcenter.ec.myprofitbalance.model.Categoria;
 
@@ -73,11 +74,7 @@ public class reportesActivity extends AppCompatActivity {
     private PieChart piechart;
     private BarChart barchart;
     private HorizontalBarChart horizontalBarChart;
-    //private String []months= new String[]{"Enero","Febrero","Marzo","Abril","Mayo"};
-   // private int[]sale = new int[]{25,20,38,40,70};
-    public String [] months;
-    public Double [] sale;
-    public int[] colors; // = new int[]{Color.RED, Color.BLACK,Color.BLUE,Color.GREEN,Color.LTGRAY,Color.YELLOW};
+
 
     private Button btn_date_hoy,btn_date_ayer, btn_date_mes, btn_date_otro, btn_ejecutar_qry;
     private Spinner spinner_categoria_rep;
@@ -328,14 +325,14 @@ public class reportesActivity extends AppCompatActivity {
                 obtenerListaIngresos();
                 ArrayAdapter adaptador = new ArrayAdapter(reportesActivity.this, android.R.layout.simple_list_item_1,listainformacionIngreso);
                 lvingresos.setAdapter(adaptador);
-                months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
-                sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
-                colors = new int[ListaColorGraficas.size()];
+                Graficas.months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
+                Graficas.sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
+                Graficas.colors = new int[ListaColorGraficas.size()];
 
                 for (int i = 0;i < ListaColorGraficas.size(); i++) {
                     //Random rnd = new Random();
                     //int colori = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-                    colors[i] = Color.RED;
+                    Graficas.colors[i] = Color.RED;
 
                 }
 
@@ -344,7 +341,7 @@ public class reportesActivity extends AppCompatActivity {
                 barchart =(BarChart) findViewById(R.id.Barchart);
                 piechart =(PieChart) findViewById(R.id.Piechart);
                 horizontalBarChart =(HorizontalBarChart) findViewById(R.id.BarchartHorizontal);
-                createCharts();
+                Graficas.createCharts(barchart,piechart,horizontalBarChart);
 
             }
         });
@@ -356,12 +353,12 @@ public class reportesActivity extends AppCompatActivity {
         transaccioneSQL="SELECT * FROM " + Utilidades.TABLA_OPERACIONES ;//+"  WHERE 1 =1 AND " +Utilidades.CAMPO_FECHA_INT + " BETWEEN "+ fechaI +" and "+ fechaF;
         Utilidades.consultarListaIngresos(getApplicationContext(),transaccioneSQL);
         obtenerListaIngresos();
-        months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
-        sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
-        colors = new int[ListaColorGraficas.size()];
+        Graficas.months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
+        Graficas.sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
+        Graficas.colors = new int[ListaColorGraficas.size()];
 
          for (int i = 0;i < ListaColorGraficas.size(); i++) {
-            colors[i] = Utilidades.getColorsbyid(i);
+            Graficas.colors[i] = Utilidades.getColorsbyid(i);
 
          }
 
@@ -371,7 +368,7 @@ public class reportesActivity extends AppCompatActivity {
         piechart =(PieChart) findViewById(R.id.Piechart);
         horizontalBarChart =(HorizontalBarChart)  findViewById(R.id.BarchartHorizontal);
 
-        createCharts();
+        Graficas.createCharts(barchart,piechart,horizontalBarChart);
 
         ArrayAdapter adaptador = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listainformacionIngreso);
         lvingresos.setAdapter(adaptador);
@@ -469,110 +466,6 @@ public class reportesActivity extends AppCompatActivity {
                     Utilidades.listaCategorias.get(i).getDescripcat()
             );
         }
-    }
-    private Chart getSameChart(Chart chart,String descripcion,int textColor,int background,int AnimateY){
-        //Description descChartDescription = new Description();
-        //descChartDescription.setEnabled(false);
-
-       // chart.getDescription().setText("Ventas");
-        chart.getDescription().setEnabled(false);
-        chart.getDescription().setTextSize(15);
-        chart.setBackgroundColor(background);
-        chart.animateY(AnimateY);
-        legend(chart);
-        return chart;
-    }
-    private void legend(Chart chart){
-        Legend legend = chart.getLegend();
-        legend.setForm(Legend.LegendForm.CIRCLE);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-
-        ArrayList<LegendEntry> entries =new ArrayList<>();
-        for (int i=0; i < months.length;i++){
-            LegendEntry entry= new LegendEntry();
-            entry.formColor=colors[i];
-            entry.label=months[i];
-            entries.add(entry);
-        }
-        legend.setCustom(entries);
-    }
-    private ArrayList<BarEntry>getBarEntries(){
-        ArrayList<BarEntry> entries =new ArrayList<>();
-
-        for (int i=0; i < sale.length;i++) {
-            entries.add(new BarEntry(i,sale[i].intValue()));
-        }
-        return entries;
-    }
-    private ArrayList<PieEntry>getPieEntries(){
-        ArrayList<PieEntry> entries =new ArrayList<>();
-
-        for (int i=0; i < sale.length;i++) {
-            entries.add(new PieEntry( sale[i].intValue()));
-        }
-        return entries;
-    }
-    private void axisX(XAxis xaxis){
-        xaxis.setGranularityEnabled(true);
-        xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xaxis.setValueFormatter(new IndexAxisValueFormatter(months));
-
-    }
-    private void axisLeft(YAxis axis){
-        axis.setSpaceTop(30);
-        axis.setAxisMinimum(0);
-
-    }
-    private void axisRight(YAxis axis){
-        axis.setEnabled(false);
-
-    }
-    public void createCharts(){
-        barchart =(BarChart) getSameChart(barchart,"Series",Color.RED,Color.CYAN,3000);
-        barchart.setDrawGridBackground(true);
-        barchart.setDrawBarShadow(true);
-        barchart.setData(getBarData());
-        barchart.invalidate();
-        axisX(barchart.getXAxis());
-        axisLeft(barchart.getAxisLeft());
-        axisRight(barchart.getAxisRight());
-
-        piechart =(PieChart) getSameChart(piechart,"Ventas",Color.GRAY,Color.WHITE,3000);
-        piechart.setHoleRadius(60);
-        piechart.setTransparentCircleRadius(12);
-        piechart.setData(getPieData());
-        piechart.invalidate();
-
-        horizontalBarChart = (HorizontalBarChart) getSameChart(horizontalBarChart,"Series",Color.RED,Color.CYAN,3000);
-        horizontalBarChart.setDrawGridBackground(true);
-        horizontalBarChart.setDrawBarShadow(true);
-        horizontalBarChart.setData(getBarData());
-        horizontalBarChart.invalidate();
-        axisX(horizontalBarChart.getXAxis());
-        axisLeft(horizontalBarChart.getAxisLeft());
-        axisRight(horizontalBarChart.getAxisRight());
-    }
-    private DataSet getData(DataSet dataset){
-        dataset.setColors(colors);
-        dataset.setValueTextSize(Color.WHITE);
-        dataset.setValueTextSize(10);
-        return dataset;
-    }
-    private BarData getBarData(){
-        BarDataSet barDataSet=(BarDataSet) getData(new BarDataSet(getBarEntries(),""));
-
-        barDataSet.setBarShadowColor(Color.GRAY);
-        BarData barData = new BarData(barDataSet);
-        barData.setBarWidth(0.45f);
-        return barData;
-    }
-    private PieData getPieData(){
-        PieDataSet pieDataSet=(PieDataSet) getData(new PieDataSet(getPieEntries(),""));
-
-        pieDataSet.setSliceSpace(2);// getSliceSpace(2);
-        pieDataSet.setValueFormatter(new PercentFormatter());
-
-        return new PieData(pieDataSet);
     }
 
 }
