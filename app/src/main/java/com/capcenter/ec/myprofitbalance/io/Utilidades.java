@@ -1,10 +1,22 @@
 package com.capcenter.ec.myprofitbalance.io;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.os.Environment;
+
 import com.capcenter.ec.myprofitbalance.R;
+import com.capcenter.ec.myprofitbalance.model.Categoria;
+import com.capcenter.ec.myprofitbalance.model.Transaccion;
+import com.capcenter.ec.myprofitbalance.ui.reportesActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,13 +25,25 @@ import java.util.TimeZone;
 public class Utilidades {
     public static final String DATE_FORMAT_1 = "dd/MM/yyyy";
 
-
+    public static final String RUTA_APK= Environment.getExternalStorageDirectory().toString();
+    public static final String RUTA_APK_SD="/storage/sdcard0/";
     public static AvatarVo avatarSeleccion=null;
     public static int avatarIdSeleccion=0;
     public static String avatarIdSeleccionDialogo="";
-
     public static ArrayList<AvatarVo> listaAvatars=null;
 
+    public static final String NOMBRE_BD="myprofitbd.db";///mnt/sdcard/
+    public static final int VERSION_DB=24;
+    public static final String RUTA_APP="com.capcenter.ec.myprofitbalance:drawable/";
+    public static  ArrayList<Integer> listColores=null;
+    public static  ConexionSQLiteHelper conn;
+    public static ArrayList<Categoria> listaCategorias;
+   public static ArrayList<Transaccion> listaingresos,listaIngresos,listaEgresos,listaTransferencias, listaTorta;
+    public static  String getAmericanDate(String fechaI){
+        String fechaE;
+        fechaE = fechaI.substring(6,10)+fechaI.substring(3,5)+fechaI.substring(0,2);
+        return fechaE;
+    }
     public static String getCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_1);
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC-5"));
@@ -53,21 +77,68 @@ public class Utilidades {
         return calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
 
     }
-    public static final String NOMBRE_BD="myprofitbd.db";
-    public static final int VERSION_DB=22;
-    public static final String RUTA_APP="com.capcenter.ec.myprofitbalance:drawable/";
+    public static int obtenerUltimoDiaMesActual() {
+        int mes = Calendar.getInstance().get(Calendar.MONTH);
+        int anio = Calendar.getInstance().get(Calendar.YEAR);
+        int dia,fecha;
+        String fechaStr,m,d,a;
+        Calendar calendario=Calendar.getInstance();
+        calendario.set(anio, mes, 1);
+        dia = calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        mes = mes +1;
+        a = String.valueOf(anio);
+        if (dia <10){
+             d  = String.valueOf(dia);
+            d = "0"+d;
+        }else{
+            d  = String.valueOf(dia);
+        }
+        if (mes <10){
+             m = String.valueOf(mes);
+            m = "0"+m;
+        }else{
+            m = String.valueOf(mes);
+        }
+        fechaStr =a+m+d;
+        fecha = Integer.parseInt(fechaStr);
+        return fecha;
+    }
+    public ArrayList<String> getMesesGrafica(){
+        ArrayList<String> Meses = new ArrayList<>();
+        int i = Calendar.getInstance().get(Calendar.MONTH)+1;
+
+        if (i <=6){
+            Meses.add("Enero");
+            Meses.add("Febrero");
+            Meses.add("Marzo");
+            Meses.add("Abril");
+            Meses.add("Mayo");
+            Meses.add("Junio");
+        }else{
+            Meses.add("Julio");
+            Meses.add("Agosto");
+            Meses.add("Septiembre");
+            Meses.add("Octubre");
+            Meses.add("Noviembre");
+            Meses.add("Diciembre");
+        }
+
+        return Meses;
+    }
 
     //tablas
     public static final String TABLA_OPERACIONES= "TRANSACCIONES";
     public static final String CAMPO_ID="id";
     public static final String CAMPO_FECHA="FECHA";
+    public static final String CAMPO_FECHA_INT="FECHAINT";
     public static final String CAMPO_TIPO_OPER="TIPO_OPERACION";
     public static final String CAMPO_TIPO_CAT="TIPO_CATEGORIA";
     public static final String CAMPO_ID_CTA="ID_CTA";
     public static final String CAMPO_MONTO="MONTO_OPERACION";
     public static final String CAMPO_DESCRIPCION="DESCRIPCION";
 
-    public static final String CREAR_TABLA_OPERACIONES ="CREATE TABLE "+TABLA_OPERACIONES+"  ("+CAMPO_ID+" INTEGER PRIMARY KEY autoincrement, "+CAMPO_FECHA+" TEXT, "+CAMPO_TIPO_OPER+" INTEGER,"+CAMPO_TIPO_CAT+" INTEGER,"+CAMPO_ID_CTA+" INTEGER,"+CAMPO_MONTO+ " DECIMAL(10,5), "+CAMPO_DESCRIPCION +" TEXT"+")";
+    public static final String CREAR_TABLA_OPERACIONES ="CREATE TABLE "+TABLA_OPERACIONES+"  ("+CAMPO_ID+" INTEGER PRIMARY KEY autoincrement, "+CAMPO_FECHA+" TEXT, "+CAMPO_FECHA_INT+" INT, "+CAMPO_TIPO_OPER+" INTEGER,"+CAMPO_TIPO_CAT+" INTEGER,"+CAMPO_ID_CTA+" INTEGER,"+CAMPO_MONTO+ " DECIMAL(10,5), "+CAMPO_DESCRIPCION +" TEXT"+")";
 
 
     public static final String TABLA_CATEGORIAS="CATEGORIAS";
@@ -96,17 +167,24 @@ public class Utilidades {
 
     // insert de la tabla de operaciones
     //Ingresos
-    public static final String INSERT_OPERACIONES0="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'01/01/2020',"+1+","+1+","+1+","+700+","+"'Descripcion'"+")";
-    public static final String INSERT_OPERACIONES1="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'02/01/2020',"+1+","+2+","+1+","+180+","+"'Descripcion'"+")";
-    public static final String INSERT_OPERACIONES2="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'03/01/2020',"+1+","+3+","+1+","+20+","+"'Descripcion'"+")";
-    public static final String INSERT_OPERACIONES3="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'06/01/2020',"+1+","+1+","+1+","+3+","+"'Descripcion'"+")";
-    public static final String INSERT_OPERACIONES4="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'08/01/2020',"+1+","+4+","+1+","+600+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES0="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'01/01/2020'"+","+20200101+","+1+","+1+","+1+","+70+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES1="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'02/01/2020'"+","+20200102+","+1+","+2+","+1+","+18+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES2="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'03/01/2020'"+","+20200103+","+1+","+3+","+1+","+20+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES3="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'06/01/2020'"+","+20200104+","+1+","+1+","+1+","+3+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES4="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'08/01/2020'"+","+20200105+","+1+","+4+","+1+","+60+","+"'Descripcion'"+")";
     //Egresos
-    public static final String INSERT_OPERACIONES10="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'01/01/2020',"+2+","+1+","+1+","+20+","+"'Descripcion'"+")";
-    public static final String INSERT_OPERACIONES11="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'02/01/2020',"+2+","+2+","+1+","+200+","+"'Descripcion'"+")";
-    public static final String INSERT_OPERACIONES12="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'03/01/2020',"+2+","+3+","+1+","+19+","+"'Descripcion'"+")";
-    public static final String INSERT_OPERACIONES13="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'07/01/2020',"+2+","+4+","+1+","+3+","+"'Descripcion'"+")";
-    public static final String INSERT_OPERACIONES14="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'08/01/2020',"+2+","+5+","+1+","+100+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES10="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'01/01/2020'"+","+20200101+","+2+","+1+","+1+","+20+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES11="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'02/01/2020'"+","+20200102+","+2+","+2+","+1+","+45+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES12="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'03/01/2020'"+","+20200103+","+2+","+3+","+1+","+19+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES13="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'07/01/2020'"+","+20200104+","+2+","+4+","+1+","+3+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES14="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'08/01/2020'"+","+20200105+","+2+","+5+","+1+","+10+","+"'Descripcion'"+")";
+    //Transferencias y retiro
+    public static final String INSERT_OPERACIONES20="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'01/01/2020'"+","+20200101+","+3+","+1+","+1+","+20+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES21="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'02/01/2020'"+","+20200102+","+3+","+1+","+1+","+200+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES22="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'03/01/2020'"+","+20200103+","+3+","+1+","+1+","+19+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES23="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'07/01/2020'"+","+20200104+","+3+","+2+","+1+","+3+","+"'Descripcion'"+")";
+    public static final String INSERT_OPERACIONES24="INSERT INTO "+TABLA_OPERACIONES+"("+CAMPO_FECHA+","+CAMPO_FECHA_INT+","+  CAMPO_TIPO_OPER  +","+CAMPO_TIPO_CAT+","+CAMPO_ID_CTA+","+ CAMPO_MONTO+","+CAMPO_DESCRIPCION+")"+" VALUES("+"'08/01/2020'"+","+20200105+","+3+","+3+","+1+","+100+","+"'Descripcion'"+")";
+
     //Insert de Categorias
     public static final String INSERT_CAT0="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Sueldo',"+1+", 'ic_cat_sueldo', 'custom_button_1')";
   // public static final String INSERT_CAT1="INSERT INTO "+TABLA_CATEGORIAS+"("+CAT_CAMPO_DESCRIPCION+","+  CAT_CAMPO_TIPO  +","+CAT_CAMPO_DRAWABLE+","+CAT_CAMPO_COLOR +")"+" VALUES("+"'Regalos',"+1+", 'ic_cat_regalos', 'custom_button_2')";
@@ -165,5 +243,124 @@ public class Utilidades {
         listaAvatars.add(new AvatarVo(26,R.drawable.avatar26,"Avatar26"));
         listaAvatars.add(new AvatarVo(27,R.drawable.avatar27,"Avatar27"));
 
+    }
+    public static void setColors(){
+
+
+    listColores = new ArrayList<Integer>();
+        listColores.add(0xFF0000FF);
+        listColores.add(0xFFFF00FF);
+        listColores.add(0xFF00FF00);
+        listColores.add(0xFFCCCCCC);
+        listColores.add(0xFF00FFFF);
+        listColores.add(0xFFFF0000);
+        listColores.add(0xFF00FF00);
+        listColores.add(0xFF0000FF);
+        listColores.add(0xFFFFFF00);
+        listColores.add(0xFF00FFFF);
+        listColores.add(0xFFFF00FF);
+        listColores.add(0xFF0000FF);
+        listColores.add(0xFFFF00FF);
+        listColores.add(0xFF00FF00);
+        listColores.add(0xFFCCCCCC);
+        listColores.add(0xFF00FFFF);
+        listColores.add(0xFFFF0000);
+        listColores.add(0xFF00FF00);
+        listColores.add(0xFF0000FF);
+        listColores.add(0xFFFFFF00);
+        listColores.add(0xFF00FFFF);
+        listColores.add(0xFFFF00FF);
+        listColores.add(0xFF0000FF);
+        listColores.add(0xFFFF00FF);
+        listColores.add(0xFF00FF00);
+        listColores.add(0xFFCCCCCC);
+        listColores.add(0xFF00FFFF);
+        listColores.add(0xFFFF0000);
+        listColores.add(0xFF00FF00);
+        listColores.add(0xFF0000FF);
+        listColores.add(0xFFFFFF00);
+        listColores.add(0xFF00FFFF);
+        listColores.add(0xFFFF00FF);
+    }
+    public static int getColorsbyid(int i){
+
+        return listColores.get(i);
+    }
+    public static void consultarCategorias(Context actividad, String consultaSQL){
+        try {
+            conn = new ConexionSQLiteHelper(actividad, Utilidades.NOMBRE_BD, null, 1);
+            SQLiteDatabase db = conn.getReadableDatabase();
+            Cursor cursorc = db.rawQuery(consultaSQL, null);
+
+
+            Categoria regCategoria = null;
+            listaCategorias= new ArrayList<Categoria>();
+
+            while (cursorc.moveToNext()) {
+                regCategoria = new Categoria();
+                regCategoria.setId(cursorc.getInt(0));
+                regCategoria.setDescripcat(cursorc.getString(1));
+                //regCategoria.setTipoCat(cursorc.getString(2));
+                regCategoria.setDrawable(cursorc.getString(3));
+                regCategoria.setColor(cursorc.getString(4));
+                listaCategorias.add(regCategoria);
+
+
+            }
+           // obtenerListaCat();
+
+        } catch (SQLiteException | IllegalStateException | NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void consultarListaIngresos(Context actividad, String transaccioneSQL){
+        try {
+            conn = new ConexionSQLiteHelper(actividad, Utilidades.NOMBRE_BD, null, 1);
+            SQLiteDatabase db = conn.getReadableDatabase();
+
+            Transaccion ingreso = null;
+            listaingresos = new ArrayList<Transaccion>();
+            Cursor cursor = db.rawQuery(transaccioneSQL, null);
+
+            while (cursor.moveToNext()) {
+                ingreso = new Transaccion();
+                ingreso.setId(cursor.getInt(0));
+                ingreso.setFecha(cursor.getString(1));
+                ingreso.setFecha_int(cursor.getInt(2));
+                ingreso.setMonto_operacion(cursor.getDouble(6));
+                listaingresos.add(ingreso);
+                //mapLista.put(cursor.getPosition(),cursor.getInt(0));
+
+            }
+
+            //obtenerListaIngresos();
+        }catch (SQLiteException | IllegalStateException | NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void consultarListaEgresos(Context actividad, String semestreEgresosISQL){
+        try {
+            conn = new ConexionSQLiteHelper(actividad, Utilidades.NOMBRE_BD, null, 1);
+            SQLiteDatabase db = conn.getReadableDatabase();
+
+            Transaccion Egreso = null;
+            listaEgresos = new ArrayList<Transaccion>();
+            Cursor cursor = db.rawQuery(semestreEgresosISQL, null);
+
+            while (cursor.moveToNext()) {
+                Egreso = new Transaccion();
+                Egreso.setId(cursor.getInt(0));
+                Egreso.setFecha(cursor.getString(1));
+                Egreso.setFecha_int(cursor.getInt(2));
+                Egreso.setMonto_operacion(cursor.getDouble(6));
+                listaEgresos.add(Egreso);
+                // mapLista.put(cursor.getPosition(),cursor.getInt(0));
+
+            }
+
+            //obtenerListaEgresos();
+        }catch (SQLiteException | IllegalStateException | NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 }

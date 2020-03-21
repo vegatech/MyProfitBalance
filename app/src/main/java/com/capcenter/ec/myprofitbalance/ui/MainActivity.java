@@ -23,9 +23,6 @@ import android.widget.Toast;
 import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
-import com.capcenter.ec.myprofitbalance.ui.fragments.homeFragment;
-import com.capcenter.ec.myprofitbalance.ui.fragments.reportsFragment;
-import com.capcenter.ec.myprofitbalance.ui.fragments.settingsFragment;
 
 public class MainActivity extends AppCompatActivity  {
     BottomNavigationView mbotomnavigationview;
@@ -41,6 +38,8 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toast.makeText(getApplicationContext(), "ruta de la apk externa"+Utilidades.RUTA_APK, Toast.LENGTH_SHORT).show();
+
         mbotomnavigationview =(BottomNavigationView) findViewById(R.id.navigationbariew);
         mbotomnavigationview.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity  {
                     finish();
                 }
                 if (menuItem.getItemId()== R.id.menu_Reportes){
-                    Intent intent = new Intent(getApplicationContext(), listaIngresos.class);
+                    Intent intent = new Intent(getApplicationContext(), reportesActivity.class);
                     startActivity(intent);
                     finish();
                     //showSelectedFragment(new reportsFragment());

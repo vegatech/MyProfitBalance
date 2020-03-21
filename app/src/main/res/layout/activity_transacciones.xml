@@ -10,6 +10,10 @@
     android:windowSoftInputMode="adjustPan"
     >
 
+    <RelativeLayout android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/contenedorFragments2"
+        android:layout_marginBottom="60dp">
 
 <RelativeLayout
     android:layout_width="390dp"
@@ -319,6 +323,7 @@
         android:layout_width="match_parent"
         android:layout_height="47dp"
         android:layout_marginVertical="500dp" />
+    </RelativeLayout>
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigationbariewT"
         android:layout_width="wrap_content"

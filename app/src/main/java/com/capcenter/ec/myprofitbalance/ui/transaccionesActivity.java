@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +31,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,12 +39,11 @@ import com.capcenter.ec.myprofitbalance.io.AdaptadorAvatar;
 import com.capcenter.ec.myprofitbalance.model.Categoria;
 import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
 import com.capcenter.ec.myprofitbalance.model.Cuenta;
-import com.capcenter.ec.myprofitbalance.model.Ingreso;
+
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
 import com.capcenter.ec.myprofitbalance.io.AvatarVo;
-import com.capcenter.ec.myprofitbalance.ui.fragments.homeFragment;
-import com.capcenter.ec.myprofitbalance.ui.fragments.settingsFragment;
+import com.capcenter.ec.myprofitbalance.model.Transaccion;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -63,7 +58,7 @@ public class transaccionesActivity extends AppCompatActivity {
     private TextView txtvmonto, txtvtituloTransaccion;
     private EditText txtfecha;
     private Button btn_date_hoy,btn_date_ayer, btn_date_otros;
-    ArrayList<Ingreso> listaTransacciones;
+    ArrayList<Transaccion> listaTransacciones;
     ArrayList<String> listainformacionTransacciones;
     ArrayList<Categoria> listaCategorias;
     ArrayList<String> listaCat;
@@ -100,7 +95,7 @@ public class transaccionesActivity extends AppCompatActivity {
     Button btn_billete3;
     int  btn_billete_show=0;
 
-    int y,d,m;
+    int y,d,m, fechaI;
     String fecha;
     ListView lstcategoriasTransacciones;
     String[] opcionnombre={"Ingresos","Egresos","Transferencias"};
@@ -130,7 +125,7 @@ public class transaccionesActivity extends AppCompatActivity {
                     //showSelectedFragment(new homeFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_Reportes){
-                    Intent intent = new Intent(getApplicationContext(), listaIngresos.class);
+                    Intent intent = new Intent(getApplicationContext(), reportesActivity.class);
                     startActivity(intent);
                     //showSelectedFragment(new reportsFragment());
                 }
@@ -222,6 +217,7 @@ public class transaccionesActivity extends AppCompatActivity {
         }
 
         String fechaOper = Utilidades.getCurrentDate();
+        fechaI = Integer.parseInt(Utilidades.getAmericanDate(fechaOper).trim()) ;
         txtfecha.setText(fechaOper);
         // txtvmonto = (TextView) findViewById(R.id.TextViewMonto1);
 
@@ -292,6 +288,7 @@ public class transaccionesActivity extends AppCompatActivity {
                 btn_date_otros.setTextColor(getResources().getColor(android.R.color.black));
 
                 String fechaOper = Utilidades.getCurrentDate();
+                fechaI = Integer.parseInt(Utilidades.getAmericanDate(fechaOper).trim()) ;
                 txtfecha.setText(fechaOper);
             }
         });
@@ -305,6 +302,7 @@ public class transaccionesActivity extends AppCompatActivity {
                 btn_date_otros.setTextColor(getResources().getColor(android.R.color.black));
                 btn_date_otros.setBackgroundResource(R.drawable.custom_date_button);
                 String fechaOper =Utilidades.getYesterday().toString();
+                fechaI = Integer.parseInt(Utilidades.getAmericanDate(fechaOper).trim()) ;
                 txtfecha.setText(fechaOper);
             }
         });
@@ -327,10 +325,10 @@ public class transaccionesActivity extends AppCompatActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(transaccionesActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        fecha= dayOfMonth+"/"+month  +"/"+year;
-
+                        fecha= dayOfMonth+"/"+ (month+1)  +"/"+year;
                         try {
                             txtfecha.setText(Utilidades.getCurrentDatePicker(fecha));
+                            fechaI = Integer.parseInt(Utilidades.getAmericanDate(txtfecha.getText().toString()).trim()) ;
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -587,11 +585,11 @@ public class transaccionesActivity extends AppCompatActivity {
             Log.d("STATE",SQL_QUERY);
             Cursor cursor = db.rawQuery(SQL_QUERY, null);
 
-            Ingreso transaccion = null;
-            listaTransacciones = new ArrayList<Ingreso>();
+            Transaccion transaccion = null;
+            listaTransacciones = new ArrayList<Transaccion>();
 
             while (cursor.moveToNext()) {
-                transaccion = new Ingreso();
+                transaccion = new Transaccion();
                 transaccion.setId(cursor.getInt(0));
                 transaccion.setFecha(cursor.getString(1));
                 transaccion.setMonto_operacion(cursor.getDouble(4));
@@ -628,11 +626,11 @@ public class transaccionesActivity extends AppCompatActivity {
             Log.d("STATE",SQL_QUERY);
             Cursor cursor = db.rawQuery(SQL_QUERY, null);
 
-            Ingreso transaccion = null;
-            listaTransacciones = new ArrayList<Ingreso>();
+            Transaccion transaccion = null;
+            listaTransacciones = new ArrayList<Transaccion>();
 
             while (cursor.moveToNext()) {
-                transaccion = new Ingreso();
+                transaccion = new Transaccion();
                 transaccion.setId(cursor.getInt(0));
                 // transaccion.setFecha(cursor.getString(1));
                 transaccion.setMonto_operacion(cursor.getDouble(1));
@@ -780,7 +778,8 @@ public void guardarnuevoRegistro(){
         ContentValues values = new ContentValues();
 
         values.put(Utilidades.CAMPO_TIPO_OPER, tipotran);//SpinnerCuentas.getSelectedItem().toString());
-        values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
+        values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString().trim());
+        values.put(Utilidades.CAMPO_FECHA_INT,fechaI);
         values.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
         values.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentas.getSelectedItemPosition());
         values.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
@@ -795,6 +794,7 @@ public void guardarnuevoRegistro(){
             ContentValues values2 = new ContentValues();
             values2.put(Utilidades.CAMPO_TIPO_OPER, tipotran);
             values2.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
+            values.put(Utilidades.CAMPO_FECHA_INT,fechaI);
             values2.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
             values2.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentaDestino.getSelectedItemPosition());
             values2.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());

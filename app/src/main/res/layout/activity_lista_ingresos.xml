@@ -5,7 +5,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.listaIngresos">
+    tools:context=".ui.reportesActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -268,7 +268,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                android:id="@+id/BarchartHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="216dp"
+                android:layout_marginTop="1dp"
+                android:layout_weight="1"
+                android:paddingVertical="5dp"
+                android:paddingTop="5dp">
+            </com.github.mikephil.charting.charts.HorizontalBarChart>
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/Barchart"
                 android:layout_width="match_parent"

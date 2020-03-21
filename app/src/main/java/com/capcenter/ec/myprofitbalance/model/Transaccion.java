@@ -1,13 +1,23 @@
 package com.capcenter.ec.myprofitbalance.model;
 
-public class Ingreso {
+public class Transaccion{
 
     private int id;
     private String fecha;
+    private int fecha_int;
     private String tipo_operacion;
     private String tipo_cat;
     private Double monto_operacion;
     private String Descripcion;
+
+
+    public int getFecha_int() {
+        return fecha_int;
+    }
+
+    public void setFecha_int(int fecha_int) {
+        this.fecha_int = fecha_int;
+    }
 
     public String getDescripcion() {
         return Descripcion;
