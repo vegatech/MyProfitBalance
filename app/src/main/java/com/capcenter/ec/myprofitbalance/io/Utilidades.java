@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Environment;
+import android.util.Log;
 
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.model.Categoria;
@@ -38,7 +39,7 @@ public class Utilidades {
     public static  ArrayList<Integer> listColores=null;
     public static  ConexionSQLiteHelper conn;
     public static ArrayList<Categoria> listaCategorias;
-   public static ArrayList<Transaccion> listaingresos,listaIngresos,listaEgresos,listaTransferencias, listaTorta;
+   public static ArrayList<Transaccion> listaingresos,listaIngresos,listaEgresos,listaTransferencias, listatransacciones;
     public static  String getAmericanDate(String fechaI){
         String fechaE;
         fechaE = fechaI.substring(6,10)+fechaI.substring(3,5)+fechaI.substring(0,2);
@@ -338,6 +339,33 @@ public class Utilidades {
             e.printStackTrace();
         }
     }
+    public static void consultarTransaccionesbycategoria(Context actividad, String SQL){
+        try {
+            conn = new ConexionSQLiteHelper(actividad, Utilidades.NOMBRE_BD, null, 1);
+            SQLiteDatabase db = conn.getReadableDatabase();
+
+            Transaccion transaccion = null;
+            listatransacciones = new ArrayList<Transaccion>();
+            Cursor cursor = db.rawQuery(SQL, null);
+            int i = 0;
+            while (cursor.moveToNext()) {
+                i = i++;
+                transaccion = new Transaccion();
+                transaccion.setId(i);
+                //transaccion.setFecha(cursor.getString(1));
+                //transaccion.setFecha_int(cursor.getInt(2));
+                transaccion.setDescripcion(cursor.getString(1));
+                transaccion.setMonto_operacion(cursor.getDouble(0));
+                listatransacciones.add(transaccion);
+                //mapLista.put(cursor.getPosition(),cursor.getInt(0));
+
+            }
+
+            //obtenerListaIngresos();
+        }catch (SQLiteException | IllegalStateException | NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
     public static void consultarListaEgresos(Context actividad, String semestreEgresosISQL){
         try {
             conn = new ConexionSQLiteHelper(actividad, Utilidades.NOMBRE_BD, null, 1);
@@ -363,4 +391,23 @@ public class Utilidades {
             e.printStackTrace();
         }
     }
+    public static void qryTransaccionesbyMes(){
+       String SQL=" ";
+        String[] mes={"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"};
+       for(int i=1;i <= 6; i++){
+        if (i !=1){
+            SQL = SQL+" UNION ALL \n";
+        }
+            SQL = SQL+ " SELECT SUM(T"+i+".MONTO_OPERACION), '"+mes[i-1]+"' \n";
+            SQL = SQL +" FROM TRANSACCIONES T"+i+" \n" ;
+            SQL = SQL +       " WHERE 1 =1\n";
+           SQL = SQL+" AND substr(T"+i+".FECHA,4,2)='0"+i+"'\n";
+           SQL = SQL+" AND substr(T"+i+".FECHA,7,4)='2020'\n";
+           SQL = SQL+" AND T"+i+".TIPO_OPERACION =2\n";
+
+       }
+        Log.d("SQL",SQL);
+
+    }
+
 }

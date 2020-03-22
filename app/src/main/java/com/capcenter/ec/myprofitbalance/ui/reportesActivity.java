@@ -63,7 +63,7 @@ public class reportesActivity extends AppCompatActivity {
     ArrayList<String> listainformacionIngreso,listainformacionEgreso, ListainformacionTransferencia, listainformacionTorta;
     ArrayList<Double> listaMontoTransaccionesGrafica, listaMontoEgresoGrafica, listaMontoIngresoGrafica, ListaMontoTransferenciaGrafica, listaMontoTorta;
     ArrayList<String> listaRangoTransaccionesFechaGrafica;
-    ArrayList ListaColorGraficas;
+    ArrayList ListaColorGraficas, ListaColorPie;
     //ArrayList<Categoria> listaCategorias;
     ArrayList<String> listaCat;
     ArrayList<Integer> listColores = new ArrayList<>();
@@ -85,7 +85,7 @@ public class reportesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_ingresos);
-
+        Utilidades.qryTransaccionesbyMes();
         mbotomnavigationviewR =(BottomNavigationView) findViewById(R.id.navigationbariewR);
         mbotomnavigationviewR.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -308,8 +308,10 @@ public class reportesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 transaccioneSQL="SELECT * FROM " + Utilidades.TABLA_OPERACIONES+" WHERE 1 =1 ";
+                categoriasSQL="SELECT SUM("+Utilidades.CAMPO_MONTO+"),"+Utilidades.CAMPO_TIPO_CAT+" FROM "+ Utilidades.TABLA_OPERACIONES+" WHERE 1 =1 ";
                 if (tipotran!=0) {
                     transaccioneSQL=transaccioneSQL+ " AND " + Utilidades.CAMPO_TIPO_OPER + "="+tipotran+" ";
+
                 }
                 if (posicionSeleccionada!=0){
                     transaccioneSQL=transaccioneSQL+" AND "+Utilidades.CAMPO_TIPO_CAT+" = " +posicionSeleccionada+" ";
@@ -318,25 +320,33 @@ public class reportesActivity extends AppCompatActivity {
                     transaccioneSQL=transaccioneSQL+"  AND "+Utilidades.CAMPO_FECHA_INT +" BETWEEN "+ fechaI +" and "+ fechaF ;
                     Log.d("SQL",transaccioneSQL);
                     semestreEgresosISQL ="SELECT SUM("+Utilidades.CAMPO_MONTO+") FROM "+Utilidades.TABLA_OPERACIONES+" WHERE 1=1 AND ";
+                    categoriasSQL=categoriasSQL+"  AND "+Utilidades.CAMPO_FECHA_INT +" BETWEEN "+ fechaI +" and "+ fechaF+" GROUP BY "+Utilidades.CAMPO_TIPO_CAT+ " ORDER BY "+Utilidades.CAMPO_TIPO_CAT+" ASC";
+                    Log.d("SQL",categoriasSQL);
                 }
 
                         //" AND "+ Utilidades.CAMPO_FECHA +" = "+FechaRep+" " ;
                 Utilidades.consultarListaIngresos(getApplicationContext(),transaccioneSQL);
                 obtenerListaIngresos();
-                ArrayAdapter adaptador = new ArrayAdapter(reportesActivity.this, android.R.layout.simple_list_item_1,listainformacionIngreso);
-                lvingresos.setAdapter(adaptador);
+                Utilidades.consultarTransaccionesbycategoria(getApplicationContext(),categoriasSQL);
+                getListaTransaciones();
+               // ArrayAdapter adaptador = new ArrayAdapter(reportesActivity.this, android.R.layout.simple_list_item_1,listainformacionIngreso);
+               // lvingresos.setAdapter(adaptador);
                 Graficas.months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
                 Graficas.sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
                 Graficas.colors = new int[ListaColorGraficas.size()];
 
-                for (int i = 0;i < ListaColorGraficas.size(); i++) {
-                    //Random rnd = new Random();
-                    //int colori = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-                    Graficas.colors[i] = Color.RED;
+                //Pie
+                Graficas.leyendaPie = listainformacionTorta.toArray(new String[listainformacionTorta.size()]);
+                Graficas.montoPie = listaMontoTorta.toArray(new Double[listaMontoTorta.size()]);
+                Graficas.colorPie = new int[ListaColorPie.size()];
 
+                for (int i = 0;i < ListaColorGraficas.size(); i++) {
+                    Graficas.colors[i] = Utilidades.getColorsbyid(i);
                 }
 
-
+                for (int i = 0;i < ListaColorPie.size(); i++){
+                    Graficas.colorPie[i] = Utilidades.getColorsbyid(i);
+                }
                 // Carga Graficas
                 barchart =(BarChart) findViewById(R.id.Barchart);
                 piechart =(PieChart) findViewById(R.id.Piechart);
@@ -346,22 +356,34 @@ public class reportesActivity extends AppCompatActivity {
             }
         });
         //conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
-        lvingresos =(ListView) findViewById(R.id.lvreportes);
+        //lvingresos =(ListView) findViewById(R.id.lvreportes);
         Bundle bundle = getIntent().getExtras();
         //tipotran=bundle.getInt("tipoper");
         //tipotran=1;
         transaccioneSQL="SELECT * FROM " + Utilidades.TABLA_OPERACIONES ;//+"  WHERE 1 =1 AND " +Utilidades.CAMPO_FECHA_INT + " BETWEEN "+ fechaI +" and "+ fechaF;
+        categoriasSQL="SELECT SUM("+Utilidades.CAMPO_MONTO+"),CATEGORIAS.DESCRIPCION"+" FROM "+ Utilidades.TABLA_OPERACIONES+" INNER JOIN CATEGORIAS ON CATEGORIAS.id= TRANSACCIONES.TIPO_CATEGORIA WHERE 1 =1 ";
+        categoriasSQL=categoriasSQL+"  AND "+Utilidades.CAMPO_FECHA_INT +" BETWEEN "+ 20200101 +" and "+ 20200131+" GROUP BY "+Utilidades.CAMPO_TIPO_CAT+ " ORDER BY "+Utilidades.CAMPO_TIPO_CAT+" ASC";
+        Log.d("SQL",categoriasSQL);
         Utilidades.consultarListaIngresos(getApplicationContext(),transaccioneSQL);
         obtenerListaIngresos();
+        Utilidades.consultarTransaccionesbycategoria(getApplicationContext(),categoriasSQL);
+        getListaTransaciones();
+
         Graficas.months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
         Graficas.sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
         Graficas.colors = new int[ListaColorGraficas.size()];
 
+        //Pie
+        Graficas.leyendaPie = listainformacionTorta.toArray(new String[listainformacionTorta.size()]);
+        Graficas.montoPie = listaMontoTorta.toArray(new Double[listaMontoTorta.size()]);
+        Graficas.colorPie = new int[ListaColorPie.size()];
+
          for (int i = 0;i < ListaColorGraficas.size(); i++) {
             Graficas.colors[i] = Utilidades.getColorsbyid(i);
-
          }
-
+         for (int i = 0;i < ListaColorPie.size(); i++){
+             Graficas.colorPie[i] = Utilidades.getColorsbyid(i);
+         }
 
         // Carga Graficas
         barchart =(BarChart) findViewById(R.id.Barchart);
@@ -370,13 +392,13 @@ public class reportesActivity extends AppCompatActivity {
 
         Graficas.createCharts(barchart,piechart,horizontalBarChart);
 
-        ArrayAdapter adaptador = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listainformacionIngreso);
-        lvingresos.setAdapter(adaptador);
+        //ArrayAdapter adaptador = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listainformacionIngreso);
+        //lvingresos.setAdapter(adaptador);
 
 
 
 
-        lvingresos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*lvingresos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(getApplicationContext(), "ee transacion:"+tipotran, Toast.LENGTH_SHORT).show();
@@ -400,16 +422,35 @@ public class reportesActivity extends AppCompatActivity {
 
 
             }
-        });
+        });*/
     }
-
+    private void getListaTransaciones(){
+        listaMontoTorta = new ArrayList<Double>();
+        listainformacionTorta = new ArrayList<String>();
+        ListaColorPie = new ArrayList<>();
+        if (Utilidades.listatransacciones.size()==0){
+            listaMontoTorta.add(0.0);
+            listainformacionTorta.add("Datos No Encontrados");
+            Random rnd = new Random();
+            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            ListaColorPie.add(color);
+        }else{
+           for (int i=0; i< Utilidades.listatransacciones.size();i++){
+               listainformacionTorta.add(Utilidades.listatransacciones.get(i).getDescripcion());
+               listaMontoTorta.add(Utilidades.listatransacciones.get(i).getMonto_operacion());
+               Random rnd = new Random();
+               int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+               ListaColorPie.add(color);
+           }
+        }
+    }
     private void obtenerListaIngresos(){
         listainformacionIngreso =new ArrayList<String>();
         listaMontoTransaccionesGrafica =new ArrayList<Double>();
         listaRangoTransaccionesFechaGrafica = new ArrayList<String>();
         ListaColorGraficas = new ArrayList<Integer>();
         if (Utilidades.listaingresos.size()==0){
-            listainformacionIngreso.add("Sin Datos Encontrados");
+            listainformacionIngreso.add("Datos no Encontrados");
             Random rnd = new Random();
             int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
             ListaColorGraficas.add(color);
