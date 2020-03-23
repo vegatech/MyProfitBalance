@@ -252,7 +252,7 @@
     <ScrollView
         android:id="@+id/ScrollView01Reports"
         android:layout_width="410dp"
-        android:layout_height="400dp"
+        android:layout_height="450dp"
         android:layout_below="@+id/lvreportes"
         android:layout_marginTop="225dp"
         android:paddingTop="5dp"
@@ -269,8 +269,24 @@
                 android:layout_marginTop="1dp"
                 android:layout_weight="1"
                 android:paddingTop="20dp" />
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/BarchartI"
+                android:layout_width="match_parent"
+                android:layout_height="216dp"
+                android:layout_marginTop="1dp"
+                android:layout_weight="1"
+                android:paddingVertical="5dp"
+                android:paddingTop="5dp" />
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/BarchartE"
+                android:layout_width="match_parent"
+                android:layout_height="216dp"
+                android:layout_marginTop="1dp"
+                android:layout_weight="1"
+                android:paddingVertical="5dp"
+                android:paddingTop="5dp" />
             <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/BarchartHorizontal"
+                android:id="@+id/BarchartHorizontalI"
                 android:layout_width="match_parent"
                 android:layout_height="216dp"
                 android:layout_marginTop="1dp"
@@ -278,14 +294,8 @@
                 android:paddingVertical="5dp"
                 android:paddingTop="5dp">
             </com.github.mikephil.charting.charts.HorizontalBarChart>
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/Barchart"
-                android:layout_width="match_parent"
-                android:layout_height="216dp"
-                android:layout_marginTop="1dp"
-                android:layout_weight="1"
-                android:paddingVertical="5dp"
-                android:paddingTop="5dp" />
+
+
 
 
         </LinearLayout>

@@ -62,8 +62,8 @@ public class reportesActivity extends AppCompatActivity {
    // ArrayList<Transaccion> listaingresos,listaIngresos,listaEgresos,listaTransferencias, listaTorta;
     ArrayList<String> listainformacionIngreso,listainformacionEgreso, ListainformacionTransferencia, listainformacionTorta;
     ArrayList<Double> listaMontoTransaccionesGrafica, listaMontoEgresoGrafica, listaMontoIngresoGrafica, ListaMontoTransferenciaGrafica, listaMontoTorta;
-    ArrayList<String> listaRangoTransaccionesFechaGrafica;
-    ArrayList ListaColorGraficas, ListaColorPie;
+    ArrayList<String> listaRangoTransaccionesFechaGrafica,listarangotrnEgresos;
+    ArrayList ListaColorGraficas, ListaColorPie, ListaColorEgreso;
     //ArrayList<Categoria> listaCategorias;
     ArrayList<String> listaCat;
     ArrayList<Integer> listColores = new ArrayList<>();
@@ -72,7 +72,7 @@ public class reportesActivity extends AppCompatActivity {
     Integer posisionLista;
     BottomNavigationView mbotomnavigationviewR;
     private PieChart piechart;
-    private BarChart barchart;
+    private BarChart barchartI, barchartE;
     private HorizontalBarChart horizontalBarChart;
 
 
@@ -85,7 +85,7 @@ public class reportesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_ingresos);
-        Utilidades.qryTransaccionesbyMes();
+
         mbotomnavigationviewR =(BottomNavigationView) findViewById(R.id.navigationbariewR);
         mbotomnavigationviewR.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -325,10 +325,13 @@ public class reportesActivity extends AppCompatActivity {
                 }
 
                         //" AND "+ Utilidades.CAMPO_FECHA +" = "+FechaRep+" " ;
-                Utilidades.consultarListaIngresos(getApplicationContext(),transaccioneSQL);
-                obtenerListaIngresos();
+
                 Utilidades.consultarTransaccionesbycategoria(getApplicationContext(),categoriasSQL);
                 getListaTransaciones();
+                Utilidades.consultarListaIngresos(getApplicationContext(),transaccioneSQL);
+                obtenerListaIngresos();
+                Utilidades.consultarListaEgresos(getApplicationContext(),transaccioneSQL);
+                obtenerListaEgresos();
                // ArrayAdapter adaptador = new ArrayAdapter(reportesActivity.this, android.R.layout.simple_list_item_1,listainformacionIngreso);
                // lvingresos.setAdapter(adaptador);
                 Graficas.months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
@@ -339,6 +342,10 @@ public class reportesActivity extends AppCompatActivity {
                 Graficas.leyendaPie = listainformacionTorta.toArray(new String[listainformacionTorta.size()]);
                 Graficas.montoPie = listaMontoTorta.toArray(new Double[listaMontoTorta.size()]);
                 Graficas.colorPie = new int[ListaColorPie.size()];
+                //Egresos
+                Graficas.monthsE= listarangotrnEgresos.toArray(new String[listarangotrnEgresos.size()]);
+                Graficas.saleE= listaMontoEgresoGrafica.toArray(new Double[listaMontoEgresoGrafica.size()]);
+                Graficas.colorsE=new int[ListaColorEgreso.size()];
 
                 for (int i = 0;i < ListaColorGraficas.size(); i++) {
                     Graficas.colors[i] = Utilidades.getColorsbyid(i);
@@ -347,11 +354,15 @@ public class reportesActivity extends AppCompatActivity {
                 for (int i = 0;i < ListaColorPie.size(); i++){
                     Graficas.colorPie[i] = Utilidades.getColorsbyid(i);
                 }
+                for (int i = 0;i < ListaColorEgreso.size(); i++){
+                    Graficas.colorsE[i] = Utilidades.getColorsbyid(i);
+                }
                 // Carga Graficas
-                barchart =(BarChart) findViewById(R.id.Barchart);
-                piechart =(PieChart) findViewById(R.id.Piechart);
-                horizontalBarChart =(HorizontalBarChart) findViewById(R.id.BarchartHorizontal);
-                Graficas.createCharts(barchart,piechart,horizontalBarChart);
+                barchartI =(BarChart) findViewById(R.id.BarchartI);
+                barchartE =(BarChart) findViewById(R.id.BarchartE);
+                piechart  =(PieChart) findViewById(R.id.Piechart);
+                horizontalBarChart =(HorizontalBarChart) findViewById(R.id.BarchartHorizontalI);
+                Graficas.createCharts(barchartI,barchartE,piechart,horizontalBarChart);
 
             }
         });
@@ -364,10 +375,13 @@ public class reportesActivity extends AppCompatActivity {
         categoriasSQL="SELECT SUM("+Utilidades.CAMPO_MONTO+"),CATEGORIAS.DESCRIPCION"+" FROM "+ Utilidades.TABLA_OPERACIONES+" INNER JOIN CATEGORIAS ON CATEGORIAS.id= TRANSACCIONES.TIPO_CATEGORIA WHERE 1 =1 ";
         categoriasSQL=categoriasSQL+"  AND "+Utilidades.CAMPO_FECHA_INT +" BETWEEN "+ 20200101 +" and "+ 20200131+" GROUP BY "+Utilidades.CAMPO_TIPO_CAT+ " ORDER BY "+Utilidades.CAMPO_TIPO_CAT+" ASC";
         Log.d("SQL",categoriasSQL);
-        Utilidades.consultarListaIngresos(getApplicationContext(),transaccioneSQL);
-        obtenerListaIngresos();
+
         Utilidades.consultarTransaccionesbycategoria(getApplicationContext(),categoriasSQL);
         getListaTransaciones();
+        Utilidades.consultarListaIngresos(getApplicationContext(),transaccioneSQL);
+        obtenerListaIngresos();
+        Utilidades.consultarListaEgresos(getApplicationContext(),transaccioneSQL);
+        obtenerListaEgresos();
 
         Graficas.months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
         Graficas.sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
@@ -377,6 +391,10 @@ public class reportesActivity extends AppCompatActivity {
         Graficas.leyendaPie = listainformacionTorta.toArray(new String[listainformacionTorta.size()]);
         Graficas.montoPie = listaMontoTorta.toArray(new Double[listaMontoTorta.size()]);
         Graficas.colorPie = new int[ListaColorPie.size()];
+        //Egresos
+        Graficas.monthsE= listarangotrnEgresos.toArray(new String[listarangotrnEgresos.size()]);
+        Graficas.saleE= listaMontoEgresoGrafica.toArray(new Double[listaMontoEgresoGrafica.size()]);
+        Graficas.colorsE=new int[ListaColorEgreso.size()];
 
          for (int i = 0;i < ListaColorGraficas.size(); i++) {
             Graficas.colors[i] = Utilidades.getColorsbyid(i);
@@ -384,13 +402,17 @@ public class reportesActivity extends AppCompatActivity {
          for (int i = 0;i < ListaColorPie.size(); i++){
              Graficas.colorPie[i] = Utilidades.getColorsbyid(i);
          }
+        for (int i = 0;i < ListaColorEgreso.size(); i++){
+            Graficas.colorsE[i] = Utilidades.getColorsbyid(i);
+        }
 
         // Carga Graficas
-        barchart =(BarChart) findViewById(R.id.Barchart);
+        barchartI =(BarChart) findViewById(R.id.BarchartI);
+        barchartE =(BarChart) findViewById(R.id.BarchartE);
         piechart =(PieChart) findViewById(R.id.Piechart);
-        horizontalBarChart =(HorizontalBarChart)  findViewById(R.id.BarchartHorizontal);
+        horizontalBarChart =(HorizontalBarChart)  findViewById(R.id.BarchartHorizontalI);
 
-        Graficas.createCharts(barchart,piechart,horizontalBarChart);
+        Graficas.createCharts(barchartI,barchartE,piechart,horizontalBarChart);
 
         //ArrayAdapter adaptador = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listainformacionIngreso);
         //lvingresos.setAdapter(adaptador);
@@ -456,12 +478,12 @@ public class reportesActivity extends AppCompatActivity {
             ListaColorGraficas.add(color);
         }else{
         for (int i=0; i<Utilidades.listaingresos.size();i++) {
-            String fechaVal = Utilidades.listaingresos.get(i).getFecha().trim().toString();
+/*            String fechaVal = Utilidades.listaingresos.get(i).getDescripcion().trim().toString());
             listainformacionIngreso.add(
                     Utilidades.listaingresos.get(i).getFecha() +"-"+ Utilidades.listaingresos.get(i).getFecha_int()//"                                 "
                             +"-"+ Utilidades.listaingresos.get(i).getMonto_operacion() + "$"
-            );
-            listaRangoTransaccionesFechaGrafica.add(Utilidades.listaingresos.get(i).getFecha());
+            );*/
+            listaRangoTransaccionesFechaGrafica.add(Utilidades.listaingresos.get(i).getDescripcion());
             listaMontoTransaccionesGrafica.add(Utilidades.listaingresos.get(i).getMonto_operacion());
             Random rnd = new Random();
             int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
@@ -473,27 +495,22 @@ public class reportesActivity extends AppCompatActivity {
     }
 
     private void obtenerListaEgresos(){
-        listainformacionIngreso =new ArrayList<String>();
-        listaMontoTransaccionesGrafica =new ArrayList<Double>();
-        listaRangoTransaccionesFechaGrafica = new ArrayList<String>();
-        ListaColorGraficas = new ArrayList<Integer>();
+        listainformacionEgreso =new ArrayList<String>();
+        listaMontoEgresoGrafica =new ArrayList<Double>();
+        listarangotrnEgresos = new ArrayList<String>();
+        ListaColorEgreso = new ArrayList<Integer>();
         if (Utilidades.listaEgresos.size()==0){
-            listainformacionIngreso.add("Sin Datos Encontrados");
+            listainformacionEgreso.add("Sin Datos Encontrados");
             Random rnd = new Random();
             int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-            ListaColorGraficas.add(color);
+            ListaColorEgreso.add(color);
         }else{
-            for (int i=0; i<Utilidades.listaingresos.size();i++) {
-                String fechaVal = Utilidades.listaEgresos.get(i).getFecha().trim().toString();
-                listainformacionIngreso.add(
-                        Utilidades.listaEgresos.get(i).getFecha() +"-"+ Utilidades.listaEgresos.get(i).getFecha_int()//"                                 "
-                                +"-"+ Utilidades.listaingresos.get(i).getMonto_operacion() + "$"
-                );
-                listaRangoTransaccionesFechaGrafica.add(Utilidades.listaEgresos.get(i).getFecha());
-                listaMontoTransaccionesGrafica.add(Utilidades.listaEgresos.get(i).getMonto_operacion());
+            for (int i=0; i<Utilidades.listaEgresos.size();i++) {
+                listarangotrnEgresos.add(Utilidades.listaEgresos.get(i).getDescripcion());
+                listaMontoEgresoGrafica.add(Utilidades.listaEgresos.get(i).getMonto_operacion());
                 Random rnd = new Random();
                 int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-                ListaColorGraficas.add(color);
+                ListaColorEgreso.add(color);
 
             }
         }

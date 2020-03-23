@@ -318,17 +318,18 @@ public class Utilidades {
         try {
             conn = new ConexionSQLiteHelper(actividad, Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
-
+            transaccioneSQL= Utilidades.qryTransaccionesbyMes(1);
             Transaccion ingreso = null;
             listaingresos = new ArrayList<Transaccion>();
             Cursor cursor = db.rawQuery(transaccioneSQL, null);
-
+            int i = 0;
             while (cursor.moveToNext()) {
+                i =i+1;
                 ingreso = new Transaccion();
-                ingreso.setId(cursor.getInt(0));
-                ingreso.setFecha(cursor.getString(1));
-                ingreso.setFecha_int(cursor.getInt(2));
-                ingreso.setMonto_operacion(cursor.getDouble(6));
+                ingreso.setId(i);
+                ingreso.setDescripcion(cursor.getString(1));
+
+                ingreso.setMonto_operacion(cursor.getDouble(0));
                 listaingresos.add(ingreso);
                 //mapLista.put(cursor.getPosition(),cursor.getInt(0));
 
@@ -370,17 +371,19 @@ public class Utilidades {
         try {
             conn = new ConexionSQLiteHelper(actividad, Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
-
+            semestreEgresosISQL= Utilidades.qryTransaccionesbyMes(2);
             Transaccion Egreso = null;
             listaEgresos = new ArrayList<Transaccion>();
             Cursor cursor = db.rawQuery(semestreEgresosISQL, null);
-
+            int i = 0;
             while (cursor.moveToNext()) {
+                i = i++;
                 Egreso = new Transaccion();
-                Egreso.setId(cursor.getInt(0));
-                Egreso.setFecha(cursor.getString(1));
-                Egreso.setFecha_int(cursor.getInt(2));
-                Egreso.setMonto_operacion(cursor.getDouble(6));
+                Egreso.setId(i);
+                //Egreso.setFecha(cursor.getString(1));
+                //Egreso.setFecha_int(cursor.getInt(2));
+                Egreso.setDescripcion(cursor.getString(1));
+                Egreso.setMonto_operacion(cursor.getDouble(0));
                 listaEgresos.add(Egreso);
                 // mapLista.put(cursor.getPosition(),cursor.getInt(0));
 
@@ -391,7 +394,7 @@ public class Utilidades {
             e.printStackTrace();
         }
     }
-    public static void qryTransaccionesbyMes(){
+    public static String qryTransaccionesbyMes(int tipoper){
        String SQL=" ";
         String[] mes={"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"};
        for(int i=1;i <= 6; i++){
@@ -403,11 +406,11 @@ public class Utilidades {
             SQL = SQL +       " WHERE 1 =1\n";
            SQL = SQL+" AND substr(T"+i+".FECHA,4,2)='0"+i+"'\n";
            SQL = SQL+" AND substr(T"+i+".FECHA,7,4)='2020'\n";
-           SQL = SQL+" AND T"+i+".TIPO_OPERACION =2\n";
+           SQL = SQL+" AND T"+i+".TIPO_OPERACION ="+tipoper+ "\n";
 
        }
         Log.d("SQL",SQL);
-
+        return SQL;
     }
 
 }

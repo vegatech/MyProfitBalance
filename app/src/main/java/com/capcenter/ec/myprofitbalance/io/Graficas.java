@@ -30,6 +30,7 @@ public class Graficas {
     private static HorizontalBarChart horizontalBarChart;
     //private String []months= new String[]{"Enero","Febrero","Marzo","Abril","Mayo"};
     // private int[]sale = new int[]{25,20,38,40,70};
+    //Ingresos
     public static String [] months;
     public static Double [] sale;
     public static int[] colors;
@@ -38,15 +39,29 @@ public class Graficas {
     public static String [] leyendaPie;
     public static Double [] montoPie;
     public static int[] colorPie;
+    //Egresos
+    public static String [] monthsE;
+    public static Double [] saleE;
+    public static int[] colorsE;
 
-    public static Chart getSameChart(Chart chart, String descripcion, int textColor, int background, int AnimateY){
+    public static Chart getSameChartI(Chart chart, String descripcion, int textColor, int background, int AnimateY){
 
       /*  chart.getDescription().setText("Ventas");
          chart.getDescription().setEnabled(false);
         chart.getDescription().setTextSize(15);*/
         chart.setBackgroundColor(background);
         chart.animateY(AnimateY);
-        legend(chart);
+        legendI(chart);
+        return chart;
+    }
+    public static Chart getSameChartE(Chart chart, String descripcion, int textColor, int background, int AnimateY){
+
+      /*  chart.getDescription().setText("Ventas");
+         chart.getDescription().setEnabled(false);
+        chart.getDescription().setTextSize(15);*/
+        chart.setBackgroundColor(background);
+        chart.animateY(AnimateY);
+        legendE(chart);
         return chart;
     }
     public static Chart getSameChartPie(Chart chart, String descripcion, int textColor, int background, int AnimateY){
@@ -60,7 +75,7 @@ public class Graficas {
         legendPie(chart);
         return chart;
     }
-    public static  void legend(Chart chart){
+    public static  void legendI(Chart chart){
         Legend legend = chart.getLegend();
         legend.setForm(Legend.LegendForm.CIRCLE);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
@@ -70,6 +85,20 @@ public class Graficas {
             LegendEntry entry= new LegendEntry();
             entry.formColor=colors[i];
             entry.label=months[i];
+            entries.add(entry);
+        }
+        legend.setCustom(entries);
+    }
+    public static  void legendE(Chart chart){
+        Legend legend = chart.getLegend();
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
+        ArrayList<LegendEntry> entries =new ArrayList<>();
+        for (int i=0; i < monthsE.length;i++){
+            LegendEntry entry= new LegendEntry();
+            entry.formColor=colorsE[i];
+            entry.label=monthsE[i];
             entries.add(entry);
         }
         legend.setCustom(entries);
@@ -88,11 +117,19 @@ public class Graficas {
         }
         legend.setCustom(entries);
     }
-    private static ArrayList<BarEntry>getBarEntries(){
+    private static ArrayList<BarEntry>getBarEntriesI(){
         ArrayList<BarEntry> entries =new ArrayList<>();
 
         for (int i=0; i < sale.length;i++) {
             entries.add(new BarEntry(i,sale[i].intValue()));
+        }
+        return entries;
+    }
+    private static ArrayList<BarEntry>getBarEntriesE(){
+        ArrayList<BarEntry> entries =new ArrayList<>();
+
+        for (int i=0; i < saleE.length;i++) {
+            entries.add(new BarEntry(i,saleE[i].intValue()));
         }
         return entries;
     }
@@ -119,32 +156,42 @@ public class Graficas {
         axis.setEnabled(false);
 
     }
-    public static void createCharts(BarChart barchart,PieChart piechart,HorizontalBarChart horizontalBarChart){
+    public static void createCharts(BarChart barchartI,BarChart barchartE,PieChart piechart,HorizontalBarChart horizontalBarChart){
         Description desc=  new Description();
         desc.setEnabled(false);
         //barchart.setDescription("asd");
 
-        barchart =(BarChart) getSameChart(barchart,"Series", Color.RED,Color.WHITE,3000);
-        barchart.setDrawGridBackground(true);
-        barchart.setDrawBarShadow(true);
-        barchart.setData(getBarData());
-        barchart.invalidate();
-        axisX(barchart.getXAxis());
-        axisLeft(barchart.getAxisLeft());
-        axisRight(barchart.getAxisRight());
+        barchartI =(BarChart) getSameChartI(barchartI,"Ingresos", Color.RED,Color.WHITE,3000);
+        barchartI.setDrawGridBackground(true);
+        barchartI.setDrawBarShadow(true);
+        barchartI.setData(getBarDataI());
+        barchartI.invalidate();
+        axisX(barchartI.getXAxis());
+        axisLeft(barchartI.getAxisLeft());
+        axisRight(barchartI.getAxisRight());
+
+        barchartE =(BarChart) getSameChartE(barchartE,"Egresos", Color.RED,Color.WHITE,3000);
+        barchartE.setDrawGridBackground(true);
+        barchartE.setDrawBarShadow(true);
+        barchartE.setData(getBarDataE());
+        barchartE.invalidate();
+        axisX(barchartE.getXAxis());
+        axisLeft(barchartE.getAxisLeft());
+        axisRight(barchartE.getAxisRight());
+
 
         piechart.setDescription(desc);
-        piechart =(PieChart) getSameChartPie(piechart,"Ventas",Color.GRAY,Color.WHITE,3000);
+        piechart =(PieChart) getSameChartPie(piechart,"Categorias",Color.GRAY,Color.WHITE,3000);
         piechart.setHoleRadius(60);
         piechart.setTransparentCircleRadius(12);
         piechart.setData(getPieData());
         piechart.invalidate();
 
         horizontalBarChart.setDescription(desc);
-        horizontalBarChart = (HorizontalBarChart) getSameChart(horizontalBarChart, "Series", Color.RED, Color.WHITE, 3000);
+        horizontalBarChart = (HorizontalBarChart) getSameChartI(horizontalBarChart, "Series", Color.RED, Color.WHITE, 3000);
         horizontalBarChart.setDrawGridBackground(true);
         horizontalBarChart.setDrawBarShadow(true);
-        horizontalBarChart.setData(getBarData());
+        horizontalBarChart.setData(getBarDataI());
         horizontalBarChart.invalidate();
         axisX(horizontalBarChart.getXAxis());
         axisLeft(horizontalBarChart.getAxisLeft());
@@ -156,8 +203,16 @@ public class Graficas {
         dataset.setValueTextSize(10);
         return dataset;
     }
-    private static BarData getBarData(){
-        BarDataSet barDataSet=(BarDataSet) getData(new BarDataSet(getBarEntries(),""));
+    private static BarData getBarDataI(){
+        BarDataSet barDataSet=(BarDataSet) getData(new BarDataSet(getBarEntriesI(),""));
+
+        barDataSet.setBarShadowColor(Color.GRAY);
+        BarData barData = new BarData(barDataSet);
+        barData.setBarWidth(0.45f);
+        return barData;
+    }
+    private static BarData getBarDataE(){
+        BarDataSet barDataSet=(BarDataSet) getData(new BarDataSet(getBarEntriesE(),""));
 
         barDataSet.setBarShadowColor(Color.GRAY);
         BarData barData = new BarData(barDataSet);
