@@ -6,7 +6,7 @@ public class Cuenta {
     private String DESCRIPCION;
     private String TIPO_CUENTA;
     private String NRO_CTA;
-    private String SALDO;
+    private Double SALDO;
 
     public int getId() {
         return id;
@@ -40,11 +40,11 @@ public class Cuenta {
         this.NRO_CTA = NRO_CTA;
     }
 
-    public String getSALDO() {
+    public Double getSALDO() {
         return SALDO;
     }
 
-    public void setSALDO(String SALDO) {
+    public void setSALDO(Double SALDO) {
         this.SALDO = SALDO;
     }
 }

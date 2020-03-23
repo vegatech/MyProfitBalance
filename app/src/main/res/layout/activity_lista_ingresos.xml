@@ -261,43 +261,94 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:orientation="vertical">
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view_chart_categoria"
+                android:layout_width="320dp"
+                android:layout_height="216dp"
+                android:innerRadius="40dp"
+                android:thicknessRatio="1.9"
+                android:layout_marginTop="5dp"
+                android:fadingEdge="horizontal|vertical"
+                android:gravity="center_horizontal"
+                app:cardElevation="5dp"
+                app:cardBackgroundColor="@color/colorWhite"
+                app:cardCornerRadius="30dp">
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/Piechart"
-                android:layout_width="match_parent"
-                android:layout_height="216dp"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="1dp"
                 android:layout_weight="1"
                 android:paddingTop="20dp" />
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view_chart_I"
+                android:layout_width="320dp"
+                android:layout_height="216dp"
+                android:innerRadius="40dp"
+                android:thicknessRatio="1.9"
+                android:layout_marginTop="5dp"
+                app:cardElevation="5dp"
+                app:cardBackgroundColor="@color/colorWhite"
+                app:cardCornerRadius="30dp">
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/BarchartI"
-                android:layout_width="match_parent"
+                android:layout_width="320dp"
                 android:layout_height="216dp"
                 android:layout_marginTop="1dp"
                 android:layout_weight="1"
                 android:paddingVertical="5dp"
                 android:paddingTop="5dp" />
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view_chart_E"
+                android:layout_width="320dp"
+                android:layout_height="216dp"
+                android:innerRadius="40dp"
+                android:thicknessRatio="1.9"
+                android:layout_marginTop="5dp"
+                app:cardElevation="5dp"
+                app:cardBackgroundColor="@color/colorWhite"
+                app:cardCornerRadius="30dp">
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/BarchartE"
-                android:layout_width="match_parent"
+                android:layout_width="320dp"
                 android:layout_height="216dp"
                 android:layout_marginTop="1dp"
                 android:layout_weight="1"
                 android:paddingVertical="5dp"
                 android:paddingTop="5dp" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view_Saldos"
+                android:layout_width="320dp"
+                android:layout_height="240dp"
+                android:innerRadius="40dp"
+                android:thicknessRatio="1.9"
+                android:layout_marginTop="5dp"
+                app:cardElevation="5dp"
+                app:cardBackgroundColor="@color/colorWhite"
+                app:cardCornerRadius="30dp">
+                    <ListView
+                    android:id="@+id/lvrepSaldos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                    android:paddingVertical="5dp" />
+        </android.support.v7.widget.CardView>
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/BarchartHorizontalI"
-                android:layout_width="match_parent"
-                android:layout_height="216dp"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="1dp"
                 android:layout_weight="1"
                 android:paddingVertical="5dp"
                 android:paddingTop="5dp">
             </com.github.mikephil.charting.charts.HorizontalBarChart>
-
-
-
-
         </LinearLayout>
 
     </ScrollView>

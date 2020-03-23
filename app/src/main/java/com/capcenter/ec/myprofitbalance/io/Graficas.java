@@ -46,9 +46,10 @@ public class Graficas {
 
     public static Chart getSameChartI(Chart chart, String descripcion, int textColor, int background, int AnimateY){
 
-      /*  chart.getDescription().setText("Ventas");
-         chart.getDescription().setEnabled(false);
-        chart.getDescription().setTextSize(15);*/
+       chart.getDescription().setText("Ingersos");
+         chart.getDescription().setEnabled(true);
+        chart.getDescription().setTextSize(15);
+        chart.getDescription().setTextColor(Color.LTGRAY);
         chart.setBackgroundColor(background);
         chart.animateY(AnimateY);
         legendI(chart);
@@ -56,9 +57,10 @@ public class Graficas {
     }
     public static Chart getSameChartE(Chart chart, String descripcion, int textColor, int background, int AnimateY){
 
-      /*  chart.getDescription().setText("Ventas");
-         chart.getDescription().setEnabled(false);
-        chart.getDescription().setTextSize(15);*/
+        chart.getDescription().setText("Egresos");
+         chart.getDescription().setEnabled(true);
+        chart.getDescription().setTextSize(15);
+        chart.getDescription().setTextColor(Color.LTGRAY);
         chart.setBackgroundColor(background);
         chart.animateY(AnimateY);
         legendE(chart);
@@ -66,10 +68,11 @@ public class Graficas {
     }
     public static Chart getSameChartPie(Chart chart, String descripcion, int textColor, int background, int AnimateY){
 
-      /*  chart.getDescription().setText("Ventas");
-         chart.getDescription().setEnabled(false);
-        chart.getDescription().setTextSize(15);*/
-        chart.getDescription().setTextColor(Color.WHITE);
+        chart.getDescription().setText("Categorias");
+         chart.getDescription().setEnabled(true);
+        chart.getDescription().setTextSize(15);
+
+        chart.getDescription().setTextColor(Color.GRAY);
         chart.setBackgroundColor(background);
         chart.animateY(AnimateY);
         legendPie(chart);
@@ -158,12 +161,20 @@ public class Graficas {
     }
     public static void createCharts(BarChart barchartI,BarChart barchartE,PieChart piechart,HorizontalBarChart horizontalBarChart){
         Description desc=  new Description();
-        desc.setEnabled(false);
-        //barchart.setDescription("asd");
+        desc.setEnabled(true);
+        //barchartI.setDescription("asd");
+
+        //piechart.setDescription(desc);
+        piechart =(PieChart) getSameChartPie(piechart,"Categorias",Color.GRAY,Color.WHITE,3000);
+        piechart.setHoleRadius(60);
+        piechart.setTransparentCircleRadius(12);
+        piechart.setData(getPieData());
+        piechart.invalidate();
 
         barchartI =(BarChart) getSameChartI(barchartI,"Ingresos", Color.RED,Color.WHITE,3000);
         barchartI.setDrawGridBackground(true);
-        barchartI.setDrawBarShadow(true);
+
+        barchartI.setDrawBarShadow(false);
         barchartI.setData(getBarDataI());
         barchartI.invalidate();
         axisX(barchartI.getXAxis());
@@ -172,7 +183,7 @@ public class Graficas {
 
         barchartE =(BarChart) getSameChartE(barchartE,"Egresos", Color.RED,Color.WHITE,3000);
         barchartE.setDrawGridBackground(true);
-        barchartE.setDrawBarShadow(true);
+        barchartE.setDrawBarShadow(false);
         barchartE.setData(getBarDataE());
         barchartE.invalidate();
         axisX(barchartE.getXAxis());
@@ -180,12 +191,6 @@ public class Graficas {
         axisRight(barchartE.getAxisRight());
 
 
-        piechart.setDescription(desc);
-        piechart =(PieChart) getSameChartPie(piechart,"Categorias",Color.GRAY,Color.WHITE,3000);
-        piechart.setHoleRadius(60);
-        piechart.setTransparentCircleRadius(12);
-        piechart.setData(getPieData());
-        piechart.invalidate();
 
         horizontalBarChart.setDescription(desc);
         horizontalBarChart = (HorizontalBarChart) getSameChartI(horizontalBarChart, "Series", Color.RED, Color.WHITE, 3000);

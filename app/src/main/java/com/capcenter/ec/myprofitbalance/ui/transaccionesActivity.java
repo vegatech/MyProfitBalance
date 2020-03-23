@@ -780,7 +780,7 @@ public void guardarnuevoRegistro(){
         values.put(Utilidades.CAMPO_TIPO_OPER, tipotran);//SpinnerCuentas.getSelectedItem().toString());
         values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString().trim());
         values.put(Utilidades.CAMPO_FECHA_INT,fechaI);
-        values.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
+        values.put(Utilidades.CAMPO_TIPO_CAT, categoriaSeleccionada);//spCategorias.getSelectedItemPosition());
         values.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentas.getSelectedItemPosition());
         values.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
         //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
@@ -795,7 +795,7 @@ public void guardarnuevoRegistro(){
             values2.put(Utilidades.CAMPO_TIPO_OPER, tipotran);
             values2.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
             values.put(Utilidades.CAMPO_FECHA_INT,fechaI);
-            values2.put(Utilidades.CAMPO_TIPO_CAT, spCategorias.getSelectedItemPosition());
+            values2.put(Utilidades.CAMPO_TIPO_CAT, categoriaSeleccionada);//spCategorias.getSelectedItemPosition());
             values2.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentaDestino.getSelectedItemPosition());
             values2.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
             //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());

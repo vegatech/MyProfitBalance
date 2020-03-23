@@ -53,19 +53,21 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
+import static com.capcenter.ec.myprofitbalance.io.Utilidades.qryTrnbyMesbyCat;
+
 public class reportesActivity extends AppCompatActivity {
     ConexionSQLiteHelper conn;
     private String FechaRep, fechaDesde, fechaHasta;
     private String consultaSQL, transaccioneSQL, categoriasSQL, semestreIngresosISQL, semestreIngresosIISQL, semestreEgresosISQL, semestreEgresosIISQL;
     private int posicionSeleccionada, fechaI, fechaF;
-    ListView lvingresos;
+    ListView lvSaldos;
    // ArrayList<Transaccion> listaingresos,listaIngresos,listaEgresos,listaTransferencias, listaTorta;
     ArrayList<String> listainformacionIngreso,listainformacionEgreso, ListainformacionTransferencia, listainformacionTorta;
     ArrayList<Double> listaMontoTransaccionesGrafica, listaMontoEgresoGrafica, listaMontoIngresoGrafica, ListaMontoTransferenciaGrafica, listaMontoTorta;
     ArrayList<String> listaRangoTransaccionesFechaGrafica,listarangotrnEgresos;
     ArrayList ListaColorGraficas, ListaColorPie, ListaColorEgreso;
     //ArrayList<Categoria> listaCategorias;
-    ArrayList<String> listaCat;
+    ArrayList<String> listaCat, listaSaldoCuentas;
     ArrayList<Integer> listColores = new ArrayList<>();
     Integer tipotran;
     Map<Integer, Integer> mapLista = new HashMap<Integer, Integer>();
@@ -124,7 +126,7 @@ public class reportesActivity extends AppCompatActivity {
         // Set Default botones
         String fechaOper = Utilidades.getCurrentDate();
         FechaRep=fechaOper;
-        fechaI = Integer.parseInt(Utilidades.getAmericanDate(fechaOper).trim());
+        fechaI = Utilidades.obtenerPrimerDiaMesActual();
         fechaF = Utilidades.obtenerUltimoDiaMesActual();
         btn_date_hoy.setBackgroundResource(R.drawable.button_date_pressed);
         btn_date_hoy.setTextColor(getResources().getColor(android.R.color.white));
@@ -332,8 +334,10 @@ public class reportesActivity extends AppCompatActivity {
                 obtenerListaIngresos();
                 Utilidades.consultarListaEgresos(getApplicationContext(),transaccioneSQL);
                 obtenerListaEgresos();
-               // ArrayAdapter adaptador = new ArrayAdapter(reportesActivity.this, android.R.layout.simple_list_item_1,listainformacionIngreso);
-               // lvingresos.setAdapter(adaptador);
+                Utilidades.consultarListaSaldosCuentas(getApplicationContext(),"");
+                obtenerListaSaldoCuentas();
+                ArrayAdapter adaptador = new ArrayAdapter(reportesActivity.this, android.R.layout.simple_list_item_1,listaSaldoCuentas);
+                lvSaldos.setAdapter(adaptador);
                 Graficas.months = listaRangoTransaccionesFechaGrafica.toArray(new String[listaRangoTransaccionesFechaGrafica.size()]);
                 Graficas.sale =  listaMontoTransaccionesGrafica.toArray(new Double[listaMontoTransaccionesGrafica.size()]);
                 Graficas.colors = new int[ListaColorGraficas.size()];
@@ -366,14 +370,15 @@ public class reportesActivity extends AppCompatActivity {
 
             }
         });
-        //conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
-        //lvingresos =(ListView) findViewById(R.id.lvreportes);
+            conn =new ConexionSQLiteHelper(getApplicationContext(),Utilidades.NOMBRE_BD,null,1);
+        lvSaldos =(ListView) findViewById(R.id.lvrepSaldos);
         Bundle bundle = getIntent().getExtras();
         //tipotran=bundle.getInt("tipoper");
         //tipotran=1;
         transaccioneSQL="SELECT * FROM " + Utilidades.TABLA_OPERACIONES ;//+"  WHERE 1 =1 AND " +Utilidades.CAMPO_FECHA_INT + " BETWEEN "+ fechaI +" and "+ fechaF;
-        categoriasSQL="SELECT SUM("+Utilidades.CAMPO_MONTO+"),CATEGORIAS.DESCRIPCION"+" FROM "+ Utilidades.TABLA_OPERACIONES+" INNER JOIN CATEGORIAS ON CATEGORIAS.id= TRANSACCIONES.TIPO_CATEGORIA WHERE 1 =1 ";
-        categoriasSQL=categoriasSQL+"  AND "+Utilidades.CAMPO_FECHA_INT +" BETWEEN "+ 20200101 +" and "+ 20200131+" GROUP BY "+Utilidades.CAMPO_TIPO_CAT+ " ORDER BY "+Utilidades.CAMPO_TIPO_CAT+" ASC";
+        //categoriasSQL="SELECT SUM("+Utilidades.CAMPO_MONTO+"),CATEGORIAS.DESCRIPCION"+" FROM "+ Utilidades.TABLA_OPERACIONES+" INNER JOIN CATEGORIAS ON CATEGORIAS.id= TRANSACCIONES.TIPO_CATEGORIA WHERE 1 =1 ";
+        //categoriasSQL=categoriasSQL+"  AND "+Utilidades.CAMPO_FECHA_INT +" BETWEEN "+ fechaI +" and "+ fechaF +" GROUP BY "+Utilidades.CAMPO_TIPO_CAT+ " ORDER BY "+Utilidades.CAMPO_TIPO_CAT+" ASC";
+        categoriasSQL=Utilidades.qryTrnbyMesbyCat();
         Log.d("SQL",categoriasSQL);
 
         Utilidades.consultarTransaccionesbycategoria(getApplicationContext(),categoriasSQL);
@@ -413,9 +418,10 @@ public class reportesActivity extends AppCompatActivity {
         horizontalBarChart =(HorizontalBarChart)  findViewById(R.id.BarchartHorizontalI);
 
         Graficas.createCharts(barchartI,barchartE,piechart,horizontalBarChart);
-
-        //ArrayAdapter adaptador = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listainformacionIngreso);
-        //lvingresos.setAdapter(adaptador);
+        Utilidades.consultarListaSaldosCuentas(getApplicationContext(),"");
+        obtenerListaSaldoCuentas();
+        ArrayAdapter adaptador = new ArrayAdapter(this, android.R.layout.simple_list_item_1,listaSaldoCuentas);
+        lvSaldos.setAdapter(adaptador);
 
 
 
@@ -522,6 +528,16 @@ public class reportesActivity extends AppCompatActivity {
         for (int i=0; i<Utilidades.listaCategorias.size();i++){
             listaCat.add(
                     Utilidades.listaCategorias.get(i).getDescripcat()
+            );
+        }
+    }
+    private void obtenerListaSaldoCuentas(){
+        listaSaldoCuentas= new ArrayList<String>();
+        listaSaldoCuentas.add("                  Saldo en cuentas...");
+
+        for (int i=0; i<Utilidades.listaSaldos.size();i++){
+            listaSaldoCuentas.add(
+                    Utilidades.listaSaldos.get(i).getDESCRIPCION()+"   =   "+Utilidades.listaSaldos.get(i).getSALDO().toString()
             );
         }
     }
