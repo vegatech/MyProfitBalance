@@ -532,6 +532,7 @@ public class reportesActivity extends AppCompatActivity {
         }
     }
     private void obtenerListaSaldoCuentas(){
+        Double saldoCuentas=0.0;
         listaSaldoCuentas= new ArrayList<String>();
         listaSaldoCuentas.add("                  Saldo en cuentas...");
 
@@ -539,7 +540,9 @@ public class reportesActivity extends AppCompatActivity {
             listaSaldoCuentas.add(
                     Utilidades.listaSaldos.get(i).getDESCRIPCION()+"   =   "+Utilidades.listaSaldos.get(i).getSALDO().toString()
             );
+            saldoCuentas=saldoCuentas+Utilidades.listaSaldos.get(i).getSALDO();
         }
+        listaSaldoCuentas.add("                             Total  :"+saldoCuentas.toString());
     }
 
 }

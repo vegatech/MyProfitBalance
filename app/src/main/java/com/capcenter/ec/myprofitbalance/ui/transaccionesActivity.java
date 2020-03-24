@@ -242,7 +242,7 @@ public class transaccionesActivity extends AppCompatActivity {
 
         //SpinnerCuentas.setSelection(posision2);
         SpinnerCuentas.setSelection(1);
-        SpinnerCuentaDestino.setSelection(1);
+        SpinnerCuentaDestino.setSelection(2);
         SpinnerCuentaDestino.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -734,6 +734,7 @@ public class transaccionesActivity extends AppCompatActivity {
                 regCuenta.setId(cursorc.getInt(0));
                 // transaccion.setFecha(cursor.getString(1));
                 regCuenta.setDESCRIPCION(cursorc.getString(1));
+                regCuenta.setSALDO(cursorc.getDouble(4));
                 listaCuentas.add(regCuenta);
 
             }
@@ -776,7 +777,7 @@ public void guardarnuevoRegistro(){
         conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
         ContentValues values = new ContentValues();
-
+        ContentValues valuesUpdate = new ContentValues();
         values.put(Utilidades.CAMPO_TIPO_OPER, tipotran);//SpinnerCuentas.getSelectedItem().toString());
         values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString().trim());
         values.put(Utilidades.CAMPO_FECHA_INT,fechaI);
@@ -785,6 +786,43 @@ public void guardarnuevoRegistro(){
         values.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
         //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
         Long idResultante = db.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values);
+        double montoAfectaSaldo=0;
+        String spinn;
+        String monto=txtmonto.getText().toString();
+        int sel1 =SpinnerCuentas.getSelectedItemPosition();
+
+
+
+        String Whereqry="";
+        montoAfectaSaldo = Double.valueOf(monto);
+        double Saldo =listaCuentas.get(SpinnerCuentas.getSelectedItemPosition()-1).getSALDO();
+        if (tipotran==1){
+            spinn=String.valueOf(sel1);
+            Whereqry="id="+spinn ;
+           Saldo = Saldo +montoAfectaSaldo;
+            Log.d("Whereqry",Whereqry);
+        }
+        if (tipotran==2){
+            spinn=String.valueOf(sel1);
+            Whereqry="id="+spinn ;
+            Saldo = Saldo -montoAfectaSaldo;
+            Log.d("Whereqry",Whereqry);
+        }
+        if (tipotran==3){
+            sel1= sel1+1;
+            spinn=String.valueOf(sel1);
+            Whereqry="id="+spinn ;
+            if (categoriaSeleccionada==11 ||categoriaSeleccionada==13){
+                Saldo = Saldo -montoAfectaSaldo;
+            }else{
+                Saldo = Saldo +montoAfectaSaldo;
+            }
+
+            Log.d("Whereqry",Whereqry);
+        }
+
+        valuesUpdate.put(Utilidades.CTA_CAMPO_SALDO,Saldo);
+        int count= db.update("CUENTAS",valuesUpdate,Whereqry,null);
 
         Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
         db.close();
@@ -800,6 +838,22 @@ public void guardarnuevoRegistro(){
             values2.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
             //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
             Long idResultante2 = db2.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values2);
+
+            ContentValues valuesUpdate1 = new ContentValues();
+            double montoAfectaSaldo1=0;
+            String monto1=txtmonto.getText().toString();
+            int sel =SpinnerCuentaDestino.getSelectedItemPosition();
+            sel= sel+1;
+            String spinn1=String.valueOf(sel);
+            String Whereqry1="";
+            montoAfectaSaldo1 = Double.valueOf(monto1);
+            double Saldo1 =listaCuentas.get(SpinnerCuentaDestino.getSelectedItemPosition()-1).getSALDO();
+
+                Whereqry1="id="+spinn1 ;
+                Saldo1 = Saldo1 +montoAfectaSaldo1;
+                Log.d("Whereqry",Whereqry1);
+            valuesUpdate1.put(Utilidades.CTA_CAMPO_SALDO,Saldo1);
+            int count2= db2.update("CUENTAS",valuesUpdate1,Whereqry1,null);
 
             Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
             db2.close();
