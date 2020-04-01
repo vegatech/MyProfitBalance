@@ -13,5 +13,8 @@
         android:title="Ajustes"
         android:icon="@drawable/ic_settings_bar_btn"
         />
-
+    <item  android:id="@+id/menu_salir"
+        android:title="Salir"
+        android:icon="@drawable/ic_salir_bar_btn"
+        />
 </menu>

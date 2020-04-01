@@ -1,5 +1,6 @@
-package com.capcenter.ec.myprofitbalance.ui;
+package com.capcenter.ec.myprofitbalance.ui.fragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,20 +10,21 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,15 +37,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.capcenter.ec.myprofitbalance.io.AdaptadorAvatar;
-import com.capcenter.ec.myprofitbalance.model.Categoria;
-import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
-import com.capcenter.ec.myprofitbalance.model.Cuenta;
-
 import com.capcenter.ec.myprofitbalance.R;
-import com.capcenter.ec.myprofitbalance.io.Utilidades;
+import com.capcenter.ec.myprofitbalance.io.AdaptadorAvatar;
 import com.capcenter.ec.myprofitbalance.io.AvatarVo;
+import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
+import com.capcenter.ec.myprofitbalance.io.Utilidades;
+import com.capcenter.ec.myprofitbalance.model.Categoria;
+import com.capcenter.ec.myprofitbalance.model.Cuenta;
 import com.capcenter.ec.myprofitbalance.model.Transaccion;
+import com.capcenter.ec.myprofitbalance.ui.MainActivity;
+
+import com.capcenter.ec.myprofitbalance.ui.interfaces.IComunicaFragments;
+import com.capcenter.ec.myprofitbalance.ui.transaccionesActivity;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -51,7 +56,29 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class transaccionesActivity extends AppCompatActivity {
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link transaccionesFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class transaccionesFragment extends Fragment {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 ="TipoTran";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    private int mparam3;
+    private OnFragmentInteractionListener mListener;
+
+    Activity actividad;
+    View vista;
+    IComunicaFragments iComunicaFragments;
+
     private View vistaTransaccion;
     private Spinner spCategorias,SpinnerCuentas,SpinnerCuentaDestino;
     private EditText txtmonto, txtDescripcion;
@@ -68,12 +95,12 @@ public class transaccionesActivity extends AppCompatActivity {
     ArrayList<String> lstInformacionCategoria;
     ArrayList<Cuenta> listaCuentas;
     ArrayList<String> listainfoCuentas;
-   private  EditText DialogoTextCategoria;
+    private  EditText DialogoTextCategoria;
     RadioButton radioIng, radioEgr, radioTransf;
     EditText iconoSeleccionarDialogo;
     Button btnCategorias ;
     ConexionSQLiteHelper conn;
-    Integer tipotran;
+    int tipotran;
     Integer numerotran;
     Integer posision;
     Integer posision2;
@@ -104,73 +131,86 @@ public class transaccionesActivity extends AppCompatActivity {
     String[] detalleCategoriasNEw={"01","02","03","04","05","06","07"};
     int [] imgCategoriasNew ={R.drawable.ic_cat_01,R.drawable.ic_cat_02,R.drawable.ic_cat_03,R.drawable.ic_cat_04,R.drawable.ic_cat_05,R.drawable.ic_cat_06,R.drawable.ic_cat_07,R.drawable.ic_cat_generic};
 
-    BottomNavigationView mbotomnavigationview;
-    View vista;
 
+
+    public transaccionesFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment transacciones_fragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static transaccionesFragment newInstance(String param1, String param2,Integer param3) {
+        transaccionesFragment fragment = new transaccionesFragment();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_PARAM3, param3);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transacciones);
+        if (getArguments() != null) {
+            tipotran = getArguments().getInt(ARG_PARAM3);
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
 
-        mbotomnavigationview =(BottomNavigationView) findViewById(R.id.navigationbariewT);
-        mbotomnavigationview.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        }
+    }
 
-                if (menuItem.getItemId()== R.id.menu_home){
-                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                     startActivity(intent);
-                    //showSelectedFragment(new homeFragment());
-                }
-                if (menuItem.getItemId()== R.id.menu_Reportes){
-                    Intent intent = new Intent(getApplicationContext(), reportesActivity.class);
-                    startActivity(intent);
-                    //showSelectedFragment(new reportsFragment());
-                }
-                if (menuItem.getItemId()== R.id.menu_ajustes){
-                    //showSelectedFragment(new settingsFragment());
-                }
-                return true;
-            }
-        });
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
 
-        final String DBO;
-
-
-        vistaTransaccion =(View) findViewById(R.id.vistaTransacciones);
-        txtvtituloTransaccion=(TextView) findViewById(R.id.TextTituloTransaccion1);
-        btn_date_hoy =(Button) findViewById(R.id.btn_set_date_today);
-        btn_date_ayer=(Button) findViewById(R.id.btn_set_date_yesterday);
-        btn_date_otros=(Button) findViewById(R.id.btn_set_date_others);
+        tipotran=getActivity().getIntent().getExtras().getInt("tipoper");
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+       // return inflater.inflate(R.layout.fragment_transacciones, container, false);
+        vista =inflater.inflate(R.layout.fragment_transacciones, container, false);
+        vistaTransaccion =vista.findViewById(R.id.vistaTransacciones);
+        txtvtituloTransaccion=vista.findViewById(R.id.TextTituloTransaccion1);
+        btn_date_hoy =vista.findViewById(R.id.btn_set_date_today);
+        btn_date_ayer=vista.findViewById(R.id.btn_set_date_yesterday);
+        btn_date_otros=vista.findViewById(R.id.btn_set_date_others);
         btn_date_hoy.setBackgroundResource(R.drawable.button_date_pressed);
-        btn_billete1=(Button)  findViewById(R.id.btnBillete1);
-        btn_billete2=(Button)  findViewById(R.id.btnBillete2);
-        btn_billete3=(Button)  findViewById(R.id.btnBillete3);
+        btn_billete1=vista.findViewById(R.id.btnBillete1);
+        btn_billete2=vista.findViewById(R.id.btnBillete2);
+        btn_billete3=vista.findViewById(R.id.btnBillete3);
         btn_billete1.setVisibility(View.GONE);
         btn_billete2.setVisibility(View.GONE);
         btn_billete3.setVisibility(View.GONE);
 
-        radioIng =(RadioButton) findViewById(R.id.radioI);
-        radioEgr =(RadioButton) findViewById(R.id.radioE);
-        radioTransf =(RadioButton) findViewById(R.id.radioT);
+        radioIng =vista.findViewById(R.id.radioI);
+        radioEgr =vista.findViewById(R.id.radioE);
+        radioTransf =vista.findViewById(R.id.radioT);
 
         //btn_date_hoy.setBackgroundColor(Color.rgb(70, 80, 90));
-        btnCategorias =(Button) findViewById(R.id.btnCategoria);
-        spCategorias =(Spinner) findViewById(R.id.SpinnerCategorias);
-        SpinnerCuentas=(Spinner) findViewById(R.id.SpinnerCuentas);
-        SpinnerCuentaDestino =(Spinner)findViewById(R.id.SpinnerCuentaDestino);
-        txtmonto =(EditText) findViewById(R.id.EditTextMonto);
-        txtfecha = (EditText) findViewById(R.id.EditTextFecha);
-        txtDescripcion =(EditText) findViewById(R.id.EditTextDescripcion);
+        btnCategorias =vista.findViewById(R.id.btnCategoria);
+        spCategorias =vista.findViewById(R.id.SpinnerCategorias);
+        SpinnerCuentas=vista.findViewById(R.id.SpinnerCuentas);
+        SpinnerCuentaDestino =vista.findViewById(R.id.SpinnerCuentaDestino);
+        txtmonto =vista.findViewById(R.id.EditTextMonto);
+        txtfecha =vista.findViewById(R.id.EditTextFecha);
+        txtDescripcion =vista.findViewById(R.id.EditTextDescripcion);
 
 
         final RecyclerView recyclerAvatars;
         //recyclerAvatars =vista.findViewById(R.id.recyclerAvatarsId);
-        recyclerAvatars = vistaTransaccion.findViewById(R.id.recyclerAvatarsId);
+        recyclerAvatars = vista.findViewById(R.id.recyclerAvatarsId);
         //RelativeLayout item = (RelativeLayout)findViewById(R.id.item);
-        recyclerAvatars.setLayoutManager(new GridLayoutManager(transaccionesActivity.this,3));
+        recyclerAvatars.setLayoutManager(new GridLayoutManager(getActivity(),3));
         recyclerAvatars.setHasFixedSize(true);
         ArrayList<AvatarVo> listaAvatars;
         listaAvatars=new ArrayList<AvatarVo>();
@@ -191,8 +231,7 @@ public class transaccionesActivity extends AppCompatActivity {
         recyclerAvatars.setAdapter(miAdaptador);
 
 
-        Bundle bundle = getIntent().getExtras();
-        tipotran=bundle.getInt("tipoper");
+
         btn_date_hoy.setTextColor(getResources().getColor(android.R.color.white));
         if (tipotran==1){
             txtvtituloTransaccion.setText("Nuevo Ingreso...");
@@ -228,17 +267,17 @@ public class transaccionesActivity extends AppCompatActivity {
 
         //consultarTransaccionById();
         consultarCategorias();
-        ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (this,android.R.layout.simple_spinner_item,listaCat);
+        ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (getActivity(),android.R.layout.simple_spinner_item,listaCat);
 //        spCategorias.setAdapter(adapador);
         //spCategorias.setSelection(posision);
         spCategorias.setSelection(1);
 
         consultarCuentas();
-        ArrayAdapter<CharSequence> adapador2=  new ArrayAdapter (this,android.R.layout.simple_spinner_item,listainfoCuentas);
+        ArrayAdapter<CharSequence> adapador2=  new ArrayAdapter (getActivity(),android.R.layout.simple_spinner_item,listainfoCuentas);
         SpinnerCuentas.setAdapter(adapador2);
         SpinnerCuentaDestino.setAdapter(adapador2);
 
-        lstcategoriasTransacciones= (ListView) findViewById(R.id.listview_category);
+        lstcategoriasTransacciones= vista.findViewById(R.id.listview_category);
 
         //SpinnerCuentas.setSelection(posision2);
         SpinnerCuentas.setSelection(1);
@@ -248,7 +287,7 @@ public class transaccionesActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(tipotran==3 && categoriaSeleccionada==11) {
                     if (SpinnerCuentas.getSelectedItem().toString().trim().equals(SpinnerCuentaDestino.getSelectedItem().toString().trim())) {
-                        Toast.makeText(transaccionesActivity.this, "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -263,7 +302,7 @@ public class transaccionesActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(tipotran==3 && categoriaSeleccionada==11) {
                     if (SpinnerCuentas.getSelectedItem().toString().trim().equals(SpinnerCuentaDestino.getSelectedItem().toString().trim())) {
-                        Toast.makeText(transaccionesActivity.this, "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Cuenta Origen y Destino no pueden ser la misma", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -322,7 +361,7 @@ public class transaccionesActivity extends AppCompatActivity {
                 m = calendar.get(Calendar.MONTH);
 
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(transaccionesActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         fecha= dayOfMonth+"/"+ (month+1)  +"/"+year;
@@ -342,7 +381,7 @@ public class transaccionesActivity extends AppCompatActivity {
             btnCategorias.setText("Sueldo");
 
             String imagenSel =Utilidades.RUTA_APP+"ic_cat_sueldo".toString();
-            int img3 =getResources().getIdentifier(imagenSel,"Drawable",getPackageName());
+            int img3 =getResources().getIdentifier(imagenSel,"Drawable",getActivity().getPackageName());
             Drawable img = getResources().getDrawable(img3);
             btnCategorias.setCompoundDrawables(img, null, null, null);
             btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
@@ -351,7 +390,7 @@ public class transaccionesActivity extends AppCompatActivity {
             categoriaSeleccionada=6;
             btnCategorias.setText("Transporte");
             String imagenSel =Utilidades.RUTA_APP+"ic_cat_transporte".toString();
-            int img3 =getResources().getIdentifier(imagenSel,"Drawable",getPackageName());
+            int img3 =getResources().getIdentifier(imagenSel,"Drawable",getActivity().getPackageName());
             Drawable img = getResources().getDrawable(img3);
             btnCategorias.setCompoundDrawables(img, null, null, null);
             btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
@@ -360,13 +399,13 @@ public class transaccionesActivity extends AppCompatActivity {
             categoriaSeleccionada=11;
             btnCategorias.setText("Transferencia");
             String imagenSel =Utilidades.RUTA_APP+"ic_transferencia_cat".toString();
-            int img3 =getResources().getIdentifier(imagenSel,"Drawable",getPackageName());
+            int img3 =getResources().getIdentifier(imagenSel,"Drawable",getActivity().getPackageName());
             Drawable img = getResources().getDrawable(img3);
             btnCategorias.setCompoundDrawables(img, null, null, null);
             btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
             if(categoriaSeleccionada==11){
                 SpinnerCuentaDestino.setVisibility(View.VISIBLE);
-                }else{
+            }else{
                 SpinnerCuentaDestino.setVisibility(View.GONE);
             }
         }
@@ -435,17 +474,17 @@ public class transaccionesActivity extends AppCompatActivity {
         for (int i = 0; i < listaCatDraw.size();i++){
             imagen =Utilidades.RUTA_APP+listaCatDraw.get(i).toString();
             Log.d("imagen: ",imagen);
-            img3 =getResources().getIdentifier(imagen,"Drawable",getPackageName());
+            img3 =getResources().getIdentifier(imagen,"Drawable",getActivity().getPackageName());
             //imgDraw = getResources().getDrawable( img3);
             imgid2[i]=img3;
         }
         btnCategorias.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder mBuilder= new AlertDialog.Builder(transaccionesActivity.this);
+                AlertDialog.Builder mBuilder= new AlertDialog.Builder(getActivity());
                 mBuilder.setIcon(R.drawable.ic_category_section);
                 mBuilder.setTitle("Selecciona una categoria");
-                final VivzAdapter1 adapter1 = new VivzAdapter1(transaccionesActivity.this,catlistitems, imgid2);
+                final VivzAdapterT adapter1 = new VivzAdapterT(getActivity(),catlistitems, imgid2);
                 //lstcategoriasTransacciones.setAdapter(adapter1);
                 // View mView=  getLayoutInflater().inflate(R.layout.custom_category_dialog,null);
                 mBuilder.setAdapter(adapter1, new DialogInterface.OnClickListener() {
@@ -472,12 +511,12 @@ public class transaccionesActivity extends AppCompatActivity {
                             if (which == i) {
                                 btnCategorias.setText(strName);
                                 String imagenSel =Utilidades.RUTA_APP+listaCatDraw.get(i).toString();
-                                int img3 =getResources().getIdentifier(imagenSel,"Drawable",getPackageName());
+                                int img3 =getResources().getIdentifier(imagenSel,"Drawable",getActivity().getPackageName());
                                 Drawable img = getResources().getDrawable(img3);
                                 btnCategorias.setCompoundDrawables(img, null, null, null);
                                 btnCategorias.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
                                 String colorSel =Utilidades.RUTA_APP+listaCatColor.get(i);
-                                int imgColor =getResources().getIdentifier(colorSel,"Drawable",getPackageName());
+                                int imgColor =getResources().getIdentifier(colorSel,"Drawable",getActivity().getPackageName());
                                 //Drawable drawColor = getResources().getDrawable(imgColor);
                                 btnCategorias.setBackgroundResource(imgColor);
                                 categoriaSeleccionada=which+1;
@@ -503,13 +542,13 @@ public class transaccionesActivity extends AppCompatActivity {
                 mBuilder.setNeutralButton("Nueva Categoria", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        AlertDialog.Builder builderInner = new AlertDialog.Builder(transaccionesActivity.this);
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(getActivity());
                         builderInner.setTitle(" Registro de Categoria...");
                         builderInner.setIcon(R.drawable.ic_category_section);
-                        View view = LayoutInflater.from(transaccionesActivity.this).inflate(R.layout.manage_category_dialog, null);
+                        View view = LayoutInflater.from(getActivity()).inflate(R.layout.manage_category_dialog, null);
                         DialogoTextCategoria =view.findViewById(R.id.campoDescripcionCategoria1);
                         RecyclerView recyclerView =   view.findViewById(R.id.recyclerAvatarsId);
-                        recyclerView.setLayoutManager(new GridLayoutManager(transaccionesActivity.this,3));
+                        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setAdapter(miAdaptador);
 
@@ -517,7 +556,7 @@ public class transaccionesActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                               Integer tipoTrans=0;
+                                Integer tipoTrans=0;
 
                                 if (radioIng.isChecked()==true){
                                     tipoTrans=1;
@@ -526,30 +565,30 @@ public class transaccionesActivity extends AppCompatActivity {
                                 }else{
                                     tipoTrans=3;
                                 }
-                            if (tipoTrans.intValue()!=0 && DialogoTextCategoria.getText().toString()!=null
+                                if (tipoTrans.intValue()!=0 && DialogoTextCategoria.getText().toString()!=null
                                     //&& !campoNick.getText().toString().trim().equals("")
-                            ) {
+                                ) {
 
-                                String RecursoDraww = getResources().getResourceName(imgCategoriasNew[Utilidades.avatarIdSeleccion-1]);
-                                String substr = RecursoDraww.substring(42);
-                                String NombreCAtegoria=DialogoTextCategoria.getText().toString();
+                                    String RecursoDraww = getResources().getResourceName(imgCategoriasNew[Utilidades.avatarIdSeleccion-1]);
+                                    String substr = RecursoDraww.substring(42);
+                                    String NombreCAtegoria=DialogoTextCategoria.getText().toString();
 
-                                conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
-                                SQLiteDatabase db = conn.getWritableDatabase();
-                                ContentValues values = new ContentValues();
-                                values.put(Utilidades.CAT_CAMPO_DESCRIPCION,NombreCAtegoria);
-                                values.put(Utilidades.CAT_CAMPO_COLOR, "custom_button_3");
-                                values.put(Utilidades.CAT_CAMPO_TIPO,tipoTrans );
-                                values.put(Utilidades.CAT_CAMPO_DRAWABLE,substr);
-                                Long idResultante = db.insert(Utilidades.TABLA_CATEGORIAS, Utilidades.CAT_CAMPO_ID, values);
-                                //Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
-                                db.close();
-                                consultarCategorias();
-                                Toast.makeText(transaccionesActivity.this, "Registro Guardado", Toast.LENGTH_SHORT).show();
+                                    conn = new ConexionSQLiteHelper(getActivity(), Utilidades.NOMBRE_BD, null, 1);
+                                    SQLiteDatabase db = conn.getWritableDatabase();
+                                    ContentValues values = new ContentValues();
+                                    values.put(Utilidades.CAT_CAMPO_DESCRIPCION,NombreCAtegoria);
+                                    values.put(Utilidades.CAT_CAMPO_COLOR, "custom_button_3");
+                                    values.put(Utilidades.CAT_CAMPO_TIPO,tipoTrans );
+                                    values.put(Utilidades.CAT_CAMPO_DRAWABLE,substr);
+                                    Long idResultante = db.insert(Utilidades.TABLA_CATEGORIAS, Utilidades.CAT_CAMPO_ID, values);
+                                    //Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
+                                    db.close();
+                                    consultarCategorias();
+                                    Toast.makeText(getActivity(), "Registro Guardado", Toast.LENGTH_SHORT).show();
                                 }else {
-                                Toast.makeText(transaccionesActivity.this, "Debe indicar todos los campos para continuar", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "Debe indicar todos los campos para continuar", Toast.LENGTH_SHORT).show();
 
-                            }
+                                }
                             }
                         });
 
@@ -564,14 +603,54 @@ public class transaccionesActivity extends AppCompatActivity {
         });
 
 
+        return  vista;
+    }// fin create View
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) {
+            this.actividad= (Activity) context;
+            iComunicaFragments= (IComunicaFragments) this.actividad;
+        }
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
 
-    }// On Create
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
     public void registrarTransaccionSalir(View view){
-            guardarnuevoRegistro();
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+        guardarnuevoRegistro();
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
     }
     public void registrarTransaccionyNuevo(View view){
         guardarnuevoRegistro();
@@ -579,7 +658,7 @@ public class transaccionesActivity extends AppCompatActivity {
     // Trae los datos paralaedicion de un registro seleccionado en la lista detransacciones
     private void consultarTransaccionById(){
         try {
-            conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
+            conn = new ConexionSQLiteHelper(getContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
             String SQL_QUERY = "Select * from " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "=" + tipotran+ " AND "+Utilidades.CAMPO_ID+"="+numerotran;
             Log.d("STATE",SQL_QUERY);
@@ -620,7 +699,7 @@ public class transaccionesActivity extends AppCompatActivity {
     }
     private void consultarMontoTransaccionByCat(){
         try {
-            conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
+            conn = new ConexionSQLiteHelper(getContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
             String SQL_QUERY = "SELECT DISTINCT "+ Utilidades.CAMPO_ID+", "+Utilidades.CAMPO_MONTO+" FROM  " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "=" + tipotran+ " AND "+Utilidades.CAMPO_TIPO_CAT+" = "+categoriaSeleccionada  +" ORDER BY "+Utilidades.CAMPO_ID+ " DESC "+" LIMIT 3 ";
             Log.d("STATE",SQL_QUERY);
@@ -669,7 +748,7 @@ public class transaccionesActivity extends AppCompatActivity {
     }
     private void consultarCategorias(){
         try {
-            conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
+            conn = new ConexionSQLiteHelper(getContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
             Cursor cursorc = db.rawQuery("Select * from " + Utilidades.TABLA_CATEGORIAS + " WHERE "+Utilidades.CAT_CAMPO_TIPO+"="+tipotran, null);
 
@@ -681,7 +760,7 @@ public class transaccionesActivity extends AppCompatActivity {
                 regCategoria = new Categoria();
                 regCategoria.setId(cursorc.getInt(0));
                 regCategoria.setDescripcat(cursorc.getString(1));
-               //regCategoria.setTipoCat(cursorc.getString(2));
+                //regCategoria.setTipoCat(cursorc.getString(2));
                 regCategoria.setDrawable(cursorc.getString(3));
                 regCategoria.setColor(cursorc.getString(4));
                 listaCategorias.add(regCategoria);
@@ -721,7 +800,7 @@ public class transaccionesActivity extends AppCompatActivity {
 
     private void consultarCuentas(){
         try {
-            conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
+            conn = new ConexionSQLiteHelper(getContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
             Cursor cursorc = db.rawQuery(sqlCuentas, null);
 
@@ -759,121 +838,119 @@ public class transaccionesActivity extends AppCompatActivity {
     }
 
 
-public void guardarnuevoRegistro(){
-    String resultado=null;
-    if  (btnCategorias.getText() != null ){
-        resultado ="ok";
-    }else{
-        resultado =null;
-        Toast.makeText(getApplicationContext(),"El campo Categoria debe ser indicado",Toast.LENGTH_LONG).show();
-    }
-    if (TextUtils.isEmpty(txtmonto.getText().toString())){
-        resultado =null;
-        Toast.makeText(getApplicationContext(),"El campo Monto debe ser indicado",Toast.LENGTH_LONG).show();
-    }else{
-        resultado ="ok";
-    }
-    if (resultado =="ok") {
-        conn = new ConexionSQLiteHelper(getApplicationContext(), Utilidades.NOMBRE_BD, null, 1);
-        SQLiteDatabase db = conn.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        ContentValues valuesUpdate = new ContentValues();
-        values.put(Utilidades.CAMPO_TIPO_OPER, tipotran);//SpinnerCuentas.getSelectedItem().toString());
-        values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString().trim());
-        values.put(Utilidades.CAMPO_FECHA_INT,fechaI);
-        values.put(Utilidades.CAMPO_TIPO_CAT, categoriaSeleccionada);//spCategorias.getSelectedItemPosition());
-        values.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentas.getSelectedItemPosition());
-        values.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
-        //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
-        Long idResultante = db.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values);
-        double montoAfectaSaldo=0;
-        String spinn;
-        String monto=txtmonto.getText().toString();
-        int sel1 =SpinnerCuentas.getSelectedItemPosition();
-
-
-
-        String Whereqry="";
-        montoAfectaSaldo = Double.valueOf(monto);
-        double Saldo =listaCuentas.get(SpinnerCuentas.getSelectedItemPosition()-1).getSALDO();
-        if (tipotran==1){
-            spinn=String.valueOf(sel1);
-            Whereqry="id="+spinn ;
-           Saldo = Saldo +montoAfectaSaldo;
-            Log.d("Whereqry",Whereqry);
+    public void guardarnuevoRegistro(){
+        String resultado=null;
+        if  (btnCategorias.getText() != null ){
+            resultado ="ok";
+        }else{
+            resultado =null;
+            Toast.makeText(getContext(),"El campo Categoria debe ser indicado",Toast.LENGTH_LONG).show();
         }
-        if (tipotran==2){
-            spinn=String.valueOf(sel1);
-            Whereqry="id="+spinn ;
-            Saldo = Saldo -montoAfectaSaldo;
-            Log.d("Whereqry",Whereqry);
+        if (TextUtils.isEmpty(txtmonto.getText().toString())){
+            resultado =null;
+            Toast.makeText(getContext(),"El campo Monto debe ser indicado",Toast.LENGTH_LONG).show();
+        }else{
+            resultado ="ok";
         }
-        if (tipotran==3){
-            sel1= sel1+1;
-            spinn=String.valueOf(sel1);
-            Whereqry="id="+spinn ;
-            if (categoriaSeleccionada==11 ||categoriaSeleccionada==13){
-                Saldo = Saldo -montoAfectaSaldo;
-            }else{
+        if (resultado =="ok") {
+            conn = new ConexionSQLiteHelper(getContext(), Utilidades.NOMBRE_BD, null, 1);
+            SQLiteDatabase db = conn.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            ContentValues valuesUpdate = new ContentValues();
+            values.put(Utilidades.CAMPO_TIPO_OPER, tipotran);//SpinnerCuentas.getSelectedItem().toString());
+            values.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString().trim());
+            values.put(Utilidades.CAMPO_FECHA_INT,fechaI);
+            values.put(Utilidades.CAMPO_TIPO_CAT, categoriaSeleccionada);//spCategorias.getSelectedItemPosition());
+            values.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentas.getSelectedItemPosition());
+            values.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
+            //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
+            Long idResultante = db.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values);
+            double montoAfectaSaldo=0;
+            String spinn;
+            String monto=txtmonto.getText().toString();
+            int sel1 =SpinnerCuentas.getSelectedItemPosition();
+
+
+
+            String Whereqry="";
+            montoAfectaSaldo = Double.valueOf(monto);
+            double Saldo =listaCuentas.get(SpinnerCuentas.getSelectedItemPosition()-1).getSALDO();
+            if (tipotran==1){
+                spinn=String.valueOf(sel1);
+                Whereqry="id="+spinn ;
                 Saldo = Saldo +montoAfectaSaldo;
+                Log.d("Whereqry",Whereqry);
+            }
+            if (tipotran==2){
+                spinn=String.valueOf(sel1);
+                Whereqry="id="+spinn ;
+                Saldo = Saldo -montoAfectaSaldo;
+                Log.d("Whereqry",Whereqry);
+            }
+            if (tipotran==3){
+                sel1= sel1+1;
+                spinn=String.valueOf(sel1);
+                Whereqry="id="+spinn ;
+                if (categoriaSeleccionada==11 ||categoriaSeleccionada==13){
+                    Saldo = Saldo -montoAfectaSaldo;
+                }else{
+                    Saldo = Saldo +montoAfectaSaldo;
+                }
+
+                Log.d("Whereqry",Whereqry);
             }
 
-            Log.d("Whereqry",Whereqry);
-        }
+            valuesUpdate.put(Utilidades.CTA_CAMPO_SALDO,Saldo);
+            int count= db.update("CUENTAS",valuesUpdate,Whereqry,null);
 
-        valuesUpdate.put(Utilidades.CTA_CAMPO_SALDO,Saldo);
-        int count= db.update("CUENTAS",valuesUpdate,Whereqry,null);
+            // Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Registro incluido Satisfactoriamente", Toast.LENGTH_LONG).show();
+            db.close();
 
-       // Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "Registro incluido Satisfactoriamente", Toast.LENGTH_LONG).show();
-        db.close();
+            if(categoriaSeleccionada==11){
+                SQLiteDatabase db2 = conn.getWritableDatabase();
+                ContentValues values2 = new ContentValues();
+                values2.put(Utilidades.CAMPO_TIPO_OPER, tipotran);
+                values2.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
+                values.put(Utilidades.CAMPO_FECHA_INT,fechaI);
+                values2.put(Utilidades.CAMPO_TIPO_CAT, categoriaSeleccionada);//spCategorias.getSelectedItemPosition());
+                values2.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentaDestino.getSelectedItemPosition());
+                values2.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
+                //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
+                Long idResultante2 = db2.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values2);
 
-        if(categoriaSeleccionada==11){
-            SQLiteDatabase db2 = conn.getWritableDatabase();
-            ContentValues values2 = new ContentValues();
-            values2.put(Utilidades.CAMPO_TIPO_OPER, tipotran);
-            values2.put(Utilidades.CAMPO_FECHA, txtfecha.getText().toString());
-            values.put(Utilidades.CAMPO_FECHA_INT,fechaI);
-            values2.put(Utilidades.CAMPO_TIPO_CAT, categoriaSeleccionada);//spCategorias.getSelectedItemPosition());
-            values2.put(Utilidades.CAMPO_ID_CTA, SpinnerCuentaDestino.getSelectedItemPosition());
-            values2.put(Utilidades.CAMPO_MONTO, txtmonto.getText().toString());
-            //values.put(Utilidades.CAMPO_ID,txtfecha.getText().toString());
-            Long idResultante2 = db2.insert(Utilidades.TABLA_OPERACIONES, Utilidades.CAMPO_ID, values2);
-
-            ContentValues valuesUpdate1 = new ContentValues();
-            double montoAfectaSaldo1=0;
-            String monto1=txtmonto.getText().toString();
-            int sel =SpinnerCuentaDestino.getSelectedItemPosition();
-            sel= sel+1;
-            String spinn1=String.valueOf(sel);
-            String Whereqry1="";
-            montoAfectaSaldo1 = Double.valueOf(monto1);
-            double Saldo1 =listaCuentas.get(SpinnerCuentaDestino.getSelectedItemPosition()-1).getSALDO();
+                ContentValues valuesUpdate1 = new ContentValues();
+                double montoAfectaSaldo1=0;
+                String monto1=txtmonto.getText().toString();
+                int sel =SpinnerCuentaDestino.getSelectedItemPosition();
+                sel= sel+1;
+                String spinn1=String.valueOf(sel);
+                String Whereqry1="";
+                montoAfectaSaldo1 = Double.valueOf(monto1);
+                double Saldo1 =listaCuentas.get(SpinnerCuentaDestino.getSelectedItemPosition()-1).getSALDO();
 
                 Whereqry1="id="+spinn1 ;
                 Saldo1 = Saldo1 +montoAfectaSaldo1;
                 Log.d("Whereqry",Whereqry1);
-            valuesUpdate1.put(Utilidades.CTA_CAMPO_SALDO,Saldo1);
-            int count2= db2.update("CUENTAS",valuesUpdate1,Whereqry1,null);
+                valuesUpdate1.put(Utilidades.CTA_CAMPO_SALDO,Saldo1);
+                int count2= db2.update("CUENTAS",valuesUpdate1,Whereqry1,null);
 
-            //Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
-            Toast.makeText(getApplicationContext(), "Registro Incluido Satisfactoriamente", Toast.LENGTH_LONG).show();
-            db2.close();
+                //Toast.makeText(getApplicationContext(), "idResultante" + idResultante, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Registro Incluido Satisfactoriamente", Toast.LENGTH_LONG).show();
+                db2.close();
+            }
+            txtDescripcion.setText("");
+            txtmonto.setText("");
         }
-        txtDescripcion.setText("");
-        txtmonto.setText("");
     }
-}
+}// Fin Clase Fragment
 
-}// Fin clase transacciones
-
-
-class VivzAdapter1 extends ArrayAdapter<String> {
+class VivzAdapterT extends ArrayAdapter<String> {
     Context context;
     int[] images;
     String[] tituloArray;
 
-    VivzAdapter1(Context c, String[] titulos, int imagenes[]) {
+    VivzAdapterT(Context c, String[] titulos, int imagenes[]) {
         super(c, R.layout.single_row1, titulos);
         this.context = c;
         this.images = imagenes;
@@ -896,4 +973,5 @@ class VivzAdapter1 extends ArrayAdapter<String> {
         return row;
     }
 }
+
 

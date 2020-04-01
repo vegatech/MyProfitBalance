@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:id="@+id/contenedorFragments"
+    tools:context=".ui.ajusteActivity">
 
-    tools:context=".ui.MainActivity">
+    <RelativeLayout android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/contenedorFragments"
+        android:layout_marginBottom="60dp">
+        <ListView
+            android:id="@+id/listview2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
 
+        </ListView>
+    </RelativeLayout>
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigationbariew"
+        android:id="@+id/navigationbariewA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

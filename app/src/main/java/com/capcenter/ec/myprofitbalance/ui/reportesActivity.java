@@ -1,5 +1,6 @@
 package com.capcenter.ec.myprofitbalance.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,10 +11,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -60,7 +63,8 @@ public class reportesActivity extends AppCompatActivity {
     private String FechaRep, fechaDesde, fechaHasta;
     private String consultaSQL, transaccioneSQL, categoriasSQL, semestreIngresosISQL, semestreIngresosIISQL, semestreEgresosISQL, semestreEgresosIISQL;
     private int posicionSeleccionada, fechaI, fechaF;
-    ListView lvSaldos;
+    ListView lvSaldos, lvMeses;
+    ArrayList<String> MesesNombre;
    // ArrayList<Transaccion> listaingresos,listaIngresos,listaEgresos,listaTransferencias, listaTorta;
     ArrayList<String> listainformacionIngreso,listainformacionEgreso, ListainformacionTransferencia, listainformacionTorta;
     ArrayList<Double> listaMontoTransaccionesGrafica, listaMontoEgresoGrafica, listaMontoIngresoGrafica, ListaMontoTransferenciaGrafica, listaMontoTorta;
@@ -89,6 +93,7 @@ public class reportesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_ingresos);
 
         mbotomnavigationviewR =(BottomNavigationView) findViewById(R.id.navigationbariewR);
+        mbotomnavigationviewR.getMenu().getItem(1).setChecked(true);
         mbotomnavigationviewR.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -99,12 +104,19 @@ public class reportesActivity extends AppCompatActivity {
                     //showSelectedFragment(new homeFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_Reportes){
-                    Intent intent = new Intent(getApplicationContext(), reportesActivity.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(getApplicationContext(), reportesActivity.class);
+                    //startActivity(intent);
                     //showSelectedFragment(new reportsFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_ajustes){
                     //showSelectedFragment(new settingsFragment());
+                    Intent intent = new Intent(getApplicationContext(), ajusteActivity.class);
+                    startActivity(intent);
+                }
+                if (menuItem.getItemId()== R.id.menu_salir){
+                    //showSelectedFragment(new settingsFragment());
+                    int p = android.os.Process.myPid();
+                    android.os.Process.killProcess(p);
                 }
                 return true;
             }
@@ -193,6 +205,39 @@ public class reportesActivity extends AppCompatActivity {
                 FechaRep=fechaOper;
                 fechaI = Integer.parseInt(Utilidades.getAmericanDate(fechaOper).trim()) ;
                 fechaF =  Utilidades.obtenerUltimoDiaMesActual();
+
+                AlertDialog.Builder mBuilder= new AlertDialog.Builder(reportesActivity.this);
+                mBuilder.setIcon(R.drawable.ic_fecha_section);
+                mBuilder.setTitle("Selecciona un mes del año");
+                //MesesNombre  = new ArrayList<String>();
+                //MesesNombre.add();
+
+                ArrayAdapter adaptadorMes = new ArrayAdapter(reportesActivity.this, android.R.layout.simple_list_item_1,Utilidades.getDialogMeses());
+                mBuilder.setAdapter(adaptadorMes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        AlertDialog.Builder mBuilderinner= new AlertDialog.Builder(reportesActivity.this);
+                        mBuilderinner.setIcon(R.drawable.ic_fecha_section);
+                        mBuilderinner.setTitle("Selecciona Año");
+                        ArrayAdapter adaptadorAnio = new ArrayAdapter(reportesActivity.this, android.R.layout.simple_list_item_1,Utilidades.getDialogAnios());
+                        mBuilderinner.setAdapter(adaptadorAnio, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        AlertDialog dialogInner = mBuilderinner.create();
+                        dialogInner.show();
+                    }
+                });
+                mBuilder.setNeutralButton("Salir", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
             }
         });
         btn_date_otro.setOnClickListener(new View.OnClickListener() {

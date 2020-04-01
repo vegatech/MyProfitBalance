@@ -156,7 +156,41 @@ public class Utilidades {
 
         return Meses;
     }
+    public static ArrayList<String> getDialogMeses(){
+        ArrayList<String> Meses = new ArrayList<>();
 
+        Meses.add("Enero");
+        Meses.add("Febrero");
+        Meses.add("Marzo");
+        Meses.add("Abril");
+        Meses.add("Mayo");
+        Meses.add("Junio");
+        Meses.add("Julio");
+        Meses.add("Agosto");
+        Meses.add("Septiembre");
+        Meses.add("Octubre");
+        Meses.add("Noviembre");
+        Meses.add("Diciembre");
+
+        return Meses;
+    }
+    public static ArrayList<String> getDialogAnios(){
+        ArrayList<String> Anios = new ArrayList<>();
+
+        Anios.add("2019");
+        Anios.add("2020");
+        Anios.add("2021");
+        Anios.add("2022");
+        Anios.add("2023");
+        Anios.add("2024");
+       /* Anios.add("2025");
+        Anios.add("2026");
+        Anios.add("2027");
+        Anios.add("2028");
+        Anios.add("2029");
+        Anios.add("2030");*/
+        return Anios;
+    }
     //tablas
     public static final String TABLA_OPERACIONES= "TRANSACCIONES";
     public static final String CAMPO_ID="id";
