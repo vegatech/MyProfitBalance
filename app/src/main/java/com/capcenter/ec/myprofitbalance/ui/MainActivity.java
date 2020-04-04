@@ -36,7 +36,7 @@ import static android.content.Intent.ACTION_MAIN;
 import static android.content.Intent.CATEGORY_HOME;
 
 public class MainActivity extends AppCompatActivity  implements IComunicaFragments, homeFragment.OnFragmentInteractionListener,transaccionesFragment.OnFragmentInteractionListener, reportsFragment.OnFragmentInteractionListener{
-    Fragment fragmentInicio, fragmentTransacciones, fragmentReporte;
+    Fragment fragmentInicio, fragmentTransacciones, fragmentReporte, fragmentAjuste;
     BottomNavigationView mbotomnavigationview;
 
     ConexionSQLiteHelper conn =new ConexionSQLiteHelper(this, Utilidades.NOMBRE_BD,null, 1);
@@ -67,10 +67,10 @@ public class MainActivity extends AppCompatActivity  implements IComunicaFragmen
                     //finish();
                 }
                 if (menuItem.getItemId()== R.id.menu_Reportes){
-                    Intent intent = new Intent(getApplicationContext(), reportesActivity.class);
+                    /*Intent intent = new Intent(getApplicationContext(), reportesActivity.class);
                     startActivity(intent);
-                    finish();
-                    //showSelectedFragment(new reportsFragment());
+                    finish();*/
+                    showSelectedFragment(new reportsFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_ajustes){
                    // showSelectedFragment(new settingsFragment());
@@ -119,9 +119,24 @@ public class MainActivity extends AppCompatActivity  implements IComunicaFragmen
 
     }
     @Override
-    public void llamaTransacciones(){
-
+    public void llamaTransacciones(int i){
+        Bundle bundle = new Bundle();
+        bundle.putInt("tipoper", i);
+        fragmentTransacciones.setArguments(bundle);
+        //getSupportFragmentManager().beginTransaction().replace(R.id.contenedorFragments,fragmentTransacciones).commit();
         getSupportFragmentManager().beginTransaction().replace(R.id.contenedorFragments,fragmentTransacciones).commit();
+    }
+    @Override
+    public void llamaHome(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.contenedorFragments,fragmentInicio).commit();
+    }
+    @Override
+    public void llamaReportes(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.contenedorFragments,fragmentReporte).commit();
+    }
+    @Override
+    public void llamaAjustes(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.contenedorFragments,fragmentAjuste).commit();
     }
     @Override
     public  void showSelectedFragment(Fragment fragment) {

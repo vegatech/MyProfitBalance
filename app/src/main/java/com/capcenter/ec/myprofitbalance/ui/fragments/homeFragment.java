@@ -63,7 +63,11 @@ public class homeFragment extends Fragment {
                 /* startActivity(intent);*/
                 //fragmentTransacciones = new Fragment();
                 //iComunicaFragments.showSelectedFragment(fragmentTransacciones);
-                iComunicaFragments.llamaTransacciones();
+               // if (pa ==1){
+                    iComunicaFragments.llamaTransacciones(pa);
+                //}
+
+
 
             }
         });
@@ -72,7 +76,7 @@ public class homeFragment extends Fragment {
     }
 
 public void llama(){
-    iComunicaFragments.llamaTransacciones();
+    iComunicaFragments.llamaTransacciones(1);
 
 }
 

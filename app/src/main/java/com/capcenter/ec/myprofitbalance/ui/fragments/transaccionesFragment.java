@@ -120,6 +120,7 @@ public class transaccionesFragment extends Fragment {
     Button btn_billete1;
     Button btn_billete2;
     Button btn_billete3;
+    Button btn_guardar_salir, btn_guardar;
     int  btn_billete_show=0;
 
     int y,d,m, fechaI;
@@ -174,12 +175,13 @@ public class transaccionesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        tipotran=getActivity().getIntent().getExtras().getInt("tipoper");
+        //tipotran=getActivity().getIntent().getExtras().getInt("tipoper");
+        tipotran=getArguments().getInt("tipoper");;
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
        // return inflater.inflate(R.layout.fragment_transacciones, container, false);
         vista =inflater.inflate(R.layout.fragment_transacciones, container, false);
-        vistaTransaccion =vista.findViewById(R.id.vistaTransacciones);
+        //vistaTransaccion =vista.findViewById(R.id.vistaTransacciones);
         txtvtituloTransaccion=vista.findViewById(R.id.TextTituloTransaccion1);
         btn_date_hoy =vista.findViewById(R.id.btn_set_date_today);
         btn_date_ayer=vista.findViewById(R.id.btn_set_date_yesterday);
@@ -188,6 +190,8 @@ public class transaccionesFragment extends Fragment {
         btn_billete1=vista.findViewById(R.id.btnBillete1);
         btn_billete2=vista.findViewById(R.id.btnBillete2);
         btn_billete3=vista.findViewById(R.id.btnBillete3);
+        btn_guardar_salir =vista.findViewById(R.id.ButtonSendTransaction);
+        btn_guardar =vista.findViewById(R.id.ButtonSendTransactionNuevo);
         btn_billete1.setVisibility(View.GONE);
         btn_billete2.setVisibility(View.GONE);
         btn_billete3.setVisibility(View.GONE);
@@ -196,7 +200,7 @@ public class transaccionesFragment extends Fragment {
         radioEgr =vista.findViewById(R.id.radioE);
         radioTransf =vista.findViewById(R.id.radioT);
 
-        //btn_date_hoy.setBackgroundColor(Color.rgb(70, 80, 90));
+
         btnCategorias =vista.findViewById(R.id.btnCategoria);
         spCategorias =vista.findViewById(R.id.SpinnerCategorias);
         SpinnerCuentas=vista.findViewById(R.id.SpinnerCuentas);
@@ -236,21 +240,21 @@ public class transaccionesFragment extends Fragment {
         if (tipotran==1){
             txtvtituloTransaccion.setText("Nuevo Ingreso...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
-            vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            vista.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
             sqlCuentas ="Select * from " + Utilidades.TABLA_CUENTAS;
             SpinnerCuentaDestino.setVisibility(View.GONE);
         }
         if (tipotran==2){
             txtvtituloTransaccion.setText("Nuevo Egreso...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
-            vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            vista.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
             sqlCuentas ="Select * from " + Utilidades.TABLA_CUENTAS;
             SpinnerCuentaDestino.setVisibility(View.GONE);
         }
         if (tipotran==3){
             txtvtituloTransaccion.setText("Nueva Transferencia...");
             txtvtituloTransaccion.setTextColor(getResources().getColor(android.R.color.white));
-            vistaTransaccion.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+            vista.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
             sqlCuentas ="Select * from " + Utilidades.TABLA_CUENTAS +" WHERE "+Utilidades.CTA_CAMPO_TIPO_CUENTA+ "<> 'EFECTIVO'";
             SpinnerCuentaDestino.setVisibility(View.VISIBLE);
         }
@@ -601,7 +605,18 @@ public class transaccionesFragment extends Fragment {
                 dialog.show();
             }
         });
-
+        btn_guardar_salir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registrarTransaccionSalir1(v);
+            }
+        });
+        btn_guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registrarTransaccionyNuevo1(v);
+            }
+        });
 
         return  vista;
     }// fin create View
@@ -647,12 +662,12 @@ public class transaccionesFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    public void registrarTransaccionSalir(View view){
+
+    public void registrarTransaccionSalir1(View view){
         guardarnuevoRegistro();
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        startActivity(intent);
+        iComunicaFragments.llamaHome();
     }
-    public void registrarTransaccionyNuevo(View view){
+    public void registrarTransaccionyNuevo1(View view){
         guardarnuevoRegistro();
     }
     // Trae los datos paralaedicion de un registro seleccionado en la lista detransacciones
