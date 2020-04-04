@@ -29,13 +29,14 @@ import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.Utilidades;
 import com.capcenter.ec.myprofitbalance.ui.fragments.homeFragment;
 import com.capcenter.ec.myprofitbalance.ui.fragments.reportsFragment;
+import com.capcenter.ec.myprofitbalance.ui.fragments.settingsFragment;
 import com.capcenter.ec.myprofitbalance.ui.fragments.transaccionesFragment;
 import com.capcenter.ec.myprofitbalance.ui.interfaces.IComunicaFragments;
 
 import static android.content.Intent.ACTION_MAIN;
 import static android.content.Intent.CATEGORY_HOME;
 
-public class MainActivity extends AppCompatActivity  implements IComunicaFragments, homeFragment.OnFragmentInteractionListener,transaccionesFragment.OnFragmentInteractionListener, reportsFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity  implements IComunicaFragments, homeFragment.OnFragmentInteractionListener,transaccionesFragment.OnFragmentInteractionListener, reportsFragment.OnFragmentInteractionListener, settingsFragment.OnFragmentInteractionListener{
     Fragment fragmentInicio, fragmentTransacciones, fragmentReporte, fragmentAjuste;
     BottomNavigationView mbotomnavigationview;
 
@@ -73,9 +74,9 @@ public class MainActivity extends AppCompatActivity  implements IComunicaFragmen
                     showSelectedFragment(new reportsFragment());
                 }
                 if (menuItem.getItemId()== R.id.menu_ajustes){
-                   // showSelectedFragment(new settingsFragment());
-                    Intent intent = new Intent(getApplicationContext(), ajusteActivity.class);
-                    startActivity(intent);
+                    showSelectedFragment(new settingsFragment());
+                   /* Intent intent = new Intent(getApplicationContext(), ajusteActivity.class);
+                    startActivity(intent);*/
                     //finish();
                 }
                 if (menuItem.getItemId()== R.id.menu_salir){
