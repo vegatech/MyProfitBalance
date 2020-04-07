@@ -262,14 +262,6 @@ public class transaccionesFragment extends Fragment {
         String fechaOper = Utilidades.getCurrentDate();
         fechaI = Integer.parseInt(Utilidades.getAmericanDate(fechaOper).trim()) ;
         txtfecha.setText(fechaOper);
-        // txtvmonto = (TextView) findViewById(R.id.TextViewMonto1);
-
-
-        //numerotran=bundle.getInt("numoper");
-
-        //Toast.makeText(getApplicationContext(), "Nro transacion:"+numerotran, Toast.LENGTH_SHORT).show();
-
-        //consultarTransaccionById();
         consultarCategorias();
         ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (getActivity(),android.R.layout.simple_spinner_item,listaCat);
 //        spCategorias.setAdapter(adapador);
@@ -678,7 +670,6 @@ public class transaccionesFragment extends Fragment {
             String SQL_QUERY = "Select * from " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "=" + tipotran+ " AND "+Utilidades.CAMPO_ID+"="+numerotran;
             Log.d("STATE",SQL_QUERY);
             Cursor cursor = db.rawQuery(SQL_QUERY, null);
-
             Transaccion transaccion = null;
             listaTransacciones = new ArrayList<Transaccion>();
 
@@ -719,7 +710,6 @@ public class transaccionesFragment extends Fragment {
             String SQL_QUERY = "SELECT DISTINCT "+ Utilidades.CAMPO_ID+", "+Utilidades.CAMPO_MONTO+" FROM  " + Utilidades.TABLA_OPERACIONES + " WHERE " + Utilidades.CAMPO_TIPO_OPER + "=" + tipotran+ " AND "+Utilidades.CAMPO_TIPO_CAT+" = "+categoriaSeleccionada  +" ORDER BY "+Utilidades.CAMPO_ID+ " DESC "+" LIMIT 3 ";
             Log.d("STATE",SQL_QUERY);
             Cursor cursor = db.rawQuery(SQL_QUERY, null);
-
             Transaccion transaccion = null;
             listaTransacciones = new ArrayList<Transaccion>();
 
@@ -766,8 +756,6 @@ public class transaccionesFragment extends Fragment {
             conn = new ConexionSQLiteHelper(getContext(), Utilidades.NOMBRE_BD, null, 1);
             SQLiteDatabase db = conn.getReadableDatabase();
             Cursor cursorc = db.rawQuery("Select * from " + Utilidades.TABLA_CATEGORIAS + " WHERE "+Utilidades.CAT_CAMPO_TIPO+"="+tipotran, null);
-
-
             Categoria regCategoria = null;
             listaCategorias= new ArrayList<Categoria>();
 
@@ -779,8 +767,6 @@ public class transaccionesFragment extends Fragment {
                 regCategoria.setDrawable(cursorc.getString(3));
                 regCategoria.setColor(cursorc.getString(4));
                 listaCategorias.add(regCategoria);
-
-
             }
             obtenerListaCat();
 
@@ -801,15 +787,11 @@ public class transaccionesFragment extends Fragment {
         for (int i=0; i<listaCategorias.size();i++){
             //catlistitems[i] =listaCategorias.get(i).getDescripcat().toString();
             listaCat.add(
-
                     listaCategorias.get(i).getDescripcat()
-                    // +listaCategorias.get(i).getTipoCat()
             );
             listaCatDraw.add(listaCategorias.get(i).getDrawable());
             listaCatColor.add(listaCategorias.get(i).getColor());
         }
-        // String [] stringArray = listaCat.toArray(new String[listaCat.size()]);
-        // catlistitems =stringArray;
         lencadena=  listaCategorias.size();
     }
 

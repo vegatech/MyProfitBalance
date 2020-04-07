@@ -2,10 +2,14 @@ package com.capcenter.ec.myprofitbalance.ui.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -16,8 +20,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.capcenter.ec.myprofitbalance.R;
 import com.capcenter.ec.myprofitbalance.io.ConexionSQLiteHelper;
@@ -42,7 +48,7 @@ public class reportsFragment extends Fragment {
     private String FechaRep, fechaDesde, fechaHasta;
     private String consultaSQL, transaccioneSQL, categoriasSQL, semestreIngresosISQL, semestreIngresosIISQL, semestreEgresosISQL, semestreEgresosIISQL;
     private int posicionSeleccionada, fechaI, fechaF;
-    ListView lvSaldos, lvMeses;
+    ListView lvSaldos, lvMeses, lvTransaccionesByCategoria;
     ArrayList<String> MesesNombre;
     // ArrayList<Transaccion> listaingresos,listaIngresos,listaEgresos,listaTransferencias, listaTorta;
     ArrayList<String> listainformacionIngreso,listainformacionEgreso, ListainformacionTransferencia, listainformacionTorta;
@@ -51,6 +57,7 @@ public class reportsFragment extends Fragment {
     ArrayList ListaColorGraficas, ListaColorPie, ListaColorEgreso;
     //ArrayList<Categoria> listaCategorias;
     ArrayList<String> listaCat, listaSaldoCuentas;
+    ArrayList<String> listaCatDraw;
     ArrayList<Integer> listColores = new ArrayList<>();
     Integer tipotran;
     Map<Integer, Integer> mapLista = new HashMap<Integer, Integer>();
@@ -108,7 +115,10 @@ public class reportsFragment extends Fragment {
         consultaSQL ="Select * from " + Utilidades.TABLA_CATEGORIAS ;
         Utilidades.consultarCategorias(getContext(),consultaSQL);
         obtenerListaCat();
+
         ArrayAdapter<CharSequence> adapador=  new ArrayAdapter (getActivity(),android.R.layout.simple_spinner_item,listaCat);
+
+
         spinner_categoria_rep.setAdapter(adapador);
         spinner_categoria_rep.setSelection(0);
 
@@ -377,6 +387,7 @@ public class reportsFragment extends Fragment {
         });
         conn =new ConexionSQLiteHelper(getContext(),Utilidades.NOMBRE_BD,null,1);
         lvSaldos =vista.findViewById(R.id.lvrepSaldos);
+        lvTransaccionesByCategoria= vista.findViewById(R.id.listviewReports);
         //Bundle bundle = getIntent().getExtras();
         //tipotran=bundle.getInt("tipoper");
         //tipotran=1;
@@ -416,6 +427,18 @@ public class reportsFragment extends Fragment {
             Graficas.colorsE[i] = Utilidades.getColorsbyid(i);
         }
 
+
+        final int [] imgid2 = new int[ListaColorPie.size()];
+        int img3;
+        Drawable imgDraw;
+        String imagen;
+        for (int i = 0; i < listaCatDraw.size();i++){
+            imagen =Utilidades.RUTA_APP+listaCatDraw.get(i).toString();
+            Log.d("imagen: ",imagen);
+            img3 =getResources().getIdentifier(imagen,"Drawable",getActivity().getPackageName());
+            imgid2[i]=img3;
+        }
+        VivzAdapterReport adapterReports = new VivzAdapterReport(getActivity(),Graficas.leyendaPie , imgid2,Graficas.montoPie );
         // Carga Graficas
         barchartI =vista.findViewById(R.id.BarchartI);
         barchartE =vista.findViewById(R.id.BarchartE);
@@ -427,6 +450,7 @@ public class reportsFragment extends Fragment {
         obtenerListaSaldoCuentas();
         ArrayAdapter adaptador = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,listaSaldoCuentas);
         lvSaldos.setAdapter(adaptador);
+        lvTransaccionesByCategoria.setAdapter(adapterReports);
 
 
 
@@ -442,6 +466,7 @@ public class reportsFragment extends Fragment {
         listaMontoTorta = new ArrayList<Double>();
         listainformacionTorta = new ArrayList<String>();
         ListaColorPie = new ArrayList<>();
+        listaCatDraw = new ArrayList<String>();
         if (Utilidades.listatransacciones.size()==0){
             listaMontoTorta.add(0.0);
             listainformacionTorta.add("Datos No Encontrados");
@@ -455,6 +480,7 @@ public class reportsFragment extends Fragment {
                 Random rnd = new Random();
                 int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
                 ListaColorPie.add(color);
+                listaCatDraw.add(Utilidades.listatransacciones.get(i).getTipo_cat());
             }
         }
     }
@@ -510,11 +536,13 @@ public class reportsFragment extends Fragment {
 
     private void obtenerListaCat(){
         listaCat= new ArrayList<String>();
+
         listaCat.add("Seleccione...");
         for (int i=0; i<Utilidades.listaCategorias.size();i++){
             listaCat.add(
                     Utilidades.listaCategorias.get(i).getDescripcat()
             );
+
         }
     }
     private void obtenerListaSaldoCuentas(){
@@ -532,4 +560,37 @@ public class reportsFragment extends Fragment {
     }
 
 
+}
+class VivzAdapterReport extends ArrayAdapter<String>
+{
+    Context context;
+    int[] images;
+    String[] tituloArray;
+    Double[] MontosArray;
+    VivzAdapterReport(Context c, String[] titulos,int imagenes[],Double[] Monto)
+    {
+        super(c,R.layout.single_row_reports,titulos);
+        this.context = c;
+        this.images = imagenes;
+        this.tituloArray=titulos;
+        this.MontosArray =Monto;
+    }
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        LayoutInflater inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View row =inflater.inflate(R.layout.single_row_reports,parent,false);
+        ImageView myImage= (ImageView) row.findViewById(R.id.profile_image);
+        TextView myTitle=(TextView) row.findViewById(R.id.tvnombreCategoriaRep);
+        TextView myMto=(TextView) row.findViewById(R.id.tvtotalCategoriaRep);
+
+        //myImage.setImageDrawable(images[position]);
+        myImage.setImageResource(images[position]);
+        myTitle.setText(tituloArray[position]);
+        myMto.setText(MontosArray[position].toString());
+
+        //return super.getView(position, convertView, parent);
+        return row;
+    }
 }

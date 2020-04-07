@@ -418,6 +418,7 @@ public class Utilidades {
                 transaccion.setId(i);
                 transaccion.setDescripcion(cursorCat.getString(1));
                 transaccion.setMonto_operacion(cursorCat.getDouble(0));
+                transaccion.setTipo_cat(cursorCat.getString(2));
                 listatransacciones.add(transaccion);
 
             }
@@ -501,7 +502,7 @@ public class Utilidades {
         int anio = Calendar.getInstance().get(Calendar.YEAR);
         mes = mes +1;
         String SQL="";
-        SQL = SQL+ "SELECT SUM("+Utilidades.CAMPO_MONTO+"), CATEGORIAS.DESCRIPCION  \n";
+        SQL = SQL+ "SELECT SUM("+Utilidades.CAMPO_MONTO+"), CATEGORIAS.DESCRIPCION, CATEGORIAS.DRAWABLE  \n";
         SQL = SQL +" FROM "+Utilidades.TABLA_OPERACIONES+" \n" ;
         SQL = SQL +" INNER JOIN CATEGORIAS ON CATEGORIAS.id= TRANSACCIONES.TIPO_CATEGORIA  \n" ;
         SQL = SQL +" WHERE 1 =1 \n";
