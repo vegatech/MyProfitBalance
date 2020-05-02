@@ -2,24 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.capcenter.ec.myprofitbalance">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_index_wallet_round"
         android:label="@string/app_name"
-        android:permission="android.permission.WRITE_EXTERNAL_STORAGE"
         android:roundIcon="@mipmap/ic_index_wallet_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.ajusteActivity"></activity>
-        <activity android:name=".ui.menuActivity" />
-        <activity
-            android:name=".ui.transaccionesActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ui.SplashActivity"></activity>
-        <activity
-            android:name=".ui.reportesActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ui.listaopciones" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +18,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.ajusteActivity"></activity>
+        <activity android:name=".ui.menuActivity" />
+        <activity
+            android:name=".ui.transaccionesActivity"
+            />
+        <activity android:name=".ui.SplashActivity"></activity>
+        <activity
+            android:name=".ui.reportesActivity"
+           />
+        <activity android:name=".ui.listaopciones" />
+
     </application>
+
 
 </manifest>
